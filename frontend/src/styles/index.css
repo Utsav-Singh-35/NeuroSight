@@ -1,0 +1,24 @@
+:root {
+  --bg-main: #000000;
+  --text-color: #ffffff;
+  --tag-color: #999999;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-color);
+  overflow-x: clip;
+}
+
+.main-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}

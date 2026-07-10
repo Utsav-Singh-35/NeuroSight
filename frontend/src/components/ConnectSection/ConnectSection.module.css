@@ -1,0 +1,163 @@
+.connectSection {
+  width: 100%;
+  background-color: #0d0d0d;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  position: relative;
+  padding: 8rem 8% 5rem;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  z-index: 0;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+}
+
+.connectTop {
+  margin-bottom: 6rem;
+}
+
+.connectEyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.connectHeadingRow {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.connectHeading {
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.connectArrow {
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  color: #ffffff;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.connectDivider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.connectFooter {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 4rem;
+  padding-top: 4rem;
+}
+
+.connectLogo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.8rem;
+}
+
+.connectBrandSub {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: #555;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.connectBrandDesc {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.7;
+  max-width: 300px;
+}
+
+.connectColTitle {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: #555;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.connectLinks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.connectLinks a {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  transition: color 0.3s;
+}
+
+.connectLinks a:hover { color: #fff; }
+
+.connectInputRow {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.5rem;
+  gap: 0.5rem;
+}
+
+.connectInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  padding: 0.3rem 0;
+}
+
+.connectInput::placeholder { color: #555; }
+
+.connectSubmit {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.3s;
+  padding: 0;
+}
+
+.connectSubmit:hover { color: #fff; transform: translateX(4px); }
+
+@media (max-width: 768px) {
+  .connectSection { padding: 5rem 5% 4rem; }
+  .connectFooter { grid-template-columns: 1fr; gap: 3rem; }
+  .connectHeading { font-size: clamp(2.5rem, 12vw, 4rem); }
+}
