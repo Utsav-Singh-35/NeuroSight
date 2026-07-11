@@ -2,318 +2,272 @@
 
 **AI-Powered Brain MRI Tumor Detection & Clinical Decision Support Platform**
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://www.tensorflow.org/)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.2-red.svg)](https://pytorch.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110-green.svg)](https://fastapi.tiangolo.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933.svg)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
 
-## 📋 Table of Contents
+## Overview
 
-- [Overview](#overview)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Dataset](#dataset)
-- [Usage](#usage)
-- [Model Architecture](#model-architecture)
-- [Results](#results)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+NeuraSight is a medical imaging platform that classifies brain tumors from MRI scans using deep learning. It provides:
 
----
-
-## 🎯 Overview
-
-NeuraSight is an advanced medical imaging platform that leverages deep learning and explainable AI to detect and classify brain tumors from MRI scans. The system provides clinical decision support through:
-
-- **High-accuracy predictions** using EfficientNet-B0
-- **Visual explanations** via Grad-CAM heatmaps
-- **Comprehensive diagnostic insights**
-- **Real-time inference** through web interface
+- **95% classification accuracy** across 4 tumor types using EfficientNet-B0
+- **Grad-CAM heatmaps** showing which MRI regions the model focuses on
+- **REST API** for integration with any frontend
+- **Prediction history** stored in MongoDB
 
 ### Tumor Classes
-1. **Glioma** - Malignant brain tumor
-2. **Meningioma** - Usually benign tumor
-3. **Pituitary** - Pituitary gland tumor
-4. **No Tumor** - Healthy brain scan
+| Class | Precision | Recall | F1-Score |
+|-------|-----------|--------|----------|
+| Glioma | 1.00 | 0.81 | 0.89 |
+| Meningioma | 0.90 | 0.99 | 0.95 |
+| No Tumor | 0.92 | 1.00 | 0.96 |
+| Pituitary | 0.99 | 1.00 | 1.00 |
+| **Overall** | **0.95** | **0.95** | **0.95** |
 
 ---
 
-## ✨ Features
+## Architecture
 
-### Core Features
-- ✅ **Brain MRI Classification** - Detect and classify 4 tumor types
-- ✅ **High Accuracy** - 97.4% classification accuracy
-- ✅ **Explainable AI** - Grad-CAM visualization for interpretability
-- ✅ **Transfer Learning** - EfficientNet-B0 pre-trained on ImageNet
-- ✅ **Web Interface** - Interactive dashboard for MRI analysis
-- ✅ **Real-time Inference** - Fast predictions (<2 seconds)
-
-### Technical Features
-- 🔬 Advanced preprocessing pipeline
-- 📊 Comprehensive evaluation metrics
-- 🎨 3D visualizations with Three.js
-- 🚀 RESTful API for integration
-- 📱 Responsive web design
-- 🔐 Secure file handling
+```
+┌──────────┐      ┌─────────────────────┐      ┌──────────────────┐
+│  React   │ HTTP │   Express Backend    │ HTTP │  FastAPI Service  │
+│ Frontend │─────▶│   (Node.js :5000)   │─────▶│  (Python :8000)   │
+│ :3000    │◀─────│                     │◀─────│                   │
+└──────────┘      │ • Image validation  │      │ • Preprocessing   │
+                  │ • Request routing   │      │ • Model inference │
+                  │ • Prediction history│      │ • Grad-CAM        │
+                  └─────────┬───────────┘      └──────────────────┘
+                            │
+                            ▼
+                  ┌─────────────────────┐
+                  │     MongoDB :27017  │
+                  │  (prediction store) │
+                  └─────────────────────┘
+```
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 NeuraSight/
+├── backend/
+│   ├── express/              # Node.js API gateway (port 5000)
+│   │   ├── src/
+│   │   │   ├── server.js     # Entry point
+│   │   │   ├── config/       # Environment config
+│   │   │   ├── middleware/   # Validation, logging, error handling
+│   │   │   ├── routes/       # API endpoints
+│   │   │   ├── services/     # FastAPI HTTP client
+│   │   │   └── models/       # Mongoose schemas
+│   │   └── package.json
+│   │
+│   ├── fastapi/              # Python ML service (port 8000)
+│   │   ├── app/
+│   │   │   ├── main.py       # Entry point
+│   │   │   ├── config.py     # Settings
+│   │   │   ├── routers/      # API endpoints
+│   │   │   ├── services/     # Preprocessing, inference, Grad-CAM
+│   │   │   └── models/       # Pydantic schemas
+│   │   └── requirements.txt
+│   │
+│   └── README.md             # Backend setup guide
+│
+├── models/
+│   └── Brain_MRI_scan.pth    # Trained EfficientNet-B0 model weights
 │
 ├── data/
-│   ├── raw/                    # Original dataset
-│   └── processed/              # Preprocessed data
+│   └── brainMRI/             # Dataset (Training + Testing)
+│       ├── Training/         # 4 classes
+│       └── Testing/          # 400 images per class (1600 total)
 │
-├── notebooks/                  # Jupyter notebooks for EDA
-│   ├── 01_dataset_analysis.ipynb
-│   ├── 02_preprocessing.ipynb
-│   └── 03_model_training.ipynb
-│
-├── preprocessing/              # Data preprocessing modules
-│   ├── preprocess.py
-│   ├── augmentation.py
-│   └── data_generator.py
-│
-├── training/                   # Model training scripts
-│   ├── train.py
-│   ├── callbacks.py
-│   └── config.py
-│
-├── models/                     # Saved models
-│   ├── best_model.h5
-│   └── model_weights.h5
-│
-├── evaluation/                 # Model evaluation
-│   ├── evaluate.py
-│   ├── metrics.py
-│   └── visualize.py
-│
-├── explainability/             # Grad-CAM implementation
-│   ├── gradcam.py
-│   └── visualize.py
-│
-├── backend/                    # Flask/FastAPI backend
-│   ├── app.py
-│   ├── routes.py
-│   └── inference.py
-│
-├── frontend/                   # React web interface
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-├── reports/                    # Generated reports
-│   └── dataset_summary.pdf
-│
-├── docs/                       # Documentation
-│   ├── dataset_analysis.md
+├── docs/                     # Documentation
+│   ├── brain_mri_model_results.md
 │   ├── model_architecture.md
+│   ├── dataset_analysis.md
+│   ├── deployment_architecture.md
 │   ├── roadmap.md
 │   └── references.md
 │
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-└── LICENSE                     # License file
+├── frontend/                 # React web interface (TBD)
+├── notebooks/                # Jupyter notebooks
+├── preprocessing/            # Data preprocessing scripts
+├── training/                 # Model training scripts
+├── evaluation/               # Model evaluation code
+├── explainability/           # Grad-CAM implementation
+└── reports/                  # Generated reports
 ```
 
 ---
 
-## 🚀 Installation
+## Quick Start
 
 ### Prerequisites
-- Python 3.8 or higher
-- pip package manager
-- (Optional) GPU with CUDA support for training
+- Python 3.10+
+- Node.js 18+
+- MongoDB 6.0+
+- The trained model file: `Brain_MRI_scan.pth`
 
-### Step 1: Clone Repository
-```bash
-git clone https://github.com/yourusername/NeuraSight.git
-cd NeuraSight
-```
+### 1. Start FastAPI (ML Service)
 
-### Step 2: Create Virtual Environment
 ```bash
+cd backend/fastapi
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-### Step 3: Install Dependencies
-```bash
+venv\Scripts\activate          # Windows
 pip install -r requirements.txt
+
+# Ensure models/Brain_MRI_scan.pth exists at project root
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-### Step 4: Download Dataset
-1. Go to [Kaggle Dataset](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset)
-2. Download and extract to `data/raw/`
+### 2. Start Express (API Gateway)
 
----
-
-## 📊 Dataset
-
-### Primary Dataset
-- **Source:** [Brain Tumor MRI Dataset (Kaggle)](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset)
-- **Total Images:** 7,000+
-- **Classes:** 4 (Glioma, Meningioma, Pituitary, No Tumor)
-- **Format:** JPG/PNG
-- **Split:** 70% Train, 15% Validation, 15% Test
-
-### Data Distribution
-| Class | Training | Validation | Testing | Total |
-|-------|----------|------------|---------|-------|
-| Glioma | [TBD] | [TBD] | [TBD] | [TBD] |
-| Meningioma | [TBD] | [TBD] | [TBD] | [TBD] |
-| Pituitary | [TBD] | [TBD] | [TBD] | [TBD] |
-| No Tumor | [TBD] | [TBD] | [TBD] | [TBD] |
-
----
-
-## 💻 Usage
-
-### 1. Data Preprocessing
 ```bash
-python preprocessing/preprocess.py
-```
-
-### 2. Train Model
-```bash
-python training/train.py
-```
-
-### 3. Evaluate Model
-```bash
-python evaluation/evaluate.py
-```
-
-### 4. Generate Grad-CAM
-```bash
-python explainability/gradcam.py --image path/to/mri.jpg
-```
-
-### 5. Run Backend Server
-```bash
-cd backend
-python app.py
-```
-
-### 6. Run Frontend
-```bash
-cd frontend
+cd backend/express
 npm install
+
+# Ensure MongoDB is running
 npm start
 ```
 
----
+### 3. Test the API
 
-## 🧠 Model Architecture
+```bash
+# Health check
+curl http://localhost:5000/api/health
 
-### Base Model: EfficientNet-B0
-- **Parameters:** 5.3M
-- **Input Size:** 224 x 224 x 3
-- **Pre-training:** ImageNet
-- **Framework:** TensorFlow/Keras
+# Predict tumor class
+curl -X POST -F "image=@path/to/mri_scan.jpg" http://localhost:5000/api/predict
 
-### Custom Classification Head
-```
-EfficientNet-B0 (frozen)
-    ↓
-Global Average Pooling
-    ↓
-Dense (256, ReLU) + Dropout (0.5)
-    ↓
-Dense (128, ReLU) + Dropout (0.3)
-    ↓
-Output (4, Softmax)
+# Get Grad-CAM heatmap
+curl -X POST -F "image=@path/to/mri_scan.jpg" http://localhost:5000/api/gradcam
+
+# View prediction history
+curl http://localhost:5000/api/predictions
 ```
 
-### Training Strategy
-1. **Phase 1:** Transfer learning with frozen base (10-15 epochs)
-2. **Phase 2:** Fine-tuning with unfrozen layers (10-20 epochs)
+---
+
+## API Endpoints
+
+### Express Backend (port 5000)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/predict` | Upload MRI → get classification + confidence |
+| `POST` | `/api/gradcam` | Upload MRI → get Grad-CAM heatmap (base64 PNG) |
+| `GET` | `/api/predictions` | List prediction history (max 100) |
+| `GET` | `/api/predictions/:id` | Get single prediction record |
+| `GET` | `/api/health` | Service + FastAPI reachability status |
+
+### Response Example
+
+```json
+{
+  "prediction": "Glioma",
+  "confidence": 95.42,
+  "probabilities": {
+    "Glioma": 95.42,
+    "Meningioma": 2.15,
+    "No Tumor": 1.30,
+    "Pituitary": 1.13
+  }
+}
+```
 
 ---
 
-## 📈 Results
+## Model Details
 
-### Performance Metrics
-| Metric | Score |
-|--------|-------|
-| **Accuracy** | 97.4% |
-| **Precision** | 96.8% |
-| **Recall** | 97.1% |
-| **F1 Score** | 96.9% |
-| **ROC-AUC** | 0.98 |
+| Attribute | Value |
+|-----------|-------|
+| Architecture | EfficientNet-B0 + custom head |
+| Framework | PyTorch |
+| Input Size | 224 × 224 × 3 (RGB) |
+| Parameters | ~5.3M |
+| Model File | `models/Brain_MRI_scan.pth` |
+| Training Platform | Google Colab (Tesla T4 GPU) |
+| Epochs | 10 |
+| Best Val Accuracy | 95.00% (Epoch 9) |
+| Test Accuracy | 95% |
 
-### Confusion Matrix
-[Add confusion matrix image after training]
+### Training Results
 
-### Sample Predictions
-[Add sample prediction images with Grad-CAM]
-
----
-
-## 📚 Documentation
-
-Detailed documentation is available in the `docs/` folder:
-
-- **[Dataset Analysis](docs/dataset_analysis.md)** - Complete dataset exploration
-- **[Model Architecture](docs/model_architecture.md)** - Detailed model design
-- **[Development Roadmap](docs/roadmap.md)** - Project timeline and milestones
-- **[References](docs/references.md)** - Research papers and resources
+| Epoch | Train Acc | Val Acc |
+|-------|-----------|---------|
+| 1 | 83.82% | 88.56% |
+| 2 | 94.36% | 91.88% |
+| 3 | 97.41% | 92.56% |
+| 5 | 98.59% | 93.75% |
+| 9 | 99.38% | **95.00%** |
+| 10 | 99.41% | 94.62% |
 
 ---
 
-## 🤝 Contributing
+## Dataset
 
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+- **Source:** [Kaggle - Brain Tumor MRI Dataset](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset)
+- **Classes:** Glioma, Meningioma, No Tumor, Pituitary
+- **Test Set:** 1,600 images (400 per class, balanced)
+- **Location:** `data/brainMRI/`
 
 ---
 
-## 📄 License
+## Development Phases
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👥 Team
-
-- **[Your Name]** - AI Research & Development
-- **[Team Member 2]** - Medical Imaging Specialist
-- **[Team Member 3]** - Full Stack Developer
-
----
-
-## 📧 Contact
-
-- **Email:** neurasight@project.com
-- **GitHub:** [github.com/yourusername/NeuraSight](https://github.com/yourusername/NeuraSight)
-- **Website:** [neurasight.com](https://neurasight.com)
+| Phase | Status | Description |
+|-------|--------|-------------|
+| 1. Foundation | ✅ Complete | Project structure, documentation |
+| 2. Preprocessing | ✅ Complete | Data pipeline, augmentation |
+| 3. Model Training | ✅ Complete | EfficientNet-B0, 95% accuracy |
+| 4. Evaluation | ✅ Complete | Classification report, metrics |
+| 5. Grad-CAM | ✅ Complete | Explainability via FastAPI |
+| 6. Backend API | ✅ Complete | Express + FastAPI microservices |
+| 7. Frontend | ⏳ Next | React web interface |
+| 8. Deployment | ⏳ Planned | Cloud hosting |
 
 ---
 
-## 🙏 Acknowledgments
+## Tech Stack
 
-- Dataset provided by [Masoud Nickparvar](https://www.kaggle.com/masoudnickparvar)
-- EfficientNet architecture by [Mingxing Tan and Quoc V. Le](https://arxiv.org/abs/1905.11946)
-- Grad-CAM implementation inspired by [Ramprasaath R. Selvaraju et al.](https://arxiv.org/abs/1610.02391)
+| Layer | Technology |
+|-------|-----------|
+| ML Model | PyTorch, torchvision, EfficientNet-B0 |
+| ML Service | FastAPI, Uvicorn, Pillow, pytorch-grad-cam |
+| API Gateway | Express.js, Multer, Axios |
+| Database | MongoDB, Mongoose |
+| Frontend | React (planned) |
+| Training | Google Colab (GPU) |
 
 ---
 
-## ⚠️ Disclaimer
+## Google Drive Assets
 
-This system is designed as a **clinical decision support tool**, not a replacement for professional medical judgment. All predictions should be validated by qualified healthcare professionals.
+```
+My Drive/NeuraSight/
+├── best_model.pth          # Original training checkpoint
+├── neurasight_model.pt     # Exported model
+└── brainMRI.zip            # Dataset backup
+```
+
+Local model file: `models/Brain_MRI_scan.pth`
 
 ---
 
-**Made with ❤️ for advancing medical AI**
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+## Disclaimer
+
+This system is a **clinical decision support tool**, not a replacement for professional medical judgment. All predictions should be validated by qualified healthcare professionals.
+
+---
+
+**NeuraSight** — Final Year Project | Brain Tumor Classification using Deep Learning & Explainable AI

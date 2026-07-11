@@ -44,6 +44,7 @@ data/processed/
 models/*.h5
 models/*.hdf5
 models/*.pb
+models/*.pth
 models/*.ckpt
 models/*.weights
 
@@ -102,3 +103,8 @@ frontend/dist/
 #markdown files for self refference
 PROJECT_SETUP_COMPLETE.md
 QUICKSTART.md
+docs/*.md
+data/*.md
+
+# Kiro specs folder
+.kiro/

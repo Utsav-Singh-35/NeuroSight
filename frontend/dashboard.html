@@ -110,19 +110,53 @@
       margin: 0 auto;
     }
 
-    /* Dashboard Grid */
+    /* Dashboard Grid - Vertical sequential layout */
     .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
       margin-bottom: 3rem;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Step connector arrow between cards */
+    .step-connector {
+      width: 2px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+      position: relative;
+    }
+
+    .step-connector::after {
+      content: '▼';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Step number badges */
+    .step-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     .dashboard-card {
       background: #060606;
       border: 2px solid rgba(255, 255, 255, 0.14);
       border-radius: 2px;
-      padding: 4rem 2rem 3.5rem;
+      padding: 3rem 2.5rem 2.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -130,7 +164,7 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
-      min-height: 520px;
+      width: 100%;
     }
 
     .dashboard-card:hover {
@@ -271,6 +305,16 @@
     }
 
     /* Processing Card */
+    .processing-card {
+      opacity: 0.4;
+      transition: all 0.4s ease;
+    }
+
+    .processing-card.active {
+      opacity: 1;
+      border-color: rgba(192, 132, 252, 0.3);
+    }
+
     .processing-card .card-icon {
       background: rgba(192, 132, 252, 0.08);
       color: #c084fc;
@@ -278,10 +322,6 @@
 
     .processing-card:hover .card-icon {
       background: rgba(192, 132, 252, 0.12);
-    }
-
-    .processing-card.active {
-      border-color: rgba(192, 132, 252, 0.3);
     }
 
     .processing-card.active .card-icon {
@@ -337,6 +377,16 @@
     }
 
     /* Results Card */
+    .results-card {
+      opacity: 0.4;
+      transition: all 0.4s ease;
+    }
+
+    .results-card.active {
+      opacity: 1;
+      border-color: rgba(244, 114, 182, 0.3);
+    }
+
     .results-card .card-icon {
       background: rgba(244, 114, 182, 0.08);
       color: #f472b6;
@@ -344,10 +394,6 @@
 
     .results-card:hover .card-icon {
       background: rgba(244, 114, 182, 0.12);
-    }
-
-    .results-card.active {
-      border-color: rgba(244, 114, 182, 0.3);
     }
 
     .prediction-main {
@@ -468,9 +514,8 @@
     /* Responsive */
     @media (max-width: 1024px) {
       .dashboard-grid {
-        grid-template-columns: 1fr;
-        max-width: 600px;
-        margin: 0 auto 3rem;
+        max-width: 100%;
+        padding: 0 1rem;
       }
     }
 
@@ -492,8 +537,7 @@
       }
 
       .dashboard-card {
-        padding: 3rem 1.5rem 2.5rem;
-        min-height: 450px;
+        padding: 2rem 1.5rem 2rem;
       }
     }
   </style>
@@ -522,6 +566,7 @@
     <div class="dashboard-grid">
       <!-- Upload Card -->
       <div class="dashboard-card upload-card">
+        <span class="step-badge">Step 1</span>
         <div class="card-icon">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -552,8 +597,12 @@
         <button class="analyze-btn" id="analyze-btn" disabled>Analyze MRI</button>
       </div>
 
+      <!-- Step connector -->
+      <div class="step-connector"></div>
+
       <!-- Processing Card -->
       <div class="dashboard-card processing-card" id="processing-card">
+        <span class="step-badge">Step 2</span>
         <div class="card-icon">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
@@ -590,8 +639,12 @@
         </div>
       </div>
 
+      <!-- Step connector -->
+      <div class="step-connector"></div>
+
       <!-- Results Card -->
       <div class="dashboard-card results-card" id="results-card">
+        <span class="step-badge">Step 3</span>
         <div class="card-icon">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
@@ -655,7 +708,7 @@
       }
     });
 
-    analyzeBtn.addEventListener('click', () => {
+    analyzeBtn.addEventListener('click', async () => {
       if (!selectedFile) return;
       
       analyzeBtn.disabled = true;
@@ -671,44 +724,68 @@
         if (currentStage < stages.length) {
           stages[currentStage].classList.add('active');
           currentStage++;
-        } else {
-          clearInterval(stageInterval);
-          
-          setTimeout(() => {
-            processingCard.classList.remove('active');
-            stages.forEach(stage => stage.classList.remove('active'));
-            showResults();
-          }, 500);
         }
-      }, 500);
+      }, 400);
+
+      try {
+        // Send image to the Express backend API
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        
+        const response = await fetch('http://localhost:5000/api/predict', {
+          method: 'POST',
+          body: formData,
+        });
+
+        clearInterval(stageInterval);
+        stages.forEach(stage => stage.classList.add('active'));
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Analysis failed');
+        }
+
+        const result = await response.json();
+        
+        setTimeout(() => {
+          processingCard.classList.remove('active');
+          stages.forEach(stage => stage.classList.remove('active'));
+          showResults(result);
+        }, 500);
+
+      } catch (error) {
+        clearInterval(stageInterval);
+        processingCard.classList.remove('active');
+        stages.forEach(stage => stage.classList.remove('active'));
+        resultsContent.innerHTML = `<p class="placeholder-text" style="color: #ef4444;">Error: ${error.message}</p>`;
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = 'Retry Analysis';
+      }
     });
 
-    function showResults() {
+    function showResults(result) {
       resultsCard.classList.add('active');
       
-      const predictions = [
-        { name: 'Glioma', confidence: 97.3, risk: 'High', probs: [97, 1, 1, 1] },
-        { name: 'Meningioma', confidence: 94.8, risk: 'Medium', probs: [2, 94, 2, 2] },
-        { name: 'Pituitary', confidence: 92.1, risk: 'Medium', probs: [3, 2, 92, 3] },
-        { name: 'No Tumor', confidence: 98.5, risk: 'Low', probs: [1, 1, 1, 97] }
-      ];
-      
-      const result = predictions[Math.floor(Math.random() * predictions.length)];
+      // Determine risk level based on prediction
+      let risk = 'Low';
+      let riskClass = '';
+      if (result.prediction === 'Glioma') { risk = 'High'; riskClass = 'risk-high'; }
+      else if (result.prediction === 'Meningioma' || result.prediction === 'Pituitary') { risk = 'Medium'; riskClass = ''; }
       
       resultsContent.innerHTML = `
         <div class="prediction-main">
           <div class="prediction-label">Prediction</div>
-          <div class="prediction-value">${result.name}</div>
+          <div class="prediction-value">${result.prediction}</div>
         </div>
         
         <div class="metrics-grid">
           <div class="metric">
             <span class="metric-label">Confidence</span>
-            <span class="metric-value">${result.confidence}%</span>
+            <span class="metric-value">${result.confidence.toFixed(1)}%</span>
           </div>
           <div class="metric">
             <span class="metric-label">Risk Level</span>
-            <span class="metric-value ${result.risk === 'High' ? 'risk-high' : ''}">${result.risk}</span>
+            <span class="metric-value ${riskClass}">${risk}</span>
           </div>
         </div>
 
@@ -717,37 +794,37 @@
           <div class="prob-bar">
             <div class="prob-label">
               <span>Glioma</span>
-              <span class="prob-percent">${result.probs[0]}%</span>
+              <span class="prob-percent">${result.probabilities.Glioma.toFixed(1)}%</span>
             </div>
             <div class="prob-bar-bg">
-              <div class="prob-bar-fill" style="width: ${result.probs[0]}%"></div>
+              <div class="prob-bar-fill" style="width: ${result.probabilities.Glioma}%"></div>
             </div>
           </div>
           <div class="prob-bar">
             <div class="prob-label">
               <span>Meningioma</span>
-              <span class="prob-percent">${result.probs[1]}%</span>
+              <span class="prob-percent">${result.probabilities.Meningioma.toFixed(1)}%</span>
             </div>
             <div class="prob-bar-bg">
-              <div class="prob-bar-fill" style="width: ${result.probs[1]}%"></div>
+              <div class="prob-bar-fill" style="width: ${result.probabilities.Meningioma}%"></div>
             </div>
           </div>
           <div class="prob-bar">
             <div class="prob-label">
               <span>Pituitary</span>
-              <span class="prob-percent">${result.probs[2]}%</span>
+              <span class="prob-percent">${result.probabilities.Pituitary.toFixed(1)}%</span>
             </div>
             <div class="prob-bar-bg">
-              <div class="prob-bar-fill" style="width: ${result.probs[2]}%"></div>
+              <div class="prob-bar-fill" style="width: ${result.probabilities.Pituitary}%"></div>
             </div>
           </div>
           <div class="prob-bar">
             <div class="prob-label">
               <span>No Tumor</span>
-              <span class="prob-percent">${result.probs[3]}%</span>
+              <span class="prob-percent">${result.probabilities['No Tumor'].toFixed(1)}%</span>
             </div>
             <div class="prob-bar-bg">
-              <div class="prob-bar-fill" style="width: ${result.probs[3]}%"></div>
+              <div class="prob-bar-fill" style="width: ${result.probabilities['No Tumor']}%"></div>
             </div>
           </div>
         </div>
