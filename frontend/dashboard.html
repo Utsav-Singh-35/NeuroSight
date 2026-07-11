@@ -304,6 +304,52 @@
       cursor: not-allowed;
     }
 
+    .upload-note {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: rgba(255, 200, 50, 0.7);
+      max-width: 100%;
+      line-height: 1.4;
+    }
+
+    .sample-btn {
+      padding: 0.6rem 1rem;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 500;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.05em;
+    }
+
+    .sample-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+    }
+
+    .sample-buttons {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .sample-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .sample-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+    }
+
     /* Processing Card */
     .processing-card {
       opacity: 0.4;
@@ -595,6 +641,16 @@
           <img id="preview-image" class="preview-image" style="display: none;">
         </div>
         <button class="analyze-btn" id="analyze-btn" disabled>Analyze MRI</button>
+        <p class="upload-note">⚠️ Upload actual brain MRI images only. Non-MRI images will always predict "No Tumor".</p>
+        <div class="sample-buttons">
+          <p class="sample-label">Or try a sample MRI:</p>
+          <div class="sample-grid">
+            <button class="sample-btn" data-sample="glioma_sample.jpg" data-label="Glioma">Glioma</button>
+            <button class="sample-btn" data-sample="meningioma_sample.jpg" data-label="Meningioma">Meningioma</button>
+            <button class="sample-btn" data-sample="notumor_sample.jpg" data-label="No Tumor">No Tumor</button>
+            <button class="sample-btn" data-sample="pituitary_sample.jpg" data-label="Pituitary">Pituitary</button>
+          </div>
+        </div>
       </div>
 
       <!-- Step connector -->
@@ -833,6 +889,34 @@
       analyzeBtn.disabled = false;
       analyzeBtn.textContent = 'Analyze Again';
     }
+
+    // Sample MRI button handlers
+    document.querySelectorAll('.sample-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const sampleFile = btn.getAttribute('data-sample');
+        const label = btn.getAttribute('data-label');
+        try {
+          const response = await fetch(`/samples/${sampleFile}`);
+          const blob = await response.blob();
+          const file = new File([blob], sampleFile, { type: 'image/jpeg' });
+          
+          selectedFile = file;
+          uploadLabel.classList.add('has-file');
+          uploadText.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ${sampleFile} (${label})`;
+          
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            previewImage.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+          
+          analyzeBtn.disabled = false;
+        } catch (err) {
+          console.error('Failed to load sample:', err);
+        }
+      });
+    });
   </script>
 </body>
 </html>
