@@ -444,23 +444,25 @@
 
     .prediction-main {
       width: 100%;
-      margin-bottom: 1.5rem;
-      padding: 1.5rem;
-      background: rgba(244, 114, 182, 0.05);
-      border: 1px solid rgba(244, 114, 182, 0.2);
-      border-radius: 2px;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: rgba(244, 114, 182, 0.04);
+      border: 1px solid rgba(244, 114, 182, 0.15);
+      border-radius: 4px;
+      text-align: center;
     }
 
     .prediction-label {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.4);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.6rem;
+      font-weight: 600;
     }
 
     .prediction-value {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 800;
       color: #f472b6;
       letter-spacing: -0.02em;
@@ -470,29 +472,31 @@
       width: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      gap: 12px;
+      margin-bottom: 2rem;
     }
 
     .metric {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      padding: 1rem;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 1.2rem 1rem;
       background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
     }
 
     .metric-label {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.4);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
+      font-weight: 600;
     }
 
     .metric-value {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: #ffffff;
     }
@@ -501,13 +505,23 @@
       color: #ef4444;
     }
 
+    .risk-medium {
+      color: #f59e0b;
+    }
+
+    .risk-low {
+      color: #10b981;
+    }
+
     .distribution-section {
       width: 100%;
       text-align: left;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .distribution-title {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: rgba(255, 255, 255, 0.5);
       margin-bottom: 1rem;
       text-transform: uppercase;
@@ -516,34 +530,35 @@
     }
 
     .prob-bar {
-      margin-bottom: 0.9rem;
+      margin-bottom: 1rem;
     }
 
     .prob-label {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 0.4rem;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.5rem;
     }
 
     .prob-percent {
       font-weight: 700;
       color: #f472b6;
+      font-size: 0.8rem;
     }
 
     .prob-bar-bg {
       width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 1px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
       overflow: hidden;
     }
 
     .prob-bar-fill {
       height: 100%;
       background: linear-gradient(90deg, #f472b6, #ec4899);
-      border-radius: 1px;
+      border-radius: 4px;
       transition: width 0.8s ease;
     }
 
@@ -555,6 +570,15 @@
       align-items: center;
       justify-content: center;
       flex: 1;
+    }
+
+    /* Results content container — force vertical stacking */
+    .results-active {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
     }
 
     /* Responsive */
@@ -824,13 +848,16 @@
       
       // Determine risk level based on prediction
       let risk = 'Low';
-      let riskClass = '';
+      let riskClass = 'risk-low';
       if (result.prediction === 'Glioma') { risk = 'High'; riskClass = 'risk-high'; }
-      else if (result.prediction === 'Meningioma' || result.prediction === 'Pituitary') { risk = 'Medium'; riskClass = ''; }
+      else if (result.prediction === 'Meningioma' || result.prediction === 'Pituitary') { risk = 'Medium'; riskClass = 'risk-medium'; }
+
+      // Replace container class to force vertical stacking
+      resultsContent.className = 'results-active';
       
       resultsContent.innerHTML = `
         <div class="prediction-main">
-          <div class="prediction-label">Prediction</div>
+          <div class="prediction-label">AI Prediction</div>
           <div class="prediction-value">${result.prediction}</div>
         </div>
         
