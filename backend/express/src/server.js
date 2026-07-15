@@ -8,6 +8,7 @@ const healthRoutes = require('./routes/health.js');
 const predictRoutes = require('./routes/predict.js');
 const gradcamRoutes = require('./routes/gradcam.js');
 const predictionsRoutes = require('./routes/predictions.js');
+const reportRoutes = require('./routes/report.js');
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use('/api/health', healthRoutes);
 app.use('/api/predict', predictRoutes);
 app.use('/api/gradcam', gradcamRoutes);
 app.use('/api/predictions', predictionsRoutes);
+app.use('/api/report', reportRoutes);
 
 // Global error handler (must be last)
 app.use(errorHandler);

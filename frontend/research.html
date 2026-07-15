@@ -288,20 +288,20 @@
   </nav>
 
   <div class="container">
-    <h1>AI-Powered Brain MRI Tumor Detection & Clinical Decision Support Platform</h1>
+    <h1>AI-Powered Brain MRI Tumor Detection & Classification</h1>
 
     <div class="section">
       <h2>Project Overview</h2>
       <p>
-        NeuraSight is an advanced medical imaging platform that leverages deep learning and explainable AI 
-        to detect and classify brain tumors from MRI scans. The system provides clinical decision support 
-        through high-accuracy predictions, visual explanations via Grad-CAM heatmaps, and comprehensive 
-        diagnostic insights.
+        NeuraSight is a medical imaging platform that classifies brain tumors from MRI scans using deep learning. 
+        Built with a microservices architecture — React frontend, Express.js API gateway, and FastAPI ML service — 
+        it provides real-time classification across 4 tumor types with Grad-CAM explainability heatmaps.
       </p>
       <p>
-        This final year project demonstrates the application of transfer learning, specifically using 
-        <span class="highlight">EfficientNet-B0</span> architecture, to achieve state-of-the-art performance 
-        in medical image classification while maintaining interpretability through explainable AI techniques.
+        The model uses <span class="highlight">EfficientNet-B0</span> from the <span class="highlight">timm</span> library, 
+        pre-trained on ImageNet and fine-tuned on 5,600 brain MRI images. Trained on Google Colab (Tesla T4 GPU) 
+        for 10 epochs using AdamW optimizer, achieving <span class="highlight">95% test accuracy</span> across 
+        1,600 test images.
       </p>
     </div>
 
@@ -310,21 +310,21 @@
       <div class="card">
         <h3>Primary Training Dataset</h3>
         <p>
-          The main dataset used for training and validation contains over 7,000 brain MRI images across 
-          four categories: Glioma, Meningioma, Pituitary tumors, and No Tumor cases.
+          5,600 training images + 1,600 testing images across four classes: Glioma, Meningioma, 
+          Pituitary tumors, and No Tumor. Images vary from 150×168 to 1375×1446 pixels, all resized to 224×224 for training.
         </p>
         <a href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset" 
            target="_blank" 
            rel="noopener noreferrer" 
            class="dataset-link">
-          Brain Tumor MRI Dataset (Primary)
+          Brain Tumor MRI Dataset — Masoud Nickparvar (Kaggle)
         </a>
       </div>
 
       <div class="card">
         <h3>Validation Dataset</h3>
         <p>
-          Additional validation dataset used for cross-validation and model robustness testing.
+          Additional dataset used for cross-validation and model robustness testing.
         </p>
         <a href="https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri" 
            target="_blank" 
@@ -351,19 +351,22 @@
     <div class="section">
       <h2>Model Architecture</h2>
       <div class="card">
-        <h3>EfficientNet-B0</h3>
+        <h3>timm EfficientNet-B0 (Transfer Learning)</h3>
         <p>
-          The system employs <span class="highlight">EfficientNet-B0</span> as the backbone architecture, 
-          chosen for its optimal balance between accuracy and computational efficiency. EfficientNet uses 
-          compound scaling to uniformly scale network width, depth, and resolution, achieving superior 
-          performance with fewer parameters.
+          The system uses <span class="highlight">timm.create_model('efficientnet_b0', pretrained=True, num_classes=4)</span> — 
+          a PyTorch Image Models implementation of EfficientNet-B0 pre-trained on ImageNet (1.2M images), 
+          fine-tuned on 5,600 brain MRI images for 4-class tumor classification.
         </p>
+        <p><strong>Architecture:</strong> Stem Conv → 16 MBConv Blocks (with Squeeze-and-Excitation) → Head Conv (320→1280) → Global Avg Pooling → Linear(1280, 4)</p>
+        <p><strong>Training Config:</strong> AdamW optimizer (lr=0.0001), CrossEntropyLoss, 10 epochs, batch size 32, ImageNet normalization (mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])</p>
         <p><strong>Key Features:</strong></p>
         <ul class="tech-list">
-          <li class="tech-item">Transfer Learning from ImageNet</li>
-          <li class="tech-item">Fine-tuned for Medical Imaging</li>
-          <li class="tech-item">Efficient Compound Scaling</li>
-          <li class="tech-item">Mobile-Friendly Architecture</li>
+          <li class="tech-item">Transfer Learning from ImageNet (1.2M images)</li>
+          <li class="tech-item">Only 5.3M Parameters (lightweight for deployment)</li>
+          <li class="tech-item">Compound Scaling (width × depth × resolution)</li>
+          <li class="tech-item">Squeeze-and-Excitation Attention</li>
+          <li class="tech-item">Single Linear Classifier Head (1280→4)</li>
+          <li class="tech-item">Data Augmentation (flip, rotation, color jitter)</li>
         </ul>
       </div>
     </div>
@@ -373,17 +376,18 @@
       <div class="card">
         <h3>Grad-CAM Visualization</h3>
         <p>
-          <span class="highlight">Gradient-weighted Class Activation Mapping (Grad-CAM)</span> is implemented 
-          to provide visual explanations for model predictions. This technique highlights the regions of the 
-          MRI scan that most influenced the classification decision, enabling clinicians to understand and 
-          validate the AI's reasoning.
+          <span class="highlight">Gradient-weighted Class Activation Mapping (Grad-CAM)</span> targets the 
+          last convolutional block (<code>model.blocks[-1]</code>) of the timm EfficientNet-B0. Gradients are 
+          backpropagated for the predicted class, globally average-pooled to get channel importance weights, 
+          then used to weight the feature maps. After ReLU and normalization, the heatmap is overlaid on the 
+          original MRI with JET colormap at 40% opacity.
         </p>
         <p><strong>Benefits:</strong></p>
         <ul class="tech-list">
-          <li class="tech-item">Visual Interpretation of Predictions</li>
-          <li class="tech-item">Identifies Suspicious Regions</li>
-          <li class="tech-item">Builds Clinical Trust</li>
-          <li class="tech-item">Supports Decision Making</li>
+          <li class="tech-item">Highlights Tumor Region the Model Focused On</li>
+          <li class="tech-item">No Architecture Modification Required</li>
+          <li class="tech-item">Builds Clinician Trust in AI Decisions</li>
+          <li class="tech-item">Generated in &lt;0.5 Seconds Per Image</li>
         </ul>
       </div>
     </div>
@@ -393,25 +397,25 @@
       <div class="metrics-grid">
         <div class="metric-card">
           <div class="metric-label">Accuracy</div>
-          <div class="metric-value">97.4%</div>
+          <div class="metric-value">95%</div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Precision</div>
-          <div class="metric-value">96.8%</div>
+          <div class="metric-value">95%</div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Recall</div>
-          <div class="metric-value">97.1%</div>
+          <div class="metric-value">95%</div>
         </div>
         <div class="metric-card">
           <div class="metric-label">F1 Score</div>
-          <div class="metric-value">96.9%</div>
+          <div class="metric-value">95%</div>
         </div>
       </div>
       <p>
-        The model demonstrates high performance across all key metrics, with particular strength in 
-        maintaining balanced precision and recall. ROC-AUC analysis shows excellent discrimination 
-        capability across all tumor classes.
+        Evaluated on 1,600 test images (400 per class). Best model saved at epoch 9 with 95% validation accuracy. 
+        Per-class: Pituitary (F1: 1.00), No Tumor (F1: 0.96), Meningioma (F1: 0.95), Glioma (F1: 0.89). 
+        Training platform: Google Colab with Tesla T4 GPU.
       </p>
     </div>
 
@@ -419,14 +423,15 @@
       <h2>Technology Stack</h2>
       <div class="card">
         <ul class="tech-list">
-          <li class="tech-item">Python & TensorFlow/Keras</li>
-          <li class="tech-item">EfficientNet-B0 Architecture</li>
-          <li class="tech-item">Grad-CAM for Explainability</li>
-          <li class="tech-item">OpenCV for Image Processing</li>
-          <li class="tech-item">NumPy & Pandas for Data Handling</li>
-          <li class="tech-item">Matplotlib & Seaborn for Visualization</li>
-          <li class="tech-item">React.js for Web Interface</li>
-          <li class="tech-item">Three.js for 3D Visualizations</li>
+          <li class="tech-item">Python 3.11 & PyTorch 2.2</li>
+          <li class="tech-item">timm (PyTorch Image Models) - EfficientNet-B0</li>
+          <li class="tech-item">FastAPI - ML Inference Service (port 8000)</li>
+          <li class="tech-item">Node.js & Express.js - API Gateway (port 5000)</li>
+          <li class="tech-item">MongoDB - Prediction History Storage</li>
+          <li class="tech-item">Grad-CAM (pytorch-grad-cam) - Explainability</li>
+          <li class="tech-item">React 18 & Vite - Frontend Interface</li>
+          <li class="tech-item">Three.js & GSAP - 3D Visuals & Animations</li>
+          <li class="tech-item">Google Colab (Tesla T4) - Model Training</li>
         </ul>
       </div>
     </div>

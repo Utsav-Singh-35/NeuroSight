@@ -86,8 +86,43 @@ async function checkHealth() {
   }
 }
 
+/**
+ * Send an image to the FastAPI /report endpoint for full AI report.
+ * @param {Buffer} imageBuffer - The image file buffer
+ * @param {string} filename - The original filename
+ * @returns {Promise<object>} The full AI report response data
+ */
+async function sendForReport(imageBuffer, filename) {
+  const form = new FormData();
+  form.append('image', imageBuffer, { filename });
+
+  try {
+    const response = await axios.post(
+      `${config.FASTAPI_URL}/report`,
+      form,
+      {
+        headers: form.getHeaders(),
+        timeout: config.FASTAPI_TIMEOUT,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED') {
+      throw new Error('ML service is unavailable');
+    }
+    if (error.response) {
+      const message = error.response.data?.error || error.response.data?.detail || 'ML service error';
+      const err = new Error(message);
+      err.status = error.response.status;
+      throw err;
+    }
+    throw new Error('ML service is unavailable');
+  }
+}
+
 module.exports = {
   sendForPrediction,
   sendForGradcam,
+  sendForReport,
   checkHealth,
 };

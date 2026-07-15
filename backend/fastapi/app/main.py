@@ -13,7 +13,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from app.config import settings
-from app.routers import health, predict, gradcam
+from app.routers import health, predict, gradcam, report
 from app.services.inference import load_model
 
 logger = logging.getLogger(__name__)
@@ -45,6 +45,7 @@ app = FastAPI(title="NeuraSight ML Service", lifespan=lifespan)
 app.include_router(health.router)
 app.include_router(predict.router)
 app.include_router(gradcam.router)
+app.include_router(report.router)
 
 
 @app.exception_handler(Exception)
