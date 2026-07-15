@@ -89,10 +89,9 @@ export default function ConnectSection() {
           <div className={styles.connectCol}>
             <h4 className={styles.connectColTitle}>CONTACT</h4>
             <ul className={styles.connectLinks}>
-              <li><a href="mailto:neurasight@project.com">neurasight@project.com <span>→</span></a></li>
               <li><a href="research.html">Research <span>→</span></a></li>
-              <li><a href="#">Dataset <span>→</span></a></li>
-              <li><a href="https://github.com/">GitHub <span>→</span></a></li>
+              <li><a href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset">Dataset <span>→</span></a></li>
+              <li><a href="https://github.com/Utsav-Singh-35">GitHub <span>→</span></a></li>
             </ul>
           </div>
 

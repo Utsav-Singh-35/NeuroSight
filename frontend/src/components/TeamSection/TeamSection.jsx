@@ -14,26 +14,26 @@ const TEAM = [
     role: 'AI Research',
     links: [
       { href: 'https://github.com/Utsav-Singh-35', label: 'GitHub', img: githubImg },
-      { href: 'https://linkedin.com/in/utsav-singh', label: 'LinkedIn', img: linkedinImg, linkedin: true },
-      { href: '#', label: 'Personal Site', img: portfolioImg },
+      { href: 'https://www.linkedin.com/in/utsavsingh35/', label: 'LinkedIn', img: linkedinImg, linkedin: true },
+      { href: 'https://www.utsavsingh.dev/', label: 'Personal Site', img: portfolioImg },
     ],
   },
   {
     name: ['Ankit', 'Sharma'],
     role: 'Medical Imaging',
     links: [
-      { href: 'https://github.com/', label: 'GitHub', img: githubImg },
-      { href: 'https://linkedin.com/in/', label: 'LinkedIn', img: linkedinImg, linkedin: true },
-      { href: '#', label: 'Personal Site', img: portfolioImg },
+      { href: 'https://github.com/sharmaankit29', label: 'GitHub', img: githubImg },
+      { href: 'https://www.linkedin.com/in/ankit-sharma-239526289/', label: 'LinkedIn', img: linkedinImg, linkedin: true },
+      { href: 'https://sharma-ankit.vercel.app', label: 'Personal Site', img: portfolioImg },
     ],
   },
   {
     name: ['Ranjan', 'Singh'],
     role: 'Full Stack Development',
     links: [
-      { href: 'https://github.com/', label: 'GitHub', img: githubImg },
-      { href: 'https://linkedin.com/in/', label: 'LinkedIn', img: linkedinImg, linkedin: true },
-      { href: '#', label: 'Personal Site', img: portfolioImg },
+      { href: 'https://github.com/Ranjan001-code', label: 'GitHub', img: githubImg },
+      { href: 'https://www.linkedin.com/in/ranjan-singh-38850128a/', label: 'LinkedIn', img: linkedinImg, linkedin: true },
+      { href: 'https://myportfolio9167.netlify.app/', label: 'Personal Site', img: portfolioImg },
     ],
   },
 ]
