@@ -40,6 +40,16 @@ data/processed/
 *.nii
 *.nii.gz
 
+# Allow frontend assets (override the above *.png *.jpg rules)
+!frontend/src/assets/*.png
+!frontend/src/assets/*.jpg
+!frontend/src/assets/*.mp4
+
+# Exception: allow frontend assets
+!frontend/src/assets/*.png
+!frontend/src/assets/*.jpg
+!frontend/src/assets/*.mp4
+
 # Models (too large for git)
 models/*.h5
 models/*.hdf5
@@ -68,6 +78,7 @@ reports/*.docx
 # Environment variables
 .env
 .env.local
+.env.production
 
 # Testing
 .pytest_cache/
