@@ -1,15 +1,11 @@
 {
+  "framework": null,
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
-  "functions": {
-    "api/**/*.js": {
-      "maxDuration": 60
-    }
-  },
+  "installCommand": "npm install",
   "rewrites": [
     { "source": "/api/predictions/:id", "destination": "/api/predictions?id=:id" },
-    { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/api/:path*", "destination": "/api/:path*" }
   ],
   "headers": [
     {
