@@ -17,16 +17,27 @@ import sys
 import time
 import os
 import signal
+import platform
 
 # Project root
 ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# Determine the Python executable (prefer venv if it exists)
+FASTAPI_DIR = os.path.join(ROOT, "backend", "fastapi")
+if platform.system() == "Windows":
+    VENV_PYTHON = os.path.join(FASTAPI_DIR, "venv", "Scripts", "python.exe")
+else:
+    VENV_PYTHON = os.path.join(FASTAPI_DIR, "venv", "bin", "python")
+
+# Use venv python if available, otherwise fall back to system python
+PYTHON_CMD = VENV_PYTHON if os.path.exists(VENV_PYTHON) else sys.executable
 
 # Service configurations
 SERVICES = [
     {
         "name": "FastAPI (ML Service)",
         "port": 8000,
-        "cmd": ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"],
+        "cmd": [PYTHON_CMD, "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"],
         "cwd": os.path.join(ROOT, "backend", "fastapi"),
     },
     {
