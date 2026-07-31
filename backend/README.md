@@ -110,7 +110,7 @@ The Express backend will be available at `http://localhost:5000`.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `MODEL_PATH` | `../../models/Brain_MRI_scan.pth` | Path to PyTorch model weights |
+| `MODEL_PATH` | `../../models/BRAIN_MRI_EFFICIENTNET.pth` | Path to PyTorch model weights |
 | `HOST` | `0.0.0.0` | Server bind address |
 | `PORT` | `8000` | Server port |
 | `CLASS_LABELS` | `Glioma,Meningioma,No Tumor,Pituitary` | Comma-separated class labels |

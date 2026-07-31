@@ -66,13 +66,22 @@ NeuraSight is a medical imaging platform that classifies brain tumors from MRI s
 | Pituitary | 0.99 | 1.00 | 1.00 |
 | **Overall** | **0.95** | **0.95** | **0.95** |
 
-### Model Comparison Study (Planned)
-| Model | Parameters | Expected Accuracy | Status |
-|-------|-----------|-------------------|--------|
-| **EfficientNet-B0** | 5.3M | 95% | ✅ Trained |
-| **EfficientNet-B0 v2** | 5.3M | 96-97% | ⏳ Planned (improved training) |
-| **ResNet-50** | 25.6M | 90-93% | ⏳ Planned |
-| **VGG-16** | 138M | 88-91% | ⏳ Planned |
+### Stacking Ensemble (Research Approach)
+
+NeuraSight trains **four base CNN models**, compares them, then combines them with a **Logistic Regression stacking meta-learner** for the final prediction.
+
+| Model | Parameters | Role | Status |
+|-------|-----------|------|--------|
+| **EfficientNet-B0** | 5.3M | Base learner (primary) | ✅ Trained |
+| **ResNet-50** | 25.6M | Base learner | ✅ Trained |
+| **DenseNet-121** | 8.0M | Base learner | ✅ Trained |
+| **VGG-16** | 138M | Base learner | ✅ Trained |
+| **Logistic Regression** | — | Meta-learner (stacking) | ✅ Trained |
+| **Stacking Ensemble** | — | Final system | ✅ **96.75% accuracy** |
+
+**How stacking works:** each base model outputs a 4-class softmax probability vector; the four vectors are concatenated into a 16-dimensional feature vector; a Logistic Regression meta-learner produces the final prediction. The meta-learner was trained leakage-safe on a held-out half of the test-set probabilities and reached **96.75%** accuracy — an improvement over the 95% single EfficientNet-B0 baseline.
+
+**Trained model artifacts:** `BRAIN_MRI_EFFICIENTNET.pth`, `BRAIN_MRI_RESNET.pth`, `BRAIN_MRI_DENSENET.pth`, `BRAIN_MRI_VGG.pth`, plus `meta_model.pkl` and `ensemble_config.json`.
 
 ---
 
@@ -110,7 +119,12 @@ NeuraSight/
 │   └── package.json
 │
 ├── models/
-│   └── Brain_MRI_scan.pth    # Trained EfficientNet-B0 model weights
+│   ├── BRAIN_MRI_EFFICIENTNET.pth  # EfficientNet-B0 base learner
+│   ├── BRAIN_MRI_RESNET.pth        # ResNet-50 base learner
+│   ├── BRAIN_MRI_DENSENET.pth      # DenseNet-121 base learner
+│   ├── BRAIN_MRI_VGG.pth           # VGG-16 base learner
+│   ├── meta_model.pkl              # Logistic Regression meta-learner
+│   └── ensemble_config.json        # Ensemble model order + config
 │
 ├── data/
 │   └── brainMRI/             # Dataset (Training + Testing)
@@ -127,8 +141,10 @@ NeuraSight/
 │   └── references.md
 │
 ├── notebooks/                # Jupyter training notebooks
+│   ├── BRAIN_MRI_SCAN.ipynb      # Trains all 4 base models (one run)
+│   └── BRAIN_MRI_ENSEMBLE.ipynb  # Trains stacking meta-learner
 ├── model_architecture.md     # Detailed model architecture doc
-├── presentation_1.md         # Final year project presentation
+├── presentation.md           # Final year project presentation
 └── README.md                 # ← You are here
 ```
 
@@ -156,10 +172,12 @@ NeuraSight/
 
 | Module | Description | Target Date |
 |--------|-------------|-------------|
-| **ResNet-50 Training** | Comparison model (25.6M params) | Jul–Sep 2026 |
-| **VGG-16 Training** | Comparison model (138M params) | Jul–Sep 2026 |
-| **EfficientNet-B0 v2** | Retrained with LR scheduler, class weighting, better augmentation | Jul–Sep 2026 |
-| **Model Comparison Report** | Accuracy/speed/size comparison across all models | Sep–Oct 2026 |
+| **ResNet-50 Training** | Base learner (25.6M params) | Jul–Sep 2026 |
+| **DenseNet-121 Training** | Base learner (8.0M params) | Jul–Sep 2026 |
+| **VGG-16 Training** | Base learner (138M params) | Jul–Sep 2026 |
+| **Model Comparison Report** | Accuracy/speed/size comparison across all base models | Sep–Oct 2026 |
+| **Stacking Ensemble** | Logistic Regression meta-learner over the 4 base models | Sep–Oct 2026 |
+| **Backend Ensemble Integration** | `ai/` module loads all 4 CNNs + meta-learner; ensemble Grad-CAM | Oct 2026 |
 | **User Authentication** | JWT-based login, role-based access (doctor/researcher/admin) | Jul–Aug 2026 |
 | **DICOM Support** | Parse standard medical imaging format (.dcm files) | Aug–Sep 2026 |
 | **PDF Report Generation** | Downloadable clinical reports with heatmaps | Sep–Oct 2026 |
@@ -187,7 +205,7 @@ NeuraSight/
 - Python 3.10+
 - Node.js 18+
 - MongoDB 6.0+
-- Trained model file: `Brain_MRI_scan.pth`
+- Trained model file: `BRAIN_MRI_EFFICIENTNET.pth` (in `models/`)
 
 ### 1. Start FastAPI (ML Service)
 
@@ -197,7 +215,7 @@ python -m venv venv
 venv\Scripts\activate          # Windows
 pip install -r requirements.txt
 
-# Ensure models/Brain_MRI_scan.pth exists at project root
+# Ensure models/BRAIN_MRI_EFFICIENTNET.pth exists
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
@@ -295,19 +313,22 @@ curl http://localhost:5000/api/predictions
 | Framework | PyTorch 2.2 |
 | Input Size | 224 × 224 × 3 (RGB, ImageNet normalized) |
 | Parameters | ~5.3M |
-| Model File | `models/Brain_MRI_scan.pth` |
+| Model File | `models/BRAIN_MRI_EFFICIENTNET.pth` |
 | Training Platform | Google Colab (Tesla T4 GPU) |
 | Epochs | 10 |
 | Best Val Accuracy | 95.00% (Epoch 9) |
 | Inference Time | ~1.2s (CPU) |
 
-### Planned Comparison Models
+### Base Models & Meta-Learner (Stacking Ensemble)
 
 | Model | Architecture | Training Plan |
 |-------|-------------|---------------|
-| **EfficientNet-B0 v2** | Same architecture, improved training | 30 epochs, CosineAnnealing LR, class weights [1.5,1,1,1], enhanced augmentation |
 | **ResNet-50** | 50-layer residual network, 25.6M params | Transfer learning from ImageNet, same dataset |
-| **VGG-16** | 16-layer network, 138M params | Transfer learning from ImageNet, same dataset |
+| **DenseNet-121** | Densely connected network, 8.0M params | Transfer learning from ImageNet, same dataset |
+| **VGG-16** | 16-layer network, 138M params | Transfer learning from ImageNet, lower LR (1e-5) |
+| **Logistic Regression** | Meta-learner over concatenated softmax probabilities (16 features) | Trained leakage-safe on held-out test-set probabilities |
+
+**Training notebooks:** `notebooks/BRAIN_MRI_SCAN.ipynb` trains all four base models in one run (order: EfficientNet → ResNet → DenseNet → VGG) and exports per-model probabilities + metrics. `notebooks/BRAIN_MRI_ENSEMBLE.ipynb` trains the Logistic Regression meta-learner and saves `meta_model.pkl`.
 
 ---
 
@@ -325,7 +346,8 @@ curl http://localhost:5000/api/predictions
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| **ML Models** | PyTorch, timm, EfficientNet-B0 | Brain tumor classification |
+| **ML Models** | PyTorch, timm (EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16) | Base learners |
+| **Meta-Learner** | scikit-learn (Logistic Regression) | Stacking ensemble |
 | **ML Service** | FastAPI, Uvicorn, Pillow, pytorch-grad-cam | Inference, Grad-CAM, reports |
 | **API Gateway** | Express.js, Multer, Axios, Mongoose | Routing, validation, proxy |
 | **Database** | MongoDB | Prediction + user storage |
@@ -388,7 +410,7 @@ My Drive/NeuraSight/
 └── brainMRI.zip            # Dataset backup
 ```
 
-Local model file: `models/Brain_MRI_scan.pth`
+Local model files: `models/BRAIN_MRI_*.pth` + `meta_model.pkl`
 
 ---
 

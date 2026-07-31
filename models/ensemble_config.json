@@ -1,0 +1,23 @@
+{
+  "model_order": [
+    "efficientnet",
+    "resnet",
+    "densenet",
+    "vgg"
+  ],
+  "save_names": {
+    "efficientnet": "BRAIN_MRI_EFFICIENTNET",
+    "resnet": "BRAIN_MRI_RESNET",
+    "densenet": "BRAIN_MRI_DENSENET",
+    "vgg": "BRAIN_MRI_VGG"
+  },
+  "class_names": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "meta_learner": "LogisticRegression",
+  "feature_dim": 16,
+  "ensemble_accuracy": 96.75
+}

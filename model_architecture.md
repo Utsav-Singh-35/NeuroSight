@@ -4,7 +4,7 @@
 
 NeuraSight uses **EfficientNet-B0** via the `timm` (PyTorch Image Models) library for brain tumor classification. The model is pre-trained on ImageNet (1.2M images, 1000 classes) and fine-tuned on 5,600 brain MRI images for 4-class classification.
 
-**Model file:** `models/Brain_MRI_scan.pth` (state_dict, ~20MB)
+**Model file:** `models/BRAIN_MRI_EFFICIENTNET.pth` (state_dict, ~16MB) — the EfficientNet-B0 base learner of the stacking ensemble
 
 ---
 
@@ -322,7 +322,7 @@ Result: "Meningioma" (confidence: 98.47%)
 | File | Location | Purpose |
 |------|----------|---------|
 | Training notebook | `notebooks/NeuraSight_BrainMRI_Training.ipynb` | Google Colab training code |
-| Model weights | `models/Brain_MRI_scan.pth` | Trained state_dict |
+| Model weights | `models/BRAIN_MRI_EFFICIENTNET.pth` | EfficientNet-B0 base learner state_dict |
 | Inference service | `backend/fastapi/app/services/inference.py` | Loads model + runs prediction |
 | Preprocessor | `backend/fastapi/app/services/preprocessor.py` | Image → tensor pipeline |
 | Grad-CAM service | `backend/fastapi/app/services/gradcam.py` | Heatmap generation |

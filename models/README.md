@@ -2,50 +2,68 @@
 
 ## Overview
 
-This directory contains the trained PyTorch model weights used by the FastAPI inference service.
+This directory holds the trained model weights and the stacking-ensemble meta-learner used by the FastAPI inference service. Large weight files are not committed to version control — download them from Google Drive (`My Drive/NeuraSight/models/`).
 
-## Model: `best_model.pth`
+## Stacking Ensemble Files
 
-The model file `best_model.pth` should be placed in this directory. It is not included in version control due to its size.
+| File | Description |
+|------|-------------|
+| `BRAIN_MRI_EFFICIENTNET.pth` | EfficientNet-B0 base learner (state_dict) |
+| `BRAIN_MRI_RESNET.pth` | ResNet-50 base learner (state_dict) |
+| `BRAIN_MRI_DENSENET.pth` | DenseNet-121 base learner (state_dict) |
+| `BRAIN_MRI_VGG.pth` | VGG-16 base learner (state_dict) |
+| `meta_model.pkl` | Logistic Regression meta-learner (pickle) |
+| `ensemble_config.json` | Model order, class names, feature dim |
 
-### Download Location
+> Until full ensemble integration lands, the backend runs single-model inference using `BRAIN_MRI_EFFICIENTNET.pth` (the EfficientNet-B0 base learner). The stacking ensemble reached **96.75%** accuracy on the held-out evaluation split.
 
-Download from **Google Drive**: `My Drive/NeuraSight/best_model.pth`
+## Base Model Architecture
 
-### Architecture
+All base models use the **`timm`** library with a 4-class head:
 
-The model is an **EfficientNet-B0** with a custom classification head for 4-class brain tumor classification:
+```python
+model = timm.create_model(TIMM_NAME, pretrained=True, num_classes=4)
+```
 
-- **Base**: EfficientNet-B0 (torchvision, pretrained backbone)
-- **Classifier Head**:
-  - `Linear(1280, 256)` → `ReLU` → `Dropout(0.5)`
-  - `Linear(256, 128)` → `ReLU` → `Dropout(0.3)`
-  - `Linear(128, 4)`
+| Key | timm name | Params |
+|-----|-----------|--------|
+| efficientnet | `efficientnet_b0` | 5.3M |
+| resnet | `resnet50` | 25.6M |
+| densenet | `densenet121` | 8.0M |
+| vgg | `vgg16` | 138M |
 
-### Classes
+## Meta-Learner (Stacking)
 
-The model classifies brain MRI images into 4 categories (mapped by output index):
+- Each base model outputs a 4-class softmax vector.
+- The four vectors are concatenated into a **16-dimensional** feature vector (order defined in `ensemble_config.json`).
+- A **Logistic Regression** meta-learner produces the final prediction.
 
-| Index | Class Label   |
-|-------|---------------|
-| 0     | Glioma        |
-| 1     | Meningioma    |
-| 2     | No Tumor      |
-| 3     | Pituitary     |
+## Classes (output index order)
 
-### Input Requirements
+| Index | Class |
+|-------|-------|
+| 0 | Glioma |
+| 1 | Meningioma |
+| 2 | No Tumor |
+| 3 | Pituitary |
 
-- Image size: 224×224 pixels
-- Channels: 3 (RGB)
-- Normalization: pixel values divided by 255.0 (range [0, 1])
-- Tensor shape: `(1, 3, 224, 224)` with dtype `float32`
+## Input Requirements
 
-## Development Without the Trained Model
+- Image size: 224×224 pixels, 3-channel RGB
+- Normalization: divide by 255, then ImageNet mean `[0.485, 0.456, 0.406]`, std `[0.229, 0.224, 0.225]`
+- Tensor shape: `(1, 3, 224, 224)`, dtype `float32`
 
-If you don't have access to the trained model weights, you can generate a dummy model with random weights for development and testing:
+## Training Notebooks
+
+| Notebook | Purpose |
+|----------|---------|
+| `notebooks/BRAIN_MRI_SCAN.ipynb` | Trains all 4 base models in one run; exports probabilities + metrics |
+| `notebooks/BRAIN_MRI_ENSEMBLE.ipynb` | Trains the Logistic Regression meta-learner; saves `meta_model.pkl` |
+
+## Development Without Trained Weights
 
 ```bash
 python create_dummy_model.py
 ```
 
-This creates a `best_model.pth` file with the correct architecture but random (untrained) weights. Predictions will be random, but this allows testing the full inference pipeline.
+Creates a dummy EfficientNet-B0 file with the correct architecture but random weights, so the inference pipeline can be tested without the real model.

@@ -71,11 +71,17 @@ async def predict(request: Request, image: UploadFile = File(...)):
             content={"error": str(e)},
         )
 
-    # Run inference
+    # Run inference (stacking ensemble if available, else single model)
     try:
-        model = request.app.state.model
         class_labels = settings.class_labels
-        result = inference.run_inference(model, tensor, class_labels)
+        ensemble = getattr(request.app.state, "ensemble", None)
+        if ensemble is not None:
+            from app.services.ensemble import run_ensemble_inference
+
+            result = run_ensemble_inference(ensemble, tensor, class_labels)
+        else:
+            model = request.app.state.model
+            result = inference.run_inference(model, tensor, class_labels)
     except Exception:
         logger.exception("Inference failed")
         return JSONResponse(

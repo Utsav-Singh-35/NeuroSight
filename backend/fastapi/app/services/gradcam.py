@@ -25,19 +25,39 @@ except ImportError:
     GRADCAM_LIB_AVAILABLE = False
 
 
-def _get_target_layer(model: torch.nn.Module):
-    """Get the last convolutional layer of the timm EfficientNet-B0.
+def _last_conv_layer(model: torch.nn.Module):
+    """Return the last nn.Conv2d module in a model (architecture-agnostic)."""
+    last = None
+    for module in model.modules():
+        if isinstance(module, torch.nn.Conv2d):
+            last = module
+    return last
 
-    For timm's EfficientNet-B0, the last block before the classifier is
-    accessed via model.blocks[-1] (the final MBConv block).
+
+def _get_target_layer(model: torch.nn.Module, arch_key: str | None = None):
+    """Get the Grad-CAM target layer for a given base-model architecture.
+
+    Uses architecture-specific layers where known (better heatmaps), and
+    falls back to the last Conv2d layer otherwise.
 
     Args:
-        model: The timm EfficientNet-B0 model.
+        model: The timm model.
+        arch_key: One of "efficientnet", "resnet", "densenet", "vgg".
 
     Returns:
-        The last convolutional block (model.blocks[-1]).
+        The target layer (module) for Grad-CAM.
     """
-    return model.blocks[-1]
+    try:
+        if arch_key == "efficientnet":
+            return model.blocks[-1]
+        if arch_key == "resnet":
+            return model.layer4[-1]
+        if arch_key == "densenet":
+            return model.features[-1]
+    except (AttributeError, IndexError):
+        pass
+    # Fallback: last convolutional layer works for VGG and anything else
+    return _last_conv_layer(model)
 
 
 def _run_inference_with_gradients(
@@ -85,6 +105,7 @@ def _generate_cam_library(
     model: torch.nn.Module,
     image_tensor: torch.Tensor,
     predicted_index: int,
+    arch_key: str | None = None,
 ) -> np.ndarray:
     """Generate CAM using the pytorch-grad-cam library.
 
@@ -99,7 +120,7 @@ def _generate_cam_library(
     Raises:
         RuntimeError: If heatmap generation fails.
     """
-    target_layer = _get_target_layer(model)
+    target_layer = _get_target_layer(model, arch_key)
 
     try:
         cam = GradCAM(model=model, target_layers=[target_layer])
@@ -118,6 +139,7 @@ def _generate_cam_manual(
     model: torch.nn.Module,
     image_tensor: torch.Tensor,
     predicted_index: int,
+    arch_key: str | None = None,
 ) -> np.ndarray:
     """Generate CAM using manual gradient computation (fallback).
 
@@ -143,7 +165,7 @@ def _generate_cam_manual(
     activations = []
     gradients = []
 
-    target_layer = _get_target_layer(model)
+    target_layer = _get_target_layer(model, arch_key)
 
     def forward_hook(module, input, output):
         activations.append(output.detach())
@@ -277,6 +299,7 @@ def generate_gradcam(
     image_tensor: torch.Tensor,
     original_image_bytes: bytes,
     class_labels: list[str] | None = None,
+    arch_key: str | None = "efficientnet",
 ) -> dict:
     """Generate a Grad-CAM heatmap for the given image.
 
@@ -309,9 +332,9 @@ def generate_gradcam(
 
     # Step 2 & 3: Generate CAM heatmap
     if GRADCAM_LIB_AVAILABLE:
-        cam = _generate_cam_library(model, image_tensor, predicted_index)
+        cam = _generate_cam_library(model, image_tensor, predicted_index, arch_key)
     else:
-        cam = _generate_cam_manual(model, image_tensor, predicted_index)
+        cam = _generate_cam_manual(model, image_tensor, predicted_index, arch_key)
 
     # Step 4 & 5: Prepare original image and overlay heatmap
     original_image = _prepare_original_image(original_image_bytes)

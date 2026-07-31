@@ -115,9 +115,9 @@ def stop_services():
 
 def main():
     # Check prerequisites
-    model_path = os.path.join(ROOT, "models", "Brain_MRI_scan.pth")
+    model_path = os.path.join(ROOT, "models", "BRAIN_MRI_EFFICIENTNET.pth")
     if not os.path.exists(model_path):
-        print("  ⚠ WARNING: Model file not found at models/Brain_MRI_scan.pth")
+        print("  ⚠ WARNING: Model file not found at models/BRAIN_MRI_EFFICIENTNET.pth")
         print("    The FastAPI service will fail to start.")
         print("    Place your trained model file there or run:")
         print("      python models/create_dummy_model.py")

@@ -70,12 +70,29 @@ async def gradcam(request: Request, image: UploadFile = File(...)):
             content={"error": str(e)},
         )
 
-    # Run Grad-CAM
+    # Run Grad-CAM. With the ensemble, the heatmap is generated from the base
+    # model whose prediction agreed with the ensemble's final class.
     try:
-        model = request.app.state.model
         from app.services.gradcam import generate_gradcam
 
-        result = generate_gradcam(model, tensor, file_bytes)
+        class_labels = settings.class_labels
+        ensemble = getattr(request.app.state, "ensemble", None)
+        if ensemble is not None:
+            from app.services.ensemble import run_ensemble_inference
+
+            ens = run_ensemble_inference(ensemble, tensor, class_labels)
+            agree_key = ens["agreeing_model"]
+            cam_model = ensemble["base_models"][agree_key]
+            cam = generate_gradcam(cam_model, tensor, file_bytes, class_labels, agree_key)
+            # Report the ensemble's prediction/confidence, not the single model's
+            result = {
+                "heatmap": cam["heatmap"],
+                "prediction": ens["prediction"],
+                "confidence": ens["confidence"],
+            }
+        else:
+            model = request.app.state.model
+            result = generate_gradcam(model, tensor, file_bytes, class_labels, "efficientnet")
     except Exception:
         logger.exception("Heatmap generation failed")
         return JSONResponse(

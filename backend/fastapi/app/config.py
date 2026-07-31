@@ -19,7 +19,9 @@ class Settings(BaseSettings):
         GRADCAM_COLORMAP: Colormap name for Grad-CAM visualization.
     """
 
-    MODEL_PATH: str = "../../models/Brain_MRI_scan.pth"
+    MODEL_PATH: str = "../../models/BRAIN_MRI_EFFICIENTNET.pth"
+    MODELS_DIR: str = "../../models"
+    USE_ENSEMBLE: bool = True
     HOST: str = "0.0.0.0"
     PORT: int = 8000
     CLASS_LABELS: str = "Glioma,Meningioma,No Tumor,Pituitary"
