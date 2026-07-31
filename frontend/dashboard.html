@@ -227,8 +227,8 @@
         const form2 = new FormData(); form2.append('image', selectedFile);
 
         const [reportRes, gradcamRes] = await Promise.all([
-          fetch('http://localhost:5000/api/report', { method: 'POST', body: form1 }),
-          fetch('http://localhost:5000/api/gradcam', { method: 'POST', body: form2 }),
+          fetch('/api/report', { method: 'POST', body: form1 }),
+          fetch('/api/gradcam', { method: 'POST', body: form2 }),
         ]);
 
         clearInterval(stageTimer);

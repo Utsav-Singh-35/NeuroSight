@@ -43,8 +43,8 @@ SERVICES = [
     {
         "name": "Express (Backend)",
         "port": 5000,
-        "cmd": ["node", "src/server.js"],
-        "cwd": os.path.join(ROOT, "backend", "express"),
+        "cmd": ["node", "server.js"],
+        "cwd": ROOT,
     },
     {
         "name": "Frontend (Vite)",
