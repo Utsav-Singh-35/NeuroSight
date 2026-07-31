@@ -78,12 +78,15 @@ async def gradcam(request: Request, image: UploadFile = File(...)):
         class_labels = settings.class_labels
         ensemble = getattr(request.app.state, "ensemble", None)
         if ensemble is not None:
-            from app.services.ensemble import run_ensemble_inference
+            from app.services.ensemble import run_ensemble_inference, _load_single_model
+            import gc
 
             ens = run_ensemble_inference(ensemble, tensor, class_labels)
             agree_key = ens["agreeing_model"]
-            cam_model = ensemble["base_models"][agree_key]
+            cam_model = _load_single_model(agree_key, ensemble["model_paths"][agree_key])
             cam = generate_gradcam(cam_model, tensor, file_bytes, class_labels, agree_key)
+            del cam_model
+            gc.collect()
             # Report the ensemble's prediction/confidence, not the single model's
             result = {
                 "heatmap": cam["heatmap"],

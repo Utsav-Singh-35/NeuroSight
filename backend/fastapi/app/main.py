@@ -37,10 +37,13 @@ async def lifespan(app: FastAPI):
         try:
             ensemble = load_ensemble(settings.MODELS_DIR)
             app.state.ensemble = ensemble
-            # Reuse the ensemble's EfficientNet as the single-model handle
-            app.state.model = ensemble["base_models"].get("efficientnet")
+            # Load just EfficientNet as the single-model fallback (lightweight)
+            from app.services.ensemble import _load_single_model
+            app.state.model = _load_single_model(
+                "efficientnet", ensemble["model_paths"]["efficientnet"]
+            )
             logger.info(
-                "Ensemble loaded from %s | models=%s | meta=%s",
+                "Ensemble config loaded from %s | models=%s | meta=%s",
                 settings.MODELS_DIR,
                 ensemble["order"],
                 ensemble["config"].get("meta_learner"),

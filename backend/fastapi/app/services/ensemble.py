@@ -47,20 +47,34 @@ def load_ensemble(models_dir: str) -> dict:
     order = config["model_order"]
     save_names = config["save_names"]
 
-    base_models = {}
+    # Instead of loading ALL models into memory at once (>2.5GB),
+    # we store paths and load each model on-demand during inference.
+    model_paths = {}
     for key in order:
-        timm_name = TIMM_NAMES[key]
-        model = timm.create_model(timm_name, pretrained=False, num_classes=4)
         weights_path = os.path.join(models_dir, save_names[key] + ".pth")
-        state_dict = torch.load(weights_path, map_location="cpu", weights_only=True)
-        model.load_state_dict(state_dict)
-        model.eval()
-        base_models[key] = model
+        if not os.path.exists(weights_path):
+            raise FileNotFoundError(f"Missing model weights: {weights_path}")
+        model_paths[key] = weights_path
 
     with open(os.path.join(models_dir, "meta_model.pkl"), "rb") as f:
         meta = pickle.load(f)
 
-    return {"base_models": base_models, "meta": meta, "order": order, "config": config}
+    return {
+        "model_paths": model_paths,
+        "meta": meta,
+        "order": order,
+        "config": config,
+    }
+
+
+def _load_single_model(key: str, path: str) -> torch.nn.Module:
+    """Load a single base model from disk, run inference-ready."""
+    timm_name = TIMM_NAMES[key]
+    model = timm.create_model(timm_name, pretrained=False, num_classes=4)
+    state_dict = torch.load(path, map_location="cpu", weights_only=True)
+    model.load_state_dict(state_dict)
+    model.eval()
+    return model
 
 
 def run_ensemble_inference(
@@ -70,8 +84,9 @@ def run_ensemble_inference(
 ) -> dict:
     """Run stacked inference on a preprocessed image tensor.
 
-    Runs all base models, concatenates their softmax probabilities in the
-    configured order, and feeds the feature vector to the meta-learner.
+    Loads each base model one at a time (to save memory), gets its softmax
+    probabilities, then frees it before loading the next. Finally feeds the
+    concatenated probabilities to the meta-learner.
 
     Args:
         ensemble: The dict returned by ``load_ensemble``.
@@ -84,21 +99,27 @@ def run_ensemble_inference(
             - confidence (float): Meta-learner confidence percentage (0-100).
             - probabilities (dict): Per-class ensemble probability percentages.
             - agreeing_model (str): Base model key whose top-1 matched the
-              ensemble prediction (used for Grad-CAM). Falls back to the first
-              model in the order if none agree.
+              ensemble prediction (used for Grad-CAM).
             - base_predictions (dict): Per-base-model top-1 label + confidence.
     """
+    import gc
+
     order = ensemble["order"]
     meta = ensemble["meta"]
+    model_paths = ensemble["model_paths"]
 
     per_model_probs = {}
     features = []
-    with torch.no_grad():
-        for key in order:
-            logits = ensemble["base_models"][key](tensor)
+
+    for key in order:
+        model = _load_single_model(key, model_paths[key])
+        with torch.no_grad():
+            logits = model(tensor)
             probs = torch.softmax(logits, dim=1)[0].cpu().numpy()
-            per_model_probs[key] = probs
-            features.append(probs)
+        per_model_probs[key] = probs
+        features.append(probs)
+        del model
+        gc.collect()
 
     X = np.concatenate(features).reshape(1, -1)  # (1, 16)
 
