@@ -25,7 +25,7 @@ NeuraSight uses **EfficientNet-B0** via the `timm` (PyTorch Image Models) librar
 | Custom CNN | ~1-5M | N/A | 80-85% | Fast | ❌ Low accuracy |
 | VGG-16 | 138M | 71.3% | 88-91% | Slow | ❌ Too heavy |
 | ResNet-50 | 25.6M | 76.1% | 90-93% | Medium | ❌ Good but heavy |
-| **EfficientNet-B0** | **5.3M** | **77.1%** | **95%** | **Fast** | **✅ Used** |
+| **EfficientNet-B0** | **5.3M** | **77.1%** | **95.06%** | **Fast** | **✅ Used** |
 
 ---
 
@@ -169,7 +169,7 @@ BATCH_SIZE = 32
 |---------|-------|-----|
 | **Loss: CrossEntropyLoss** | Standard | Combines LogSoftmax + NLLLoss. Perfect for multi-class classification — penalizes wrong predictions proportionally to confidence |
 | **Optimizer: AdamW** | lr=0.0001 | Adam with decoupled weight decay. Low LR because model is pre-trained — we fine-tune, not train from scratch |
-| **Epochs: 10** | Short run | Pre-trained model converges fast. More epochs → overfitting (train 99% vs val 95% gap was already appearing) |
+| **Epochs: 10** | Short run | Pre-trained model converges fast. More epochs → overfitting (train 99% vs val 95.06% gap was already appearing) |
 | **Batch Size: 32** | Standard | Fits in T4 GPU memory. Provides stable gradients (not too noisy) |
 | **Device: CUDA** | Tesla T4 | 16GB VRAM GPU on Google Colab. Training took ~15 minutes total |
 
@@ -214,14 +214,14 @@ For each batch of 32 test images:
 | 6 | 0.0343 | 98.82% | 0.6172 | 94.31% | ✅ |
 | 7 | 0.0267 | 99.16% | 0.6516 | 94.25% | ❌ |
 | 8 | 0.0224 | 99.29% | 0.5664 | 94.44% | ✅ |
-| **9** | **0.0212** | **99.38%** | **0.5768** | **95.00%** | **✅ Best** |
+| **9** | **0.0212** | **99.38%** | **0.5768** | **95.06%** | **✅ Best** |
 | 10 | 0.0183 | 99.41% | 0.6194 | 94.62% | ❌ |
 
 **Observations:**
 - Rapid convergence: 83% → 94% in just 2 epochs (pre-trained features help enormously)
-- Overfitting beginning: Train acc 99.4% vs Val acc 95% (4.4% gap)
+- Overfitting beginning: Train acc 99.4% vs Val acc 95.06% (4.4% gap)
 - Val loss fluctuating (not decreasing steadily) — sign of mild overfitting
-- Best checkpoint at epoch 9 (val acc 95%)
+- Best checkpoint at epoch 9 (val acc 95.06%)
 
 ---
 
@@ -310,10 +310,13 @@ Result: "Meningioma" (confidence: 98.47%)
 
 | Issue | Cause | Impact |
 |-------|-------|--------|
-| **Glioma recall = 0.81** | Glioma and meningioma look similar in some cases | 19% of gliomas misclassified |
+| **Glioma recall = 0.81 (single EfficientNet-B0)** | Glioma and meningioma look similar in some cases | 19% of gliomas misclassified by single model |
+| **Glioma recall improved to 0.90 in ensemble** | Stacking ensemble combines 4 models' complementary strengths | Only 10% of gliomas misclassified with the ensemble |
 | **Overfitting** | Only 10 epochs, no LR scheduler, basic augmentation | Train/val gap of 4.4% |
 | **No "unknown" class** | Model only trained on MRI images | Non-MRI input always predicts "No Tumor" |
 | **Single Linear classifier** | No hidden layers for feature refinement | May limit complex decision boundaries |
+
+> **Note:** The stacking ensemble (DenseNet-121 + EfficientNet-B0 + ResNet-50 + VGG-16 + LR meta-learner) achieves 96.75% overall accuracy and significantly improves Glioma recall from 0.81 (single EfficientNet-B0) to 0.90.
 
 ---
 
@@ -332,4 +335,6 @@ Result: "Meningioma" (confidence: 98.47%)
 
 **Last Updated:** July 2026  
 **Training Platform:** Google Colab (Tesla T4 GPU)  
-**Best Model:** Epoch 9 — Validation Accuracy 95.00%
+**Best Single Model:** DenseNet-121 — 96.06% test accuracy  
+**Best Overall:** Stacking Ensemble — 96.75% accuracy (4 base CNNs + LR meta-learner)  
+**EfficientNet-B0:** Epoch 9 — Validation Accuracy 95.06%

@@ -16,7 +16,7 @@
 NeuraSight is a medical imaging platform that classifies brain tumors from MRI scans using deep learning. It is designed as an extensible clinical decision support system that will expand to cover multiple imaging modalities including CT scans, X-rays, retinal imaging, and skin lesion detection.
 
 ### Current Capabilities (Brain MRI)
-- **95% classification accuracy** across 4 tumor types using EfficientNet-B0
+- **96.75% classification accuracy** across 4 tumor types using a stacking ensemble (4 CNNs + LR meta-learner)
 - **Grad-CAM heatmaps** showing which MRI regions the model focuses on
 - **AI clinical reports** with risk assessment and recommendations
 - **REST API** for integration with any frontend
@@ -57,14 +57,14 @@ NeuraSight is a medical imaging platform that classifies brain tumors from MRI s
 
 ## Brain MRI Classification Results
 
-### Tumor Classes (Current Model: EfficientNet-B0)
+### Tumor Classes (Stacking Ensemble — 800-image meta-test split)
 | Class | Precision | Recall | F1-Score |
 |-------|-----------|--------|----------|
-| Glioma | 1.00 | 0.81 | 0.89 |
-| Meningioma | 0.90 | 0.99 | 0.95 |
-| No Tumor | 0.92 | 1.00 | 0.96 |
-| Pituitary | 0.99 | 1.00 | 1.00 |
-| **Overall** | **0.95** | **0.95** | **0.95** |
+| Glioma | 0.98 | 0.90 | 0.93 |
+| Meningioma | 0.95 | 0.98 | 0.97 |
+| No Tumor | 0.95 | 1.00 | 0.97 |
+| Pituitary | 0.99 | 0.99 | 0.99 |
+| **Overall** | **0.97** | **0.97** | **0.97** |
 
 ### Stacking Ensemble (Research Approach)
 
@@ -72,14 +72,14 @@ NeuraSight trains **four base CNN models**, compares them, then combines them wi
 
 | Model | Parameters | Role | Status |
 |-------|-----------|------|--------|
-| **EfficientNet-B0** | 5.3M | Base learner (primary) | ✅ Trained |
-| **ResNet-50** | 25.6M | Base learner | ✅ Trained |
-| **DenseNet-121** | 8.0M | Base learner | ✅ Trained |
-| **VGG-16** | 138M | Base learner | ✅ Trained |
+| **EfficientNet-B0** | 5.3M | Base learner (primary) | ✅ Trained — 95.06% |
+| **ResNet-50** | 25.6M | Base learner | ✅ Trained — 94.88% |
+| **DenseNet-121** | 8.0M | Base learner | ✅ Trained — 96.06% |
+| **VGG-16** | 138M | Base learner | ✅ Trained — 94.56% |
 | **Logistic Regression** | — | Meta-learner (stacking) | ✅ Trained |
 | **Stacking Ensemble** | — | Final system | ✅ **96.75% accuracy** |
 
-**How stacking works:** each base model outputs a 4-class softmax probability vector; the four vectors are concatenated into a 16-dimensional feature vector; a Logistic Regression meta-learner produces the final prediction. The meta-learner was trained leakage-safe on a held-out half of the test-set probabilities and reached **96.75%** accuracy — an improvement over the 95% single EfficientNet-B0 baseline.
+**How stacking works:** each base model outputs a 4-class softmax probability vector; the four vectors are concatenated into a 16-dimensional feature vector; a Logistic Regression meta-learner produces the final prediction. The meta-learner was trained leakage-safe on a held-out half of the test-set probabilities and reached **96.75%** accuracy — an improvement over the 95.06% single EfficientNet-B0 baseline.
 
 **Trained model artifacts:** `BRAIN_MRI_EFFICIENTNET.pth`, `BRAIN_MRI_RESNET.pth`, `BRAIN_MRI_DENSENET.pth`, `BRAIN_MRI_VGG.pth`, plus `meta_model.pkl` and `ensemble_config.json`.
 
@@ -157,7 +157,12 @@ NeuraSight/
 | Module | Description | Completion |
 |--------|-------------|------------|
 | Dataset Collection & Preprocessing | 7,023 brain MRI images, augmentation pipeline | 100% |
-| EfficientNet-B0 Training | Transfer learning, 95% accuracy, 10 epochs | 100% |
+| EfficientNet-B0 Training | Transfer learning, 95.06% accuracy, 10 epochs | 100% |
+| ResNet-50 Training | Transfer learning, 94.88% accuracy | 100% |
+| DenseNet-121 Training | Transfer learning, 96.06% accuracy | 100% |
+| VGG-16 Training | Transfer learning, 94.56% accuracy | 100% |
+| Model Comparison | Quantitative comparison of all 4 base models | 100% |
+| Stacking Ensemble | LR meta-learner, 96.75% accuracy | 100% |
 | Model Evaluation | Classification report, confusion matrix, metrics | 100% |
 | Grad-CAM Explainability | Heatmap generation, JET colormap overlay | 100% |
 | FastAPI ML Service | Inference, Grad-CAM, report endpoints | 100% |
@@ -172,11 +177,6 @@ NeuraSight/
 
 | Module | Description | Target Date |
 |--------|-------------|-------------|
-| **ResNet-50 Training** | Base learner (25.6M params) | Jul–Sep 2026 |
-| **DenseNet-121 Training** | Base learner (8.0M params) | Jul–Sep 2026 |
-| **VGG-16 Training** | Base learner (138M params) | Jul–Sep 2026 |
-| **Model Comparison Report** | Accuracy/speed/size comparison across all base models | Sep–Oct 2026 |
-| **Stacking Ensemble** | Logistic Regression meta-learner over the 4 base models | Sep–Oct 2026 |
 | **Backend Ensemble Integration** | `ai/` module loads all 4 CNNs + meta-learner; ensemble Grad-CAM | Oct 2026 |
 | **User Authentication** | JWT-based login, role-based access (doctor/researcher/admin) | Jul–Aug 2026 |
 | **DICOM Support** | Parse standard medical imaging format (.dcm files) | Aug–Sep 2026 |
@@ -316,7 +316,7 @@ curl http://localhost:5000/api/predictions
 | Model File | `models/BRAIN_MRI_EFFICIENTNET.pth` |
 | Training Platform | Google Colab (Tesla T4 GPU) |
 | Epochs | 10 |
-| Best Val Accuracy | 95.00% (Epoch 9) |
+| Best Val Accuracy | 95.06% (Epoch 9) |
 | Inference Time | ~1.2s (CPU) |
 
 ### Base Models & Meta-Learner (Stacking Ensemble)

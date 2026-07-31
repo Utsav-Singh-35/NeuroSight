@@ -67,7 +67,7 @@ Healthcare is one of the most impactful domains for AI. The intersection of medi
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| **Phase 1** | Dataset, EDA, preprocessing, EfficientNet-B0 (95%), Grad-CAM, evaluation | ✅ Complete |
+| **Phase 1** | Dataset, EDA, preprocessing, EfficientNet-B0 (95.06%), Grad-CAM, evaluation | ✅ Complete |
 | **Phase 2** | Train multiple base models (ResNet-50, DenseNet-121, VGG-16) with hyperparameter tuning | ✅ Complete |
 | **Phase 3** | Quantitative comparison of all base models | ✅ Complete |
 | **Phase 4** | Build stacking ensemble (Logistic Regression meta-learner) — **96.75%** | ✅ Complete |
@@ -102,7 +102,7 @@ Hyperparam  Hyperparam  Hyperparam  Hyperparam
 | Milestone | Status |
 |-----------|--------|
 | Dataset prepared (7,023 images) | ✅ |
-| EfficientNet-B0 trained (95%) | ✅ |
+| EfficientNet-B0 trained (95.06%) | ✅ |
 | Grad-CAM working | ✅ |
 | Full-stack integration | ✅ |
 | ResNet-50 / DenseNet-121 / VGG-16 trained | ✅ |
@@ -263,12 +263,12 @@ Gradient-weighted class activation maps target the last convolutional layer of t
 
 | Metric | Score |
 |--------|-------|
-| **Accuracy** | **95%** |
-| **Precision** (macro) | 0.95 |
-| **Recall** (macro) | 0.95 |
-| **F1-Score** (macro) | 0.95 |
+| **Accuracy** | **95.06%** |
+| **Precision** (macro) | 95.52 |
+| **Recall** (macro) | 95.06 |
+| **F1-Score** (macro) | 94.92 |
 
-**Per-class (EfficientNet-B0):**
+**Per-class (EfficientNet-B0, 1600 test images):**
 
 | Class | Precision | Recall | F1-Score | Support |
 |-------|-----------|--------|----------|---------|
@@ -277,19 +277,38 @@ Gradient-weighted class activation maps target the last convolutional layer of t
 | No Tumor | 0.92 | 1.00 | 0.96 | 400 |
 | Pituitary | 0.99 | 1.00 | 1.00 | 400 |
 
-### 7.2 Model Comparison Table (To Be Filled After Training)
+**Per-class (Stacking Ensemble, 800-image meta-test split):**
 
-> Values below are **targets/expected ranges** until the models are actually trained and evaluated on the held-out split.
+| Class | Precision | Recall | F1-Score |
+|-------|-----------|--------|----------|
+| Glioma | 0.98 | 0.90 | 0.93 |
+| Meningioma | 0.95 | 0.98 | 0.97 |
+| No Tumor | 0.95 | 1.00 | 0.97 |
+| Pituitary | 0.99 | 0.99 | 0.99 |
 
-| Model | Accuracy | Precision | Recall | F1 | Inference Time |
-|-------|----------|-----------|--------|-----|----------------|
-| EfficientNet-B0 | 95% | 0.95 | 0.95 | 0.95 | ~1.2s |
-| ResNet-50 | see notebook | — | — | — | — |
-| DenseNet-121 | see notebook | — | — | — | — |
-| VGG-16 | see notebook | — | — | — | — |
-| **Stacking Ensemble** | **96.75%** | — | — | — | ~3–4s (4 models) |
+**Ensemble overall:** Accuracy 96.75% | Precision 96.81% | Recall 96.75% | F1 96.71%
 
-> The stacking ensemble achieved **96.75%** on the held-out evaluation split — above the 95% single-model baseline. Individual base-model accuracies were printed by `BRAIN_MRI_SCAN.ipynb`; fill them into the "—" cells from your run output for the final report.
+**Fair comparison on same 800-image meta-test split:**
+
+| Model | Accuracy |
+|-------|----------|
+| EfficientNet-B0 | 95.12% |
+| ResNet-50 | 95.12% |
+| DenseNet-121 | 95.88% |
+| VGG-16 | 94.75% |
+| **Stacking Ensemble** | **96.75%** |
+
+### 7.2 Model Comparison Table (Full 1600-image Test Set)
+
+| Model | Accuracy | Precision | Recall | F1 | Best Val Acc |
+|-------|----------|-----------|--------|-----|-------------|
+| DenseNet-121 | 96.06% | 96.32 | 96.06 | 95.97 | 96.06% |
+| EfficientNet-B0 | 95.06% | 95.52 | 95.06 | 94.92 | 95.06% |
+| ResNet-50 | 94.88% | 95.29 | 94.88 | 94.74 | 94.88% |
+| VGG-16 | 94.56% | 95.12 | 94.56 | 94.41 | 94.56% |
+| **Stacking Ensemble** | **96.75%** | **96.81** | **96.75** | **96.71** | — (meta-test) |
+
+> DenseNet-121 is the best single model (96.06%), but the stacking ensemble (96.75%) beats all individual models on the held-out 800-image meta-test split.
 
 ### 7.3 Evaluation Methodology
 
@@ -308,17 +327,17 @@ Gradient-weighted class activation maps target the last convolutional layer of t
 
 ### 7.5 Research Story (Report Highlight)
 
-Instead of "trained one CNN → 95%", the report will show:
+Instead of "trained one CNN → 95%", the report shows:
 
 ```
-EfficientNet-B0   → 95%
-ResNet-50         → (from notebook output)
-DenseNet-121      → (from notebook output)
-VGG-16            → (from notebook output)
-Stacking Ensemble → 96.75%   ← best
+EfficientNet-B0   → 95.06%
+ResNet-50         → 94.88%
+DenseNet-121      → 96.06%  ← best single model
+VGG-16            → 94.56%
+Stacking Ensemble → 96.75%  ← best overall
 ```
 
-Demonstrating: multiple architectures evaluated, each tuned, combined via stacking, final system selected on quantitative evidence. The ensemble improved on the single-model baseline (95% → 96.75%).
+Demonstrating: multiple architectures evaluated, each tuned, combined via stacking, final system selected on quantitative evidence. The ensemble improved on the best single-model baseline (96.06% → 96.75%).
 
 ---
 
@@ -386,7 +405,7 @@ INFRA       Docker · nginx · GitHub Actions · AWS/GCP  (planned)
 | Component | Status |
 |-----------|--------|
 | Dataset, preprocessing, EDA | ✅ Complete |
-| EfficientNet-B0 (95%) | ✅ Complete |
+| EfficientNet-B0 (95.06%) | ✅ Complete |
 | Grad-CAM explainability | ✅ Complete |
 | FastAPI ML service | ✅ Complete |
 | Express.js gateway + MongoDB | ✅ Complete |
@@ -414,7 +433,7 @@ CT scan analysis · Chest X-ray diagnostics · Retinal imaging · Skin lesion de
 | **Base Models** | EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16 |
 | **Meta-Learner** | Logistic Regression (stacking) |
 | **Explainability** | Grad-CAM (from agreeing base model) |
-| **Accuracy** | 95% (EfficientNet-B0) → **96.75% (stacking ensemble)** |
+| **Accuracy** | 95.06% (EfficientNet-B0) → **96.75% (stacking ensemble)** |
 | **Training** | Google Colab, Tesla T4 GPU |
 
 ---

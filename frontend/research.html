@@ -298,10 +298,11 @@
         it provides real-time classification across 4 tumor types with Grad-CAM explainability heatmaps.
       </p>
       <p>
-        The model uses <span class="highlight">EfficientNet-B0</span> from the <span class="highlight">timm</span> library, 
-        pre-trained on ImageNet and fine-tuned on 5,600 brain MRI images. Trained on Google Colab (Tesla T4 GPU) 
-        for 10 epochs using AdamW optimizer, achieving <span class="highlight">95% test accuracy</span> across 
-        1,600 test images.
+        The model uses a <span class="highlight">stacking ensemble</span> of four CNNs (EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16) 
+        from the <span class="highlight">timm</span> library, combined with a Logistic Regression meta-learner via 
+        <span class="highlight">scikit-learn</span>. All base models are pre-trained on ImageNet and fine-tuned on 5,600 brain MRI images. 
+        Trained on Google Colab (Tesla T4 GPU), achieving <span class="highlight">96.75% ensemble accuracy</span> on 
+        an 800-image held-out meta-test split.
       </p>
     </div>
 
@@ -351,21 +352,24 @@
     <div class="section">
       <h2>Model Architecture</h2>
       <div class="card">
-        <h3>timm EfficientNet-B0 (Transfer Learning)</h3>
+        <h3>Stacking Ensemble (4 Base CNNs + LR Meta-Learner)</h3>
         <p>
-          The system uses <span class="highlight">timm.create_model('efficientnet_b0', pretrained=True, num_classes=4)</span> — 
-          a PyTorch Image Models implementation of EfficientNet-B0 pre-trained on ImageNet (1.2M images), 
-          fine-tuned on 5,600 brain MRI images for 4-class tumor classification.
+          The system uses a <span class="highlight">stacking ensemble</span> combining four base CNN models — 
+          EfficientNet-B0, ResNet-50, DenseNet-121, and VGG-16 — all from the <span class="highlight">timm</span> library, 
+          pre-trained on ImageNet and fine-tuned on 5,600 brain MRI images. Each base model outputs a 4-class softmax 
+          probability vector; the four vectors are concatenated into a 16-dimensional feature vector and fed to a 
+          <span class="highlight">Logistic Regression meta-learner</span> (scikit-learn) for the final prediction.
         </p>
-        <p><strong>Architecture:</strong> Stem Conv → 16 MBConv Blocks (with Squeeze-and-Excitation) → Head Conv (320→1280) → Global Avg Pooling → Linear(1280, 4)</p>
-        <p><strong>Training Config:</strong> AdamW optimizer (lr=0.0001), CrossEntropyLoss, 10 epochs, batch size 32, ImageNet normalization (mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])</p>
+        <p><strong>Base Models:</strong> EfficientNet-B0 (95.06%) · ResNet-50 (94.88%) · DenseNet-121 (96.06%) · VGG-16 (94.56%)</p>
+        <p><strong>Ensemble:</strong> 96.75% accuracy on held-out 800-image meta-test split</p>
+        <p><strong>Training Config:</strong> AdamW optimizer, CrossEntropyLoss, CosineAnnealingLR scheduler, batch size 32, ImageNet normalization (mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])</p>
         <p><strong>Key Features:</strong></p>
         <ul class="tech-list">
           <li class="tech-item">Transfer Learning from ImageNet (1.2M images)</li>
-          <li class="tech-item">Only 5.3M Parameters (lightweight for deployment)</li>
-          <li class="tech-item">Compound Scaling (width × depth × resolution)</li>
-          <li class="tech-item">Squeeze-and-Excitation Attention</li>
-          <li class="tech-item">Single Linear Classifier Head (1280→4)</li>
+          <li class="tech-item">4 Diverse Architectures for Error Diversity</li>
+          <li class="tech-item">Logistic Regression Meta-Learner (Leakage-Safe)</li>
+          <li class="tech-item">Squeeze-and-Excitation Attention (EfficientNet)</li>
+          <li class="tech-item">Dense Connectivity & Feature Reuse (DenseNet)</li>
           <li class="tech-item">Data Augmentation (flip, rotation, color jitter)</li>
         </ul>
       </div>
@@ -397,25 +401,25 @@
       <div class="metrics-grid">
         <div class="metric-card">
           <div class="metric-label">Accuracy</div>
-          <div class="metric-value">95%</div>
+          <div class="metric-value">96.75%</div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Precision</div>
-          <div class="metric-value">95%</div>
+          <div class="metric-value">97%</div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Recall</div>
-          <div class="metric-value">95%</div>
+          <div class="metric-value">97%</div>
         </div>
         <div class="metric-card">
           <div class="metric-label">F1 Score</div>
-          <div class="metric-value">95%</div>
+          <div class="metric-value">97%</div>
         </div>
       </div>
       <p>
-        Evaluated on 1,600 test images (400 per class). Best model saved at epoch 9 with 95% validation accuracy. 
-        Per-class: Pituitary (F1: 1.00), No Tumor (F1: 0.96), Meningioma (F1: 0.95), Glioma (F1: 0.89). 
-        Training platform: Google Colab with Tesla T4 GPU.
+        Evaluated using a 4-model stacking ensemble (EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16 + Logistic Regression meta-learner) 
+        on an 800-image held-out meta-test split. Per-class: Pituitary (F1: 0.99), No Tumor (F1: 0.97), 
+        Meningioma (F1: 0.97), Glioma (F1: 0.93). Base models trained on Google Colab with Tesla T4 GPU.
       </p>
     </div>
 
@@ -424,7 +428,8 @@
       <div class="card">
         <ul class="tech-list">
           <li class="tech-item">Python 3.11 & PyTorch 2.2</li>
-          <li class="tech-item">timm (PyTorch Image Models) - EfficientNet-B0</li>
+          <li class="tech-item">timm (PyTorch Image Models) - EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16</li>
+          <li class="tech-item">scikit-learn - Logistic Regression Meta-Learner (Stacking Ensemble)</li>
           <li class="tech-item">FastAPI - ML Inference Service (port 8000)</li>
           <li class="tech-item">Node.js & Express.js - API Gateway (port 5000)</li>
           <li class="tech-item">MongoDB - Prediction History Storage</li>
