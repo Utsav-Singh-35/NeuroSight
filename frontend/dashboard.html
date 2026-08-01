@@ -226,9 +226,12 @@
         const form1 = new FormData(); form1.append('image', selectedFile);
         const form2 = new FormData(); form2.append('image', selectedFile);
 
+        // Use FastAPI directly for file uploads (avoids Vercel serverless multipart issues)
+        const ML_URL = window.location.hostname === 'localhost' ? 'http://localhost:8000' : 'http://65.0.189.183:8000';
+
         const [reportRes, gradcamRes] = await Promise.all([
-          fetch('/api/report', { method: 'POST', body: form1 }),
-          fetch('/api/gradcam', { method: 'POST', body: form2 }),
+          fetch(`${ML_URL}/report`, { method: 'POST', body: form1 }),
+          fetch(`${ML_URL}/gradcam`, { method: 'POST', body: form2 }),
         ]);
 
         clearInterval(stageTimer);

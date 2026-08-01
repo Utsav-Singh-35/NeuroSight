@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.routers import health, predict, gradcam, report
@@ -66,6 +67,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="NeuraSight ML Service", lifespan=lifespan)
+
+# CORS — allow browser requests from Vercel and localhost
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Register routers
 app.include_router(health.router)
