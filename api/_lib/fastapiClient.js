@@ -4,7 +4,7 @@ const config = require('./config');
 
 async function sendForPrediction(imageBuffer, filename) {
   const form = new FormData();
-  form.append('image', imageBuffer, { filename });
+  form.append('image', imageBuffer, { filename, contentType: 'image/jpeg' });
   try {
     const res = await axios.post(`${config.FASTAPI_URL}/predict`, form, {
       headers: form.getHeaders(), timeout: config.FASTAPI_TIMEOUT,
@@ -24,7 +24,7 @@ async function sendForPrediction(imageBuffer, filename) {
 
 async function sendForGradcam(imageBuffer, filename) {
   const form = new FormData();
-  form.append('image', imageBuffer, { filename });
+  form.append('image', imageBuffer, { filename, contentType: 'image/jpeg' });
   try {
     const res = await axios.post(`${config.FASTAPI_URL}/gradcam`, form, {
       headers: form.getHeaders(), timeout: config.FASTAPI_TIMEOUT,
@@ -44,7 +44,7 @@ async function sendForGradcam(imageBuffer, filename) {
 
 async function sendForReport(imageBuffer, filename) {
   const form = new FormData();
-  form.append('image', imageBuffer, { filename });
+  form.append('image', imageBuffer, { filename, contentType: 'image/jpeg' });
   try {
     const res = await axios.post(`${config.FASTAPI_URL}/report`, form, {
       headers: form.getHeaders(), timeout: config.FASTAPI_TIMEOUT,

@@ -6,7 +6,8 @@ async function handler(req, res) {
 
   imageValidator(req, res, async () => {
     try {
-      const result = await sendForGradcam(req.file.buffer, req.file.originalname);
+      const buffer = Buffer.isBuffer(req.file.buffer) ? req.file.buffer : Buffer.from(req.file.buffer);
+      const result = await sendForGradcam(buffer, req.file.originalname || 'image.jpg');
       res.status(200).json(result);
     } catch (error) {
       if (error.message === 'ML service is unavailable') {
