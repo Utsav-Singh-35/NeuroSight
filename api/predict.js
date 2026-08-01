@@ -3,10 +3,7 @@ const Prediction = require('./_lib/Prediction');
 const { sendForPrediction } = require('./_lib/fastapiClient');
 const imageValidator = require('./_lib/imageValidator');
 
-// Disable Vercel's body parser so multer can handle multipart
-module.exports.config = { api: { bodyParser: false } };
-
-module.exports = (req, res) => {
+async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   imageValidator(req, res, async () => {
@@ -35,7 +32,10 @@ module.exports = (req, res) => {
 
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ error: 'An internal error occurred' });
+      res.status(500).json({ error: error.message || 'An internal error occurred' });
     }
   });
-};
+}
+
+module.exports = handler;
+module.exports.config = { api: { bodyParser: false } };
