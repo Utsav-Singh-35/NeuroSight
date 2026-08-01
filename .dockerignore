@@ -1,0 +1,16 @@
+# Don't send these to Docker build context
+.git
+.kiro
+.pytest_cache
+.vscode
+node_modules
+frontend/node_modules
+backend/express/node_modules
+data/
+notebooks/
+docs/
+*.md
+__pycache__
+*.pyc
+.env
+.env.*
