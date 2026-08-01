@@ -3,6 +3,9 @@ const Prediction = require('./_lib/Prediction');
 const { sendForPrediction } = require('./_lib/fastapiClient');
 const imageValidator = require('./_lib/imageValidator');
 
+// Disable Vercel's body parser so multer can handle multipart
+module.exports.config = { api: { bodyParser: false } };
+
 module.exports = (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
