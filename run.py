@@ -41,10 +41,10 @@ SERVICES = [
         "cwd": os.path.join(ROOT, "backend", "fastapi"),
     },
     {
-        "name": "Express (Backend)",
+        "name": "Express (API Gateway)",
         "port": 5000,
-        "cmd": ["node", "server.js"],
-        "cwd": ROOT,
+        "cmd": ["node", "src/server.js"],
+        "cwd": os.path.join(ROOT, "backend", "express"),
     },
     {
         "name": "Frontend (Vite)",
@@ -130,14 +130,19 @@ def main():
     if not os.path.exists(model_path):
         print("  ⚠ WARNING: Model file not found at models/BRAIN_MRI_EFFICIENTNET.pth")
         print("    The FastAPI service will fail to start.")
-        print("    Place your trained model file there or run:")
-        print("      python models/create_dummy_model.py")
+        print("    Place your trained model file there first.")
         print()
 
     express_modules = os.path.join(ROOT, "backend", "express", "node_modules")
     if not os.path.exists(express_modules):
         print("  ⚠ Express dependencies not installed. Running npm install...")
         subprocess.run(["npm", "install"], cwd=os.path.join(ROOT, "backend", "express"), shell=True)
+        print()
+
+    frontend_modules = os.path.join(ROOT, "frontend", "node_modules")
+    if not os.path.exists(frontend_modules):
+        print("  ⚠ Frontend dependencies not installed. Running npm install...")
+        subprocess.run(["npm", "install"], cwd=os.path.join(ROOT, "frontend"), shell=True)
         print()
 
     start_services()

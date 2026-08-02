@@ -110,16 +110,28 @@ def run_ensemble_inference(
 
     per_model_probs = {}
     features = []
+    skipped_models = []
 
     for key in order:
-        model = _load_single_model(key, model_paths[key])
-        with torch.no_grad():
-            logits = model(tensor)
-            probs = torch.softmax(logits, dim=1)[0].cpu().numpy()
-        per_model_probs[key] = probs
-        features.append(probs)
-        del model
-        gc.collect()
+        try:
+            model = _load_single_model(key, model_paths[key])
+            with torch.no_grad():
+                logits = model(tensor)
+                probs = torch.softmax(logits, dim=1)[0].cpu().numpy()
+            per_model_probs[key] = probs
+            features.append(probs)
+            del model
+            gc.collect()
+        except (OSError, MemoryError, RuntimeError) as e:
+            # Model too large for available RAM — skip it gracefully
+            import logging
+            logging.getLogger(__name__).warning(
+                "Skipping %s due to memory: %s", key, str(e)[:80]
+            )
+            skipped_models.append(key)
+            # Insert zeros so feature vector length stays consistent for meta-learner
+            features.append(np.zeros(len(class_labels), dtype=np.float32))
+            gc.collect()
 
     X = np.concatenate(features).reshape(1, -1)  # (1, 16)
 
@@ -133,15 +145,26 @@ def run_ensemble_inference(
     }
 
     # Pick the base model that agreed with the ensemble (highest confidence)
+    # Only consider models that successfully ran (not skipped)
     agreeing_model = None
     best_conf = -1.0
     for key in order:
+        if key in skipped_models:
+            continue
+        if key not in per_model_probs:
+            continue
         p = per_model_probs[key]
         if int(p.argmax()) == pred_idx and float(p[pred_idx]) > best_conf:
             best_conf = float(p[pred_idx])
             agreeing_model = key
     if agreeing_model is None:
-        agreeing_model = order[0]
+        # Fall back to the first model that actually ran
+        for key in order:
+            if key in per_model_probs:
+                agreeing_model = key
+                break
+        if agreeing_model is None:
+            agreeing_model = order[0]
 
     base_predictions = {
         key: {

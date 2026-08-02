@@ -6,10 +6,10 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-      },
+      '/predict': { target: 'http://localhost:8000', changeOrigin: true },
+      '/gradcam': { target: 'http://localhost:8000', changeOrigin: true },
+      '/report': { target: 'http://localhost:8000', changeOrigin: true },
+      '/health': { target: 'http://localhost:8000', changeOrigin: true },
     },
   },
   build: {
