@@ -1,0 +1,20 @@
+{
+  "model_order": [
+    "efficientnet",
+    "resnet",
+    "densenet"
+  ],
+  "save_names": {
+    "efficientnet": "CHEST_XRAY_EFFICIENTNET",
+    "resnet": "CHEST_XRAY_RESNET",
+    "densenet": "CHEST_XRAY_DENSENET"
+  },
+  "class_names": [
+    "Normal",
+    "Pneumonia",
+    "Tuberculosis"
+  ],
+  "meta_learner": "LogisticRegression",
+  "feature_dim": 9,
+  "ensemble_accuracy": 82.0
+}

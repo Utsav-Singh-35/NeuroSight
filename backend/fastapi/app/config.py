@@ -1,4 +1,7 @@
-"""FastAPI service configuration loaded from environment variables."""
+"""FastAPI service configuration loaded from environment variables.
+
+Supports multi-module AI engine with per-module model directories.
+"""
 
 from functools import cached_property
 from pathlib import Path
@@ -11,16 +14,21 @@ class Settings(BaseSettings):
     """Application settings loaded from the .env file at backend/fastapi/.env.
 
     Attributes:
-        MODEL_PATH: Path to the PyTorch model weights file.
+        MODEL_PATH: Path to the default PyTorch model weights file (brain MRI EfficientNet).
+        MODELS_DIR: Base directory containing all model weight files.
+        MODELS_BASE_DIR: Alias for MODELS_DIR — base path for all modules' models.
+        USE_ENSEMBLE: Whether to use stacking ensemble (all base models + meta-learner).
         HOST: Host address to bind the FastAPI server.
         PORT: Port number for the FastAPI server.
-        CLASS_LABELS: Comma-separated class label names (parsed via class_labels property).
+        CLASS_LABELS: Comma-separated class label names (brain MRI default).
         GRADCAM_OPACITY: Opacity for Grad-CAM heatmap overlay (0.0 to 1.0).
         GRADCAM_COLORMAP: Colormap name for Grad-CAM visualization.
     """
 
     MODEL_PATH: str = "../../models/BRAIN_MRI_EFFICIENTNET.pth"
     MODELS_DIR: str = "../../models"
+    MODELS_BASE_DIR: str = "../../models"
+    CHEST_MODELS_DIR: str = "../../chest"
     USE_ENSEMBLE: bool = True
     HOST: str = "0.0.0.0"
     PORT: int = 8000

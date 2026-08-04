@@ -1,0 +1,15 @@
+{
+  "module_id": "chest_xray",
+  "display_name": "Chest X-ray Disease Detection",
+  "classes": ["Normal", "Pneumonia", "Tuberculosis"],
+  "input_size": 224,
+  "normalization": "imagenet",
+  "base_models": ["efficientnet", "resnet", "densenet"],
+  "timm_names": {
+    "efficientnet": "efficientnet_b0",
+    "resnet": "resnet50",
+    "densenet": "densenet121"
+  },
+  "model_prefix": "CHEST_XRAY",
+  "num_classes": 3
+}

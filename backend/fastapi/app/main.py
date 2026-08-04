@@ -1,8 +1,9 @@
 """FastAPI main entry point for the NeuraSight ML Service.
 
 Configures the application lifespan (model loading at startup),
-registers all routers, and adds a global exception handler that
-never exposes stack traces to clients.
+registers all routers, initializes the AI engine module registry,
+and adds a global exception handler that never exposes stack traces
+to clients.
 """
 
 import logging
@@ -17,6 +18,7 @@ from app.config import settings
 from app.routers import health, predict, gradcam, report
 from app.services.inference import load_model
 from app.services.ensemble import load_ensemble
+from app.engine.registry import init_registry, get_registry
 
 logger = logging.getLogger(__name__)
 
@@ -25,14 +27,20 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Application lifespan context manager.
 
-    On startup: loads the stacking ensemble (4 base models + meta-learner)
-    into app.state.ensemble. Also exposes the EfficientNet-B0 base model as
-    app.state.model for single-model fallback and Grad-CAM defaults.
+    On startup:
+        1. Initialize the module registry (discovers brain_mri, chest_xray, etc.)
+        2. Load the stacking ensemble (4 base models + meta-learner) into app.state.ensemble
+        3. Load EfficientNet-B0 as app.state.model for single-model fallback
     On shutdown: performs cleanup if needed.
     """
     # Startup
     app.state.ensemble = None
     app.state.model = None
+
+    # Initialize module registry
+    init_registry()
+    app.state.registry = get_registry()
+    logger.info("Module registry initialized: %s", app.state.registry.list_ids())
 
     if settings.USE_ENSEMBLE:
         try:
@@ -40,6 +48,7 @@ async def lifespan(app: FastAPI):
             app.state.ensemble = ensemble
             # Load just EfficientNet as the single-model fallback (lightweight)
             from app.services.ensemble import _load_single_model
+
             app.state.model = _load_single_model(
                 "efficientnet", ensemble["model_paths"]["efficientnet"]
             )
@@ -81,6 +90,19 @@ app.include_router(health.router)
 app.include_router(predict.router)
 app.include_router(gradcam.router)
 app.include_router(report.router)
+
+
+@app.get("/modules")
+async def get_modules():
+    """Return the list of available AI modules.
+
+    Each module includes its ID, display name, supported classes,
+    and whether model weights are currently available.
+    """
+    from app.engine.registry import get_registry
+
+    registry = get_registry()
+    return {"modules": registry.available_modules()}
 
 
 @app.exception_handler(Exception)

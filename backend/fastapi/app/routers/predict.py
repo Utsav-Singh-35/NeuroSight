@@ -1,4 +1,4 @@
-"""Predict router for MRI image classification."""
+"""Predict router for medical image classification."""
 
 import logging
 import time
@@ -7,9 +7,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Request, UploadFile, File
 from fastapi.responses import JSONResponse
 
-from app.config import settings
 from app.models.schemas import PredictionResponse, ErrorResponse
-from app.services import preprocessor, inference
 
 logger = logging.getLogger(__name__)
 
@@ -24,16 +22,17 @@ router = APIRouter()
         500: {"model": ErrorResponse, "description": "Internal server error"},
     },
 )
-async def predict(request: Request, image: UploadFile = File(...)):
-    """Classify a brain MRI image.
+async def predict(request: Request, image: UploadFile = File(...), module: str = "brain_mri"):
+    """Classify a medical image using the specified module.
 
     Accepts a JPEG or PNG image via multipart/form-data, preprocesses it,
-    runs inference through the EfficientNet-B0 model, and returns the
+    runs inference through the module's ensemble pipeline, and returns the
     classification result.
 
     Args:
-        request: FastAPI request object (used to access app.state.model).
+        request: FastAPI request object.
         image: Uploaded image file (must be JPEG or PNG).
+        module: Module ID to use for classification (default: brain_mri).
 
     Returns:
         PredictionResponse with prediction, confidence, and probabilities.
@@ -62,28 +61,27 @@ async def predict(request: Request, image: UploadFile = File(...)):
             content={"error": "Uploaded file is empty"},
         )
 
-    # Preprocess image
-    try:
-        tensor = preprocessor.preprocess_image(file_bytes)
-    except ValueError as e:
+    # Get module from registry
+    from app.engine.registry import get_registry
+
+    registry = get_registry()
+    mod = registry.get(module)
+    if mod is None:
         return JSONResponse(
-            status_code=422,
-            content={"error": str(e)},
+            status_code=400,
+            content={"error": f"Unknown module: {module}"},
+        )
+    if not mod.is_available():
+        return JSONResponse(
+            status_code=503,
+            content={"error": f"Module '{module}' is not available. Model weights may be missing."},
         )
 
-    # Run inference (stacking ensemble if available, else single model)
+    # Run inference via module
     try:
-        class_labels = settings.class_labels
-        ensemble = getattr(request.app.state, "ensemble", None)
-        if ensemble is not None:
-            from app.services.ensemble import run_ensemble_inference
-
-            result = run_ensemble_inference(ensemble, tensor, class_labels)
-        else:
-            model = request.app.state.model
-            result = inference.run_inference(model, tensor, class_labels)
+        result = mod.predict(file_bytes)
     except Exception:
-        logger.exception("Inference failed")
+        logger.exception("Inference failed for module %s", module)
         return JSONResponse(
             status_code=500,
             content={"error": "Inference failed"},
@@ -93,12 +91,18 @@ async def predict(request: Request, image: UploadFile = File(...)):
     duration_ms = round((time.time() - start_time) * 1000, 2)
     timestamp = datetime.now(timezone.utc).isoformat()
     logger.info(
-        "%s | filename=%s | prediction=%s | confidence=%.2f%% | duration=%.2fms",
+        "%s | module=%s | filename=%s | prediction=%s | confidence=%.2f%% | duration=%.2fms",
         timestamp,
+        module,
         image.filename,
         result["prediction"],
         result["confidence"],
         duration_ms,
     )
 
-    return PredictionResponse(**result)
+    return PredictionResponse(
+        prediction=result["prediction"],
+        confidence=result["confidence"],
+        probabilities=result["probabilities"],
+        module=module,
+    )

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
 from app.models.schemas import HealthResponse
+from app.engine.registry import list_modules
 
 router = APIRouter()
 
@@ -17,7 +18,14 @@ async def health_check(request: Request):
     """
     model = getattr(request.app.state, "model", None)
     if model is not None:
-        return HealthResponse(status="healthy", model_loaded=True)
+        return JSONResponse(
+            status_code=200,
+            content={
+                "status": "healthy",
+                "model_loaded": True,
+                "available_modules": list_modules(),
+            },
+        )
     return JSONResponse(
         status_code=503,
         content={"status": "unhealthy", "model_loaded": False},

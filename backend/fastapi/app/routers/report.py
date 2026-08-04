@@ -7,21 +7,22 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Request, UploadFile, File
 from fastapi.responses import JSONResponse
 
-from app.config import settings
-from app.services import preprocessor, inference
-from app.services.report import generate_report
-
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
 
 @router.post("/report")
-async def get_report(request: Request, image: UploadFile = File(...)):
-    """Generate a full AI diagnostic report for a brain MRI image.
+async def get_report(request: Request, image: UploadFile = File(...), module: str = "brain_mri"):
+    """Generate a full AI diagnostic report for a medical image.
 
     Returns prediction, confidence, risk level, AI summary,
     clinical recommendation, and disclaimer.
+
+    Args:
+        request: FastAPI request object.
+        image: Uploaded image file (must be JPEG or PNG).
+        module: Module ID to use for classification (default: brain_mri).
     """
     start_time = time.time()
 
@@ -37,39 +38,39 @@ async def get_report(request: Request, image: UploadFile = File(...)):
     if not file_bytes:
         return JSONResponse(status_code=422, content={"error": "Uploaded file is empty"})
 
-    # Preprocess
-    try:
-        tensor = preprocessor.preprocess_image(file_bytes)
-    except ValueError as e:
-        return JSONResponse(status_code=422, content={"error": str(e)})
+    # Get module from registry
+    from app.engine.registry import get_registry
 
-    # Inference (stacking ensemble if available, else single model)
-    try:
-        ensemble = getattr(request.app.state, "ensemble", None)
-        if ensemble is not None:
-            from app.services.ensemble import run_ensemble_inference
+    registry = get_registry()
+    mod = registry.get(module)
+    if mod is None:
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"Unknown module: {module}"},
+        )
+    if not mod.is_available():
+        return JSONResponse(
+            status_code=503,
+            content={"error": f"Module '{module}' is not available. Model weights may be missing."},
+        )
 
-            result = run_ensemble_inference(ensemble, tensor, settings.class_labels)
-        else:
-            model = request.app.state.model
-            result = inference.run_inference(model, tensor, settings.class_labels)
+    # Run report via module
+    try:
+        report = mod.report(file_bytes)
     except Exception:
-        logger.exception("Inference failed")
-        return JSONResponse(status_code=500, content={"error": "Inference failed"})
+        logger.exception("Report generation failed for module %s", module)
+        return JSONResponse(status_code=500, content={"error": "Report generation failed"})
 
-    # Generate report
-    report = generate_report(
-        prediction=result["prediction"],
-        confidence=result["confidence"],
-        probabilities=result["probabilities"],
-    )
+    # Add module info
+    report["module"] = module
 
     duration_ms = round((time.time() - start_time) * 1000, 2)
     logger.info(
-        "%s | report | prediction=%s | confidence=%.2f%% | duration=%.2fms",
+        "%s | module=%s | report | prediction=%s | confidence=%.2f%% | duration=%.2fms",
         datetime.now(timezone.utc).isoformat(),
-        result["prediction"],
-        result["confidence"],
+        module,
+        report.get("prediction", "unknown"),
+        report.get("confidence", 0),
         duration_ms,
     )
 

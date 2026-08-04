@@ -1,10 +1,11 @@
-"""AI Report Generator for brain tumor classification results.
+"""AI Report Generator for medical image classification results.
 
 Generates clinical-style summary reports with prediction details,
 risk assessment, AI reasoning summary, and recommendations.
+Supports brain MRI and chest X-ray modules.
 """
 
-# Tumor information database
+# Disease/condition information database (brain MRI + chest X-ray)
 TUMOR_INFO = {
     "Glioma": {
         "risk": "High",
@@ -45,11 +46,41 @@ TUMOR_INFO = {
                          "persist, consult a neurologist for further evaluation. This AI result does not "
                          "replace a formal radiological report.",
     },
+    # --- Chest X-ray classes ---
+    "Normal": {
+        "risk": "Low",
+        "description": "No significant pulmonary abnormalities detected in the chest X-ray.",
+        "characteristics": "The chest X-ray appears within normal limits. Clear lung fields with no "
+                          "consolidation, infiltrates, or pleural effusion identified by the AI model.",
+        "recommendation": "No immediate intervention required based on AI analysis. If respiratory symptoms "
+                         "persist, consult a pulmonologist for further evaluation. This AI result does not "
+                         "replace a formal radiological report.",
+    },
+    "Pneumonia": {
+        "risk": "High",
+        "description": "Pneumonia is an infection that inflames the air sacs in one or both lungs, "
+                       "which may fill with fluid or pus causing cough, fever, and difficulty breathing.",
+        "characteristics": "The chest X-ray demonstrates imaging features consistent with pneumonia, "
+                          "showing areas of consolidation or ground-glass opacities in the lung fields.",
+        "recommendation": "Immediate consultation with a pulmonologist or infectious disease specialist is advised. "
+                         "Further workup including blood tests, sputum culture, and possibly CT scan "
+                         "may be warranted for pathogen identification and treatment planning.",
+    },
+    "Tuberculosis": {
+        "risk": "High",
+        "description": "Tuberculosis (TB) is a serious infectious disease caused by Mycobacterium tuberculosis "
+                       "that primarily affects the lungs but can spread to other organs.",
+        "characteristics": "The chest X-ray shows features consistent with tuberculosis, which may include "
+                          "upper lobe infiltrates, cavitary lesions, or hilar lymphadenopathy.",
+        "recommendation": "Urgent referral to an infectious disease specialist is recommended. Confirmatory testing "
+                         "including sputum AFB smear, culture, and GeneXpert should be performed. If TB is confirmed, "
+                         "initiation of anti-TB therapy and contact tracing are essential.",
+    },
 }
 
 
 def generate_report(prediction: str, confidence: float, probabilities: dict) -> dict:
-    """Generate a clinical-style AI report for a brain tumor prediction.
+    """Generate a clinical-style AI report for a medical image prediction.
 
     Args:
         prediction: The predicted class label.
@@ -61,7 +92,7 @@ def generate_report(prediction: str, confidence: float, probabilities: dict) -> 
             - prediction: class label
             - confidence: percentage
             - risk_level: High/Medium/Low
-            - description: tumor type description
+            - description: condition description
             - ai_summary: clinical-style explanation
             - recommendation: next steps
             - disclaimer: legal note
@@ -96,7 +127,7 @@ def generate_report(prediction: str, confidence: float, probabilities: dict) -> 
         "disclaimer": (
             "This AI-generated report is for clinical decision support only. "
             "It must not replace professional medical diagnosis. All findings should be "
-            "validated by a qualified radiologist or neurologist."
+            "validated by a qualified radiologist or specialist physician."
         ),
         "probabilities": probabilities,
     }

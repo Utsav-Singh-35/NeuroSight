@@ -58,6 +58,10 @@ models/*.pth
 models/*.ckpt
 models/*.weights
 
+# Chest X-ray model weights (too large for git)
+chest/*.pth
+chest/*.pkl
+
 # Logs
 logs/
 *.log
@@ -119,3 +123,6 @@ data/*.md
 
 # Kiro specs folder
 .kiro/
+
+# Chest V1 folder (old/large)
+chest V1/

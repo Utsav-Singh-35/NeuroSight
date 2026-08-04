@@ -1,0 +1,16 @@
+{
+  "module_id": "brain_mri",
+  "display_name": "Brain MRI Tumor Classification",
+  "classes": ["Glioma", "Meningioma", "No Tumor", "Pituitary"],
+  "input_size": 224,
+  "normalization": "imagenet",
+  "base_models": ["efficientnet", "resnet", "densenet", "vgg"],
+  "timm_names": {
+    "efficientnet": "efficientnet_b0",
+    "resnet": "resnet50",
+    "densenet": "densenet121",
+    "vgg": "vgg16"
+  },
+  "model_prefix": "BRAIN_MRI",
+  "num_classes": 4
+}

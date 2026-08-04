@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MRI Analysis - NeuraSight</title>
+  <title>Medical Image Analysis - NeuraSight</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -136,19 +136,23 @@
 
   <!-- SCREEN 1: Upload -->
   <div class="screen upload-screen active" id="screen-upload">
-    <h1>MRI Analysis</h1>
-    <p>Upload a brain MRI scan for AI-powered tumor classification</p>
+    <h1>Medical Image Analysis</h1>
+    <p>Upload a medical scan for AI-powered classification</p>
+    <div class="scan-selector" style="width:100%;max-width:500px;display:flex;gap:0.8rem;margin-bottom:0.5rem;">
+      <button class="scan-btn active" data-module="brain_mri" style="flex:1;padding:0.8rem;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.4);border-radius:8px;color:#22d3ee;font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.3s;">🧠 Brain MRI</button>
+      <button class="scan-btn" data-module="chest_xray" style="flex:1;padding:0.8rem;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.4);font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.3s;">🫁 Chest X-ray</button>
+    </div>
     <div class="formats"><span>PNG</span><span>JPG</span><span>JPEG</span></div>
     <div class="upload-box" id="upload-box">
       <input type="file" id="file-input" accept=".png,.jpg,.jpeg">
       <label for="file-input">
         <div class="icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-        <div class="text" id="upload-text">Drop MRI image here or click to browse</div>
+        <div class="text" id="upload-text">Drop medical image here or click to browse</div>
       </label>
       <img class="preview" id="preview" style="display:none;">
     </div>
-    <button class="analyze-btn" id="analyze-btn" disabled>Analyze MRI</button>
-    <p class="note">⚠️ Use actual brain MRI images. Non-MRI images will default to "No Tumor".</p>
+    <button class="analyze-btn" id="analyze-btn" disabled>Analyze Scan</button>
+    <p class="note">⚠️ Use actual medical images matching your selected scan type for best results.</p>
     <div class="samples">
       <p class="samples-label">Or try a sample:</p>
       <div class="samples-row">
@@ -163,7 +167,7 @@
   <!-- SCREEN 2: Loading -->
   <div class="screen loading-screen" id="screen-loading">
     <div class="spinner"></div>
-    <div class="loading-text">Analyzing MRI scan...</div>
+    <div class="loading-text">Analyzing medical scan...</div>
     <div class="loading-stage" id="loading-stage"></div>
   </div>
 
@@ -185,6 +189,32 @@
     const resultsContainer = document.getElementById('results-container');
 
     let selectedFile = null;
+    let selectedModule = 'brain_mri';
+
+    // Scan type selector
+    document.querySelectorAll('.scan-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.scan-btn').forEach(b => {
+          b.style.background = 'transparent';
+          b.style.borderColor = 'rgba(255,255,255,0.1)';
+          b.style.color = 'rgba(255,255,255,0.4)';
+          b.classList.remove('active');
+        });
+        btn.style.background = 'rgba(34,211,238,0.1)';
+        btn.style.borderColor = 'rgba(34,211,238,0.4)';
+        btn.style.color = '#22d3ee';
+        btn.classList.add('active');
+        selectedModule = btn.dataset.module;
+
+        // Update UI text based on selection
+        const sampleSection = document.querySelector('.samples');
+        if (selectedModule === 'chest_xray') {
+          sampleSection.style.display = 'none';
+        } else {
+          sampleSection.style.display = 'block';
+        }
+      });
+    });
 
     function showScreen(screen) {
       [screenUpload, screenLoading, screenResults].forEach(s => s.classList.remove('active'));
@@ -218,6 +248,7 @@
       showScreen(screenLoading);
 
       let stageIdx = 0;
+      const moduleLabel = selectedModule === 'chest_xray' ? 'X-ray' : 'MRI';
       const stageTimer = setInterval(() => {
         if (stageIdx < stages.length) { loadingStage.textContent = stages[stageIdx]; stageIdx++; }
       }, 600);
@@ -227,8 +258,8 @@
         const form2 = new FormData(); form2.append('image', selectedFile);
 
         const [reportRes, gradcamRes] = await Promise.all([
-          fetch('/report', { method: 'POST', body: form1 }),
-          fetch('/gradcam', { method: 'POST', body: form2 }),
+          fetch(`/report?module=${selectedModule}`, { method: 'POST', body: form1 }),
+          fetch(`/gradcam?module=${selectedModule}`, { method: 'POST', body: form2 }),
         ]);
 
         clearInterval(stageTimer);
@@ -252,16 +283,18 @@
       if (r.risk_level === 'High') riskClass = 'risk-high';
       else if (r.risk_level === 'Medium') riskClass = 'risk-medium';
 
-      // Show heatmap only for tumor predictions (not for "No Tumor")
+      // Determine if we should show heatmap (hide for "Normal" / "No Tumor")
+      const isNormal = r.prediction === 'No Tumor' || r.prediction === 'Normal';
+
       let heatmapHtml = '';
-      if (heatmap && r.prediction !== 'No Tumor') {
+      if (heatmap && !isNormal) {
         heatmapHtml = `
         <div class="heatmap-section">
-          <div class="title">MRI Comparison</div>
+          <div class="title">Scan Comparison</div>
           <div class="images">
             <div class="img-box">
-              <div class="img-label">Original MRI</div>
-              <img src="${uploadedImageDataUrl}" alt="Original MRI">
+              <div class="img-label">Original</div>
+              <img src="${uploadedImageDataUrl}" alt="Original scan">
             </div>
             <div class="img-box">
               <div class="img-label">Grad-CAM Heatmap</div>
@@ -270,18 +303,26 @@
           </div>
           <div class="caption">Red/warm regions = areas the AI focused on for its prediction</div>
         </div>`;
-      } else if (r.prediction === 'No Tumor' && uploadedImageDataUrl) {
+      } else if (isNormal && uploadedImageDataUrl) {
         heatmapHtml = `
         <div class="heatmap-section">
-          <div class="title">Uploaded MRI</div>
+          <div class="title">Uploaded Scan</div>
           <div class="images">
             <div class="img-box">
-              <img src="${uploadedImageDataUrl}" alt="Original MRI">
+              <img src="${uploadedImageDataUrl}" alt="Original scan">
             </div>
           </div>
           <div class="caption">No abnormality detected — Grad-CAM not shown for healthy scans</div>
         </div>`;
       }
+
+      // Build probability bars dynamically from the report's probabilities
+      const probClasses = Object.keys(r.probabilities);
+      const probHtml = probClasses.map(c => `
+        <div class="prob-row">
+          <div class="prob-labels"><span>${c}</span><span class="pct">${r.probabilities[c].toFixed(1)}%</span></div>
+          <div class="prob-track"><div class="prob-fill" style="width:${r.probabilities[c]}%"></div></div>
+        </div>`).join('');
 
       resultsContainer.innerHTML = `
         <div class="result-header">
@@ -300,14 +341,10 @@
         </div>
         <div class="prob-section">
           <div class="title">Probability Distribution</div>
-          ${['Glioma','Meningioma','Pituitary','No Tumor'].map(c => `
-            <div class="prob-row">
-              <div class="prob-labels"><span>${c}</span><span class="pct">${r.probabilities[c].toFixed(1)}%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:${r.probabilities[c]}%"></div></div>
-            </div>`).join('')}
+          ${probHtml}
         </div>
         <div class="disclaimer">${r.disclaimer}</div>
-        <button class="new-upload-btn" onclick="resetToUpload()">Upload New MRI</button>
+        <button class="new-upload-btn" onclick="resetToUpload()">Upload New Scan</button>
       `;
     }
 
@@ -315,7 +352,7 @@
       selectedFile = null;
       uploadedImageDataUrl = null;
       uploadBox.classList.remove('has-file');
-      uploadText.textContent = 'Drop MRI image here or click to browse';
+      uploadText.textContent = 'Drop medical image here or click to browse';
       uploadText.classList.remove('selected');
       preview.style.display = 'none';
       fileInput.value = '';
