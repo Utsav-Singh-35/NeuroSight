@@ -194,6 +194,13 @@ class ReportResponse(BaseModel):
     follow_up: str | None = None
     warning_signs: str | None = None
     treatment_information: str | None = None
+    india_care_pathway: str | None = Field(
+        default=None,
+        description="Jurisdictional context for India: care pathway, resource "
+        "setting, regulatory status under CDSCO and the ICMR ethical framework. "
+        "Explicitly states that citing Indian authorities does not imply the "
+        "model was validated on an Indian cohort.",
+    )
 
     clinical_narrative: str | None = None
     narrative_source: str | None = Field(

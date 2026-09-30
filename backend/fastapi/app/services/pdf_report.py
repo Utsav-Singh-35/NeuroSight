@@ -511,6 +511,15 @@ def _clinical_sections(report: dict, styles: dict) -> list:
             styles["small"],
         ))
 
+    # Jurisdictional context. Placed after the clinical sections and before the
+    # recommendation, because it frames who should act on the result and under
+    # what regulatory standing - which is exactly what a reader of a detached
+    # PDF needs before acting on anything above.
+    india = report.get("india_care_pathway")
+    if india:
+        flows.append(Paragraph("CARE PATHWAY AND REGULATORY STATUS (INDIA)", styles["h2"]))
+        flows.extend(_prose_block(india, styles["body"]))
+
     recommendation = report.get("recommendation")
     if recommendation and recommendation != report.get("investigations"):
         flows.append(Paragraph("RECOMMENDED NEXT STEP", styles["h2"]))

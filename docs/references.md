@@ -106,17 +106,37 @@ in Medical Image Analysis.* **Medical Image Analysis** 42, 60–88.
 
 ---
 
-## 4. Clinical sources
+## 4. Clinical and jurisdictional sources
 
-The 12 clinical sources behind the report text are **not** listed here, because they are recorded
+The 17 sources behind the report text are **not** individually listed here, because they are recorded
 machine-readably with their verification status in
 [`knowledge/sources.json`](../knowledge/sources.json). That file is the single source of truth and is
 what the build-time citation check validates against.
 
-Summary: 7 government clinical summaries (NCI, NINDS, NCBI Bookshelf), 3 peer-reviewed reference
-articles and consensus reviews (StatPearls; *Neuro-Oncology* 2024 consensus review on meningioma), 1
-classification standard (WHO Classification of Tumours of the Central Nervous System, 5th edition,
-2021), and 1 self-reference used for statements about this system's own behaviour.
+### 4.1 Clinical backbone — international and US
+
+7 government clinical summaries (NCI, NINDS, NCBI Bookshelf), 3 peer-reviewed reference articles and
+consensus reviews (StatPearls; *Neuro-Oncology* 2024 consensus review on meningioma), and 1
+classification standard — the WHO Classification of Tumours of the Central Nervous System, 5th
+edition, 2021. One self-reference is used for statements about this system's own behaviour.
+
+### 4.2 Indian sources — care pathway, epidemiology and governance
+
+Added because the clinical backbone above is jurisdiction-neutral for *classification* but
+US-flavoured for everything else. WHO CNS5 remains the typing and grading authority; these supply
+what genuinely differs by country.
+
+| Source | Role in this project |
+|--------|---------------------|
+| [ICMR — Ethical Guidelines for Application of Artificial Intelligence in Biomedical Research and Healthcare](https://icmr.gov.in/ethical-guidelines-for-application-of-artificial-intelligence-in-biomedical-research-and-healthcare) (2023) | India's first ethical framework for AI in health. Sets patient-centric principles, the ethics review process, governance and consent, and requires clinical and field validation before patient application. **The framework this project is answerable to.** |
+| [CDSCO — Medical Device and Diagnostics regulation](https://cdsco.gov.in/opencms/opencms/en/Medical-Device-Diagnostics/Medical-Device-Diagnostics/) | Devices in India are regulated under the Drugs and Cosmetics Act, 1940 and the Medical Devices Rules, 2017. Cited to state what this project is **not**: it holds no registration and is not a medical device in India. |
+| [National Cancer Grid](https://www.ncgindia.org/) | Network of major Indian cancer centres with a mandate of uniform care standards; publishes resource-stratified guidelines so evidence-based management is implementable across differing infrastructure. Supplies the referral context. |
+| [ICMR-NCDIR — National Cancer Registry Programme](https://www.ncdirindia.org/) | Indian cancer incidence by age, sex and site (ICD-10). Cited as *where to obtain* figures; per-class numbers are deliberately not restated, as they vary by registry and reporting year. |
+| [Indian data on central nervous system tumours: a summary of published work](https://pmc.ncbi.nlm.nih.gov/articles/PMC4991137/) | Peer-reviewed review. CNS tumours are approximately 2% of all malignancies, with burden weighted towards younger and middle-aged patients. |
+
+**Verification.** All five Indian URLs were confirmed to exist and be topically correct via search on
+2026-09-30, on the same basis as the original set. Citing them does **not** imply the model was
+validated on an Indian cohort — the `## Care pathway in India` sections say the opposite explicitly.
 
 **Verification status, recorded honestly in that file:** all 12 URLs were confirmed to exist and be
 topically correct. Full page text was **not** programmatically extracted — cancer.gov and
@@ -158,6 +178,8 @@ Exact pins: [`backend/fastapi/requirements.txt`](../backend/fastapi/requirements
 | **TRIPOD+AI** | Reporting of prediction-model studies including AI. |
 | [FDA — AI/ML-enabled medical devices](https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-and-machine-learning-aiml-enabled-medical-devices) | Positions this work correctly: a research prototype, **not** a cleared device. |
 | [WHO — Ethics and Governance of AI for Health](https://www.who.int/publications/i/item/9789240029200) | Ethical framing for clinical decision support. |
+| **[ICMR — Ethical Guidelines for AI in Biomedical Research and Healthcare](https://icmr.gov.in/ethical-guidelines-for-application-of-artificial-intelligence-in-biomedical-research-and-healthcare)** (2023) | **The governing framework in India**, and the one that actually applies here. Requires clinical and field validation before patient use — which this project has not done, and says so. |
+| **[CDSCO — Medical Devices Rules, 2017](https://cdsco.gov.in/opencms/opencms/en/Medical-Device-Diagnostics/Medical-Device-Diagnostics/)** | The Indian regulatory instrument for medical devices. No registration held. |
 
 ---
 

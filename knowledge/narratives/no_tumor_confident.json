@@ -2,7 +2,7 @@
   "class": "No Tumor",
   "module": "brain_mri",
   "band": "confident",
-  "text": "The model has classified the brain MRI as \"No Tumour\", meaning it did not detect imaging features that match the three tumour types it was trained on - glioma, meningioma or pituitary tumour [neurasight-system]. This is a classification output, not a diagnostic conclusion, and it does not equate to a normal scan or a clean bill of health. The system only recognises four categories; other abnormalities such as infarction, haemorrhage, infection or developmental lesions lie outside its experience and may be assigned to the \"No Tumour\" class by default [nci-cns-pdq-patient]. Likewise, the absence of a detected tumour does not guarantee the absence of disease, a single slice does not represent the whole study, and clinical correlation remains essential [nci-cns-pdq-patient]. If the patient has any concerning symptoms - for example sudden severe headache, new seizures, loss of consciousness, focal weakness, visual change, confusion or persistent vomiting - these should prompt prompt medical assessment regardless of the classification [ninds-brain-tumors]. In such circumstances it would be appropriate to discuss with a qualified clinician a thorough neurological examination, a formal radiological report of the complete imaging set, possible repeat or additional imaging with full coverage, evaluation for non-tumour causes of the symptoms and referral to a specialist if needed [nci-cns-pdq-patient] [ninds-brain-tumors].",
+  "text": "The AI system has classified the brain MRI as \"No Tumour\", meaning it did not detect image features that correspond to the three tumour types it was trained on - glioma, meningioma or pituitary tumour [neurasight-system]. It is important to understand that this output is a classification, not a definitive medical diagnosis, and it does not equate to a normal scan [neurasight-system]. The model only recognises four categories; any other abnormality such as infarct, haemorrhage, infection or developmental anomaly may be placed into the \"No Tumour\" class because the algorithm has no way to express \"something else\" [nci-cns-pdq-patient]. Likewise, a lack of tumour detection does not guarantee the absence of disease, a single slice does not represent the whole study, and clinical correlation remains essential [nci-cns-pdq-patient]. If the patient has symptoms such as sudden severe headache, new seizures, loss of consciousness, focal weakness, visual change, confusion or persistent vomiting, urgent medical assessment is still required [ninds-brain-tumors]. In such circumstances a clinician may discuss a thorough neurological examination, formal radiological reporting of the complete imaging set, repeat or additional imaging with appropriate sequences, evaluation for non-tumour causes and possible specialist referral [nci-cns-pdq-patient] [ninds-brain-tumors].",
   "grounding": {
     "citations_used": [
       "nci-cns-pdq-patient",
@@ -20,7 +20,7 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 207
+    "word_count": 192
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
@@ -38,13 +38,13 @@
     "error": null,
     "usage": {
       "prompt_tokens": 1284,
-      "completion_tokens": 665,
-      "total_tokens": 1949
+      "completion_tokens": 659,
+      "total_tokens": 1943
     },
     "attempts": 1,
-    "elapsed_seconds": 12.818
+    "elapsed_seconds": 14.675
   },
-  "generated": "2026-09-29T18:26:22.723025+00:00",
+  "generated": "2026-09-30T11:22:59.631499+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

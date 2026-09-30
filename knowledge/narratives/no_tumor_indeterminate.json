@@ -2,7 +2,7 @@
   "class": "No Tumor",
   "module": "brain_mri",
   "band": "indeterminate",
-  "text": "The AI output of 'No Tumour' indicates that the model did not identify features matching the three tumour types it was trained on [neurasight-system], but this does not equate to a normal scan and should not be taken as a definitive assessment. The system only distinguishes four categories and any other pathology may be mis-classified, while a single slice does not represent the whole study; therefore absence of a detected tumour is not the same as absence of disease [nci-cns-pdq-patient]. Consequently the result is inconclusive and must not be used to guide management without further review. Any concerning symptoms such as sudden severe headache, new seizures, loss of consciousness, weakness, visual change, confusion or persistent vomiting should still prompt urgent medical assessment [ninds-brain-tumors]. It is essential that a qualified radiologist or specialist physician review the full imaging study and discuss, as appropriate, clinical examination, formal radiological reporting, repeat or additional imaging and investigation of non-tumour causes [nci-cns-pdq-patient] [ninds-brain-tumors]",
+  "text": "The model has returned a \"No Tumour\" classification, which indicates that no features associated with the three tumour types it was trained on were identified, but it does not mean the scan is normal [neurasight-system]. This result is not a clean bill of health; the system only knows four categories and any other abnormality may be placed into the \"No Tumour\" class, and the absence of a detected tumour is not the same as the absence of disease [nci-cns-pdq-patient]. Because the conformal prediction set includes three or more classes, the output is inconclusive and must not be acted upon. Clinical correlation is required, and the finding should be reviewed by a qualified radiologist or specialist physician. If symptoms are present, matters a clinician may consider discussing include a clinical and neurological examination, formal radiological reporting of the full study, further or repeat imaging with appropriate sequences, investigation of non-tumour causes and specialist referral where symptoms persist or progress [nci-cns-pdq-patient] [ninds-brain-tumors].",
   "grounding": {
     "citations_used": [
       "nci-cns-pdq-patient",
@@ -20,7 +20,7 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 158
+    "word_count": 160
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
@@ -38,13 +38,13 @@
     "error": null,
     "usage": {
       "prompt_tokens": 1285,
-      "completion_tokens": 1939,
-      "total_tokens": 3224
+      "completion_tokens": 574,
+      "total_tokens": 1859
     },
     "attempts": 1,
-    "elapsed_seconds": 16.571
+    "elapsed_seconds": 17.259
   },
-  "generated": "2026-09-29T18:26:53.548313+00:00",
+  "generated": "2026-09-30T11:23:32.912076+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

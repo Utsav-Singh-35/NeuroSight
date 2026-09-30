@@ -61,6 +61,11 @@ _SECTION_KEYS = {
     "follow-up considerations": "follow_up",
     "warning signs": "warning_signs",
     "treatment information": "treatment_information",
+    # India-specific context. Kept as its own section rather than folded into
+    # the clinical ones, because it is jurisdictional rather than medical: care
+    # pathway, resource stratification and regulatory status. Separating it also
+    # keeps the clinical chunks portable to another jurisdiction.
+    "care pathway in india": "india_care_pathway",
 }
 
 

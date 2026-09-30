@@ -257,7 +257,7 @@ configs the server reads.
                                   │  uncertainty      │       │  models/ (brain, 4×.pth)         │
                                   └───────────────────┘       │  chest/  (chest, 3×.pth)         │
                                                               │  models/calibration/*.json       │
-                                                              │  knowledge/ (28 chunks, index)   │
+                                                              │  knowledge/ (32 chunks, index)   │
                                                               └──────────────────────────────────┘
 ```
 
@@ -1506,15 +1506,46 @@ while assessment is always reported.
 
 ### 13.15 Cited clinical knowledge base **[MEASURED]**
 
-**Artefacts:** `knowledge/sources.json` (**12 sources**), `knowledge/brain_mri/*.md` (4 files,
-**28 chunks**)
+**Artefacts:** `knowledge/sources.json` (**17 sources**), `knowledge/brain_mri/*.md` (4 files,
+**32 chunks**)
 
-| Source type | Count |
-|-------------|-------|
-| Government clinical summaries (NCI, NINDS, NCBI Bookshelf) | 7 |
-| Peer-reviewed reference articles / consensus reviews (StatPearls, *Neuro-Oncology* 2024) | 3 |
-| Classification standard (WHO CNS5, 2021) | 1 |
-| `neurasight-system` self-reference | 1 |
+| Source type | Jurisdiction | Count |
+|-------------|--------------|-------|
+| Classification standard (WHO CNS5, 2021) | International | 1 |
+| Peer-reviewed reference articles / consensus reviews (StatPearls, *Neuro-Oncology* 2024) | International | 3 |
+| Government clinical summaries (NCI, NINDS, NCBI Bookshelf) | United States | 7 |
+| National ethics guideline (ICMR, 2023) | **India** | 1 |
+| National regulatory authority (CDSCO) | **India** | 1 |
+| National clinical network (National Cancer Grid) | **India** | 1 |
+| National disease registry (ICMR-NCDIR) | **India** | 1 |
+| Peer-reviewed Indian CNS epidemiology review | **India** | 1 |
+| `neurasight-system` self-reference | — | 1 |
+
+**The jurisdictional split is a deliberate division of labour, not hedging.** Tumour typing and
+grading follow WHO CNS5 because that *is* the international standard and Indian tertiary centres
+grade against it too — there is no Indian alternative and none is wanted. What genuinely differs by
+country is everything around the classification: where a patient is seen, what is locally
+available, and which authority governs a tool like this. Those are the Indian sources' job.
+
+Each of the four class files gained a **`## Care pathway in India`** section (chunk key
+`india_care_pathway`), which is surfaced as its own field in the API, the dashboard and the PDF
+rather than folded into the clinical text. Keeping it separate means the clinical chunks stay
+portable if another jurisdiction is ever added, and it keeps the evidence audit legible: a
+statement about Indian regulation should not be dressed up as a medical citation.
+
+**What those sections say, and what they refuse to say.** They give the referral context (National
+Cancer Grid's resource-stratified network), the epidemiological framing (CNS tumours ≈ 2% of
+malignancies, weighted towards younger patients, so a missed diagnosis costs disproportionate
+life-years), the regulatory status (**no CDSCO registration — therefore not a medical device in
+India**), and the governing ethical framework (ICMR requires clinical and field validation before
+patient application). They deliberately **do not** restate per-class Indian incidence figures,
+because those vary by registry and reporting year and were not independently verified here;
+`icmr-ncdir-ncrp` is cited as where to obtain them instead.
+
+**The honest counterweight, stated in all four sections.** The model was trained and evaluated on a
+public corpus of unstated scanner and population provenance. It has **not** been validated on an
+Indian cohort. Citing ICMR and CDSCO makes the governance framing correct; it does not make the
+model locally validated, and a reader could easily infer otherwise if it were not said plainly.
 
 **Every chunk carries at least one citation id**, enforced by a build-time check. Four chunks
 initially failed it — they described *this system's* behaviour (e.g. "the model cannot grade a
@@ -1536,33 +1567,51 @@ explicit unknown-label error path, not the most reassuring class in the dictiona
 ### 13.16 Local evidence retrieval — RAG without the stack **[MEASURED]**
 
 **Artefacts:** `knowledge/index.npz` (**40,091 bytes**), `knowledge/index_meta.json`,
-`knowledge/retrieval_eval.json` (30 hand-labelled queries), `knowledge/retrieval_results.json`
+`knowledge/retrieval_eval.json` (36 hand-labelled queries), `knowledge/retrieval_results.json`
 
 **Encoder:** `sentence-transformers/all-MiniLM-L6-v2`, 384-dim. The entire corpus is a
-$(28, 384)$ float array. **No vector database, no LangChain** — at 28 chunks / 40 KB, exact
+$(32, 384)$ float array. **No vector database, no LangChain** — at 32 chunks / 45 KB, exact
 brute-force cosine similarity over a NumPy array is both faster and simpler than any index, and
 introducing Pinecone or Chroma here would be unjustifiable complexity. Retrieval is warm in
 **15.3 ms**; the 18.7 s cold cost is the one-off encoder load.
 
-**Evaluation against a lexical baseline**, 30 hand-labelled queries, $k = 5$, **19 of 30
-deliberately paraphrased away from corpus wording**:
+**Evaluation against a lexical baseline**, **36 hand-labelled queries** over **32 chunks**, $k = 5$,
+**23 of 36 deliberately paraphrased away from corpus wording**:
 
 | Metric | TF-IDF | **Embedding** | Δ |
 |--------|--------|---------------|---|
-| Hit@1 | 0.5000 | **0.5333** | +0.033 |
-| Hit@3 | 0.8000 | **0.9000** | +0.100 |
-| Recall@5 | 0.7472 | **0.8194** | +0.072 |
-| MRR | 0.6389 | **0.7139** | +0.075 |
-| Precision@5 | 0.2800 | 0.3067 | +0.027 |
-| **Complete misses (0 relevant in top-5)** | **6 / 30** | **2 / 30** | **−4** |
+| Hit@1 | 0.5000 | **0.6111** | +0.111 |
+| Hit@3 | 0.8056 | **0.8889** | +0.083 |
+| Recall@5 | 0.7731 | **0.7940** | +0.021 |
+| MRR | 0.6528 | **0.7532** | +0.100 |
+| Precision@5 | 0.3500 | 0.3444 | −0.006 |
+| **Complete misses (0 relevant in top-5)** | **5 / 36** | **2 / 36** | **−3** |
 
 Split by query type, which is where the mechanism shows:
 
 | Subset | Metric | TF-IDF | Embedding |
 |--------|--------|--------|-----------|
-| Paraphrased (n = 19) | Hit@3 | 0.7368 | **0.8947** |
-| Paraphrased (n = 19) | Recall@5 | 0.6535 | **0.7939** |
-| Literal (n = 11) | Hit@1 | 0.5455 | **0.7273** |
+| Paraphrased (n = 23) | Hit@3 | 0.7391 | **0.8696** |
+| Paraphrased (n = 23) | Recall@5 | 0.6884 | **0.7536** |
+| Paraphrased (n = 23) | MRR | 0.6232 | **0.7080** |
+| Literal (n = 13) | Hit@1 | 0.5385 | **0.7692** |
+
+**These numbers supersede the 30-query set.** Six queries (q31–q36) were added when the India
+care-pathway chunks were introduced, so the eval still covers the whole corpus rather than
+measuring retrieval over a subset of it. All six retrieve a relevant chunk at **rank 1**.
+
+Two effects are worth reading correctly rather than glossing:
+
+- **Hit@1 rose from 0.5333 to 0.6111 and MRR from 0.7139 to 0.7532.** That is not the retriever
+  getting better; it is the new queries being easier, because "Is this an approved medical device in
+  India?" has distinctive vocabulary. Comparative standing against TF-IDF is what the table is for,
+  and embedding still wins on every metric except precision@5.
+- **Precision@5 now slightly favours TF-IDF (0.3500 vs 0.3444).** Four of the six new queries have
+  four relevant chunks — one per class, because the regulatory and non-validation statements are
+  deliberately repeated across all four classes so a user who only ever sees one class is still told
+  the tool holds no CDSCO approval. With $k = 5$ those four compete with each other, which moves
+  precision around for reasons that have nothing to do with retrieval quality. This is the same
+  construction artefact flagged for precision@5 from the start.
 
 The gain concentrates on paraphrased queries — exactly the behaviour semantic embeddings are
 supposed to provide, confirmed rather than assumed. **Complete misses is the metric that matters
@@ -1620,7 +1669,7 @@ feature.
 `models/calibration/sample_reports/` · endpoint `POST /report/pdf`
 
 Built on reportlab **platypus flowables** so content paginates rather than being placed at fixed
-coordinates. **4 pages, 121–139 KB** with both the original scan and the Grad-CAM overlay embedded.
+coordinates. **4 pages, 121–144 KB** with both the original scan and the Grad-CAM overlay embedded.
 
 Sections in order: branded header with scan metadata · primary finding with calibrated confidence,
 risk level, conformal prediction set and coverage guarantee · **caveats box** · probability table
@@ -2061,7 +2110,7 @@ Say this before you are asked. It is the difference between a defensible project
 | Is your ECE flattered by the binning? | The opposite — conventional equal-width ECE is *inflated* here because 454 of 480 samples land in one bin. Both equal-width (0.0259) and equal-mass adaptive (0.0133) are reported (§13.12). |
 | Does the LLM write the medical text users see? | **No.** Twelve narratives were authored offline and every one is behind a `reviewed: false` gate, so the system serves a deterministic template and reports `narrative_source: "template"`. Verified live (§13.17). |
 | How do you know the narratives aren't hallucinated? | A build-time grounding check requires every claim to trace to a retrieved chunk and every citation id to resolve. 12/12 grounded on the first attempt, 0 fabricated citations, 0 invented percentages (§13.17). |
-| Why no vector database for the RAG? | 28 chunks is a $(28, 384)$ array — 40 KB. Exact brute-force cosine is faster and simpler than any index; a vector DB here would be unjustifiable complexity. Retrieval is 15.3 ms warm (§13.16). |
+| Why no vector database for the RAG? | 32 chunks is a $(32, 384)$ array — 45 KB. Exact brute-force cosine is faster and simpler than any index; a vector DB here would be unjustifiable complexity. Retrieval is 15.3 ms warm (§13.16). |
 | Why Logistic Regression and not a neural meta-learner? | 68 parameters versus thousands on a small meta-set; convex so reproducible; and the coefficients are directly interpretable — §6.4 is only possible because the combiner is linear. |
 | Why is the deployed chest model the less accurate one? | Different label spaces, so the numbers were never comparable. See §2.2. |
 | Why is VGG-16 there if it's the weakest? | Diversity. The meta-learner assigns it a 25.6% reliance share — second highest of the four. |
@@ -2090,9 +2139,9 @@ Say this before you are asked. It is the difference between a defensible project
 | **Calibration** | ECE 0.0262 → 0.0259 (adaptive 0.0134 → 0.0133), $T = 0.9964$; bases need $T$ up to **3.35**, the meta-learner needs none [MEASURED] |
 | **Uncertainty** | Split conformal, $\alpha = 0.01$, coverage **1.0000**, mean set size **1.3313**; 334 confident / 137 borderline / 9 indeterminate [MEASURED] |
 | **OOD** | Quality gate + JS-divergence novelty detector, **AUROC 0.9538**, FPR 7.29% on the hard tier [MEASURED] |
-| **Evidence** | 12 cited sources, 28 chunks, embedding retrieval MRR **0.7139** vs TF-IDF 0.6389; complete misses 6/30 → **2/30** [MEASURED] |
+| **Evidence** | **17 cited sources across 3 jurisdictions** (WHO, US federal, India), 32 chunks; embedding retrieval MRR **0.7532** vs TF-IDF 0.6528; complete misses 5/36 → **2/36** [MEASURED] |
 | **Narratives** | 12/12 grounded first attempt, 0 fabricated citations, all `reviewed: false` so the **template is served** [MEASURED] |
-| **Reporting** | 4-page PDF, 121–139 KB, caveats box, cited references [MEASURED] |
+| **Reporting** | 4-page PDF, 121–144 KB, caveats box, cited references, India care-pathway section [MEASURED] |
 | **Measured latency** | brain **650 ms** · chest **490 ms** · Grad-CAM 3.2 s · full scan 3.5–4.0 s — was 9.9–14.9 s, CPU-only throughout [MEASURED] |
 | **Top safety gap (closed)** | Confidence gating replaced by conformal bands with a coverage guarantee; the 56.5% "Normal" TB scan now reports **Indeterminate** |
 | **Top integration gap (closed)** | Chest module reachable end to end; escalated scans persist |

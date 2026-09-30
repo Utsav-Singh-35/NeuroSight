@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-29T18:27:46.247013+00:00",
+  "generated": "2026-09-30T11:24:16.040703+00:00",
   "model": "openai/gpt-oss-120b",
   "retriever": "embedding",
   "k": 5,
@@ -9,164 +9,164 @@
   "grounded_final": 12,
   "grounded_first_attempt": 12,
   "needed_retry": 0,
-  "total_tokens": 27539,
+  "total_tokens": 26839,
   "grounding_attempts_allowed": 3,
   "items": [
     {
       "slug": "glioma_confident",
       "ok": true,
       "grounded": true,
-      "word_count": 161,
+      "word_count": 159,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 2462
+      "tokens": 2921
     },
     {
       "slug": "glioma_borderline",
       "ok": true,
       "grounded": true,
-      "word_count": 151,
+      "word_count": 184,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 1984
+      "tokens": 2510
     },
     {
       "slug": "glioma_indeterminate",
       "ok": true,
       "grounded": true,
-      "word_count": 146,
+      "word_count": 199,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 1970
+      "tokens": 2923
     },
     {
       "slug": "meningioma_confident",
       "ok": true,
       "grounded": true,
-      "word_count": 190,
+      "word_count": 154,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 2672
+      "tokens": 2486
     },
     {
       "slug": "meningioma_borderline",
       "ok": true,
       "grounded": true,
-      "word_count": 193,
+      "word_count": 162,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 2145
+      "tokens": 1647
     },
     {
       "slug": "meningioma_indeterminate",
       "ok": true,
       "grounded": true,
-      "word_count": 156,
+      "word_count": 149,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 2171
+      "tokens": 1850
     },
     {
       "slug": "no_tumor_confident",
       "ok": true,
       "grounded": true,
-      "word_count": 207,
+      "word_count": 192,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 1949
+      "tokens": 1943
     },
     {
       "slug": "no_tumor_borderline",
       "ok": true,
       "grounded": true,
-      "word_count": 191,
+      "word_count": 174,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 1996
+      "tokens": 2521
     },
     {
       "slug": "no_tumor_indeterminate",
       "ok": true,
       "grounded": true,
-      "word_count": 158,
+      "word_count": 160,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 3224
+      "tokens": 1859
     },
     {
       "slug": "pituitary_confident",
       "ok": true,
       "grounded": true,
-      "word_count": 158,
+      "word_count": 148,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 2121
+      "tokens": 2023
     },
     {
       "slug": "pituitary_borderline",
       "ok": true,
       "grounded": true,
-      "word_count": 171,
+      "word_count": 172,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 2108
+      "tokens": 1992
     },
     {
       "slug": "pituitary_indeterminate",
       "ok": true,
       "grounded": true,
-      "word_count": 131,
+      "word_count": 152,
       "hallucinated": [],
       "percentages": [],
       "ascii_clean": true,
       "non_ascii": [],
       "attempts_used": 1,
       "grounded_first_attempt": true,
-      "tokens": 2737
+      "tokens": 2164
     }
   ]
 }

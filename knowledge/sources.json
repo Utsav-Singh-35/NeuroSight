@@ -2,9 +2,10 @@
   "registry_version": "1.0",
   "generated": "2026-09-29",
   "purpose": "Source registry for the NeuraSight evidence layer. Every clinical statement in knowledge/**/*.md carries one or more of these source IDs so the generated report can cite its evidence.",
+  "jurisdiction_note": "Deliberate division of labour. Tumour typing and grading follow WHO CNS5, which is the shared international standard that Indian tertiary centres also use - there is no Indian alternative to it and none is wanted. The US federal sources (NCI, NINDS) supply general clinical fundamentals. The Indian sources (ICMR, CDSCO, NCG, ICMR-NCDIR) supply what is genuinely country-specific: care pathway, resource context, epidemiology and the regulatory/ethical framework that governs a tool like this one. Citing Indian authorities does NOT mean the model was validated on an Indian cohort - see the care-pathway sections, which state the opposite explicitly.",
   "verification_status": {
     "urls_verified": true,
-    "urls_verified_note": "All URLs below were confirmed to exist and to be topically correct via web search on 2026-09-29.",
+    "urls_verified_note": "All URLs below were confirmed to exist and to be topically correct via web search: the original set on 2026-09-29, the Indian set on 2026-09-30.",
     "content_extracted": false,
     "content_extracted_note": "Full page text was NOT programmatically extracted (cancer.gov/ninds.nih.gov blocked automated fetching; NCBI Bookshelf pages did not yield text to the fetcher). The knowledge-base entries therefore state well-established, general clinical fundamentals and point to these sources for verification. They are NOT verbatim extracts and MUST be reviewed against the primary source by a qualified reviewer before any clinical framing is relied upon.",
     "clinical_review_required": true
@@ -112,7 +113,57 @@
       "type": "classification standard",
       "licence": "Copyrighted publication - cite, do not reproduce.",
       "accessed": "2026-09-29",
-      "relevant_note": "The current authority for CNS tumour typing and grading. Integrates histology with molecular markers; grading terminology changed from the 4th edition, which matters when comparing older literature."
+      "relevant_note": "The current authority for CNS tumour typing and grading. Integrates histology with molecular markers; grading terminology changed from the 4th edition, which matters when comparing older literature. Indian tertiary centres type and grade CNS tumours against this same standard, so it is the shared clinical backbone rather than a foreign alternative to Indian practice."
+    },
+    "icmr-ai-ethics": {
+      "title": "Ethical Guidelines for Application of Artificial Intelligence in Biomedical Research and Healthcare",
+      "publisher": "Indian Council of Medical Research (ICMR), Government of India, 2023",
+      "url": "https://icmr.gov.in/ethical-guidelines-for-application-of-artificial-intelligence-in-biomedical-research-and-healthcare",
+      "type": "national ethics guideline",
+      "jurisdiction": "India",
+      "licence": "Government of India publication - cite, do not reproduce.",
+      "accessed": "2026-09-30",
+      "relevant_note": "India's first ethical framework for AI in biomedical research and healthcare. Sets out patient-centric ethical principles, guiding principles for stakeholders, the ethics review process, governance, and informed consent, and requires AI health technologies to undergo clinical and field validation before being applied to patients. This is the governing framework for a tool of this kind in India, which is why it is cited in the care-pathway sections rather than as a clinical source."
+    },
+    "cdsco-md-rules": {
+      "title": "Medical Device and Diagnostics regulation (Drugs and Cosmetics Act 1940; Medical Devices Rules 2017)",
+      "publisher": "Central Drugs Standard Control Organisation (CDSCO), Directorate General of Health Services, Ministry of Health and Family Welfare, Government of India",
+      "url": "https://cdsco.gov.in/opencms/opencms/en/Medical-Device-Diagnostics/Medical-Device-Diagnostics/",
+      "type": "national regulatory authority",
+      "jurisdiction": "India",
+      "licence": "Government of India publication - cite, do not reproduce.",
+      "accessed": "2026-09-30",
+      "relevant_note": "CDSCO is the central authority regulating medical devices in India under the Drugs and Cosmetics Act, 1940 and the Medical Devices Rules, 2017. Cited to state plainly what this project is NOT: it holds no CDSCO registration or approval and is therefore not a medical device for use in India."
+    },
+    "ncg-india": {
+      "title": "National Cancer Grid - network and resource-stratified management guidelines",
+      "publisher": "National Cancer Grid (NCG), coordinated from Tata Memorial Centre, Mumbai",
+      "url": "https://www.ncgindia.org/",
+      "type": "national clinical network",
+      "jurisdiction": "India",
+      "licence": "Check the NCG site for terms on specific guideline documents.",
+      "accessed": "2026-09-30",
+      "relevant_note": "A network of major cancer centres, research institutes, patient groups and charitable institutions across India, with the mandate of establishing uniform standards of care for prevention, diagnosis and treatment. Publishes resource-stratified, contextualised guidelines so that evidence-based management is implementable across centres with differing infrastructure. Cited for the Indian referral and care-pathway context, which genuinely differs from the US pathway the other sources describe."
+    },
+    "icmr-ncdir-ncrp": {
+      "title": "National Cancer Registry Programme - population-based and hospital-based cancer registry reports",
+      "publisher": "ICMR-National Centre for Disease Informatics and Research (NCDIR), Bengaluru",
+      "url": "https://www.ncdirindia.org/",
+      "type": "national disease registry",
+      "jurisdiction": "India",
+      "licence": "Government of India publication - cite, do not reproduce.",
+      "accessed": "2026-09-30",
+      "relevant_note": "India's national cancer registry programme. Publishes cancer incidence by age group, sex and site (ICD-10) across participating registries. Cited as the authoritative place to obtain Indian incidence figures; this knowledge base deliberately does NOT restate specific per-class numbers, because the figures vary by registry and reporting year and were not independently verified here."
+    },
+    "indian-cns-data": {
+      "title": "Indian data on central nervous system tumours: a summary of published work",
+      "publisher": "Peer-reviewed review, available via PubMed Central (PMC4991137)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4991137/",
+      "type": "peer-reviewed review",
+      "jurisdiction": "India",
+      "licence": "Check the PMC article for the specific licence.",
+      "accessed": "2026-09-30",
+      "relevant_note": "Summarises published Indian work on CNS tumours and notes that CNS tumours constitute approximately 2% of all malignancies, with morbidity and mortality weighted towards younger and middle-aged patients. Cited for Indian epidemiological context."
     }
   }
 }

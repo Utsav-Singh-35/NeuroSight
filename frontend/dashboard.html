@@ -167,6 +167,11 @@
     .clin-section .text { font-size:0.8rem; color:rgba(255,255,255,0.62); line-height:1.7; white-space:pre-line; }
     .clin-section.warn { padding:1rem 1.2rem; background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.25); border-radius:8px; }
     .clin-section.warn .title { color:#f59e0b; }
+    /* Jurisdictional section. Tinted differently from the clinical ones because
+       it is care-pathway and regulatory context, not a medical finding. */
+    .clin-section.india { padding:1rem 1.2rem; background:rgba(34,211,238,0.04); border:1px solid rgba(34,211,238,0.2); border-left:3px solid #22d3ee; border-radius:8px; }
+    .clin-section.india .title { color:#22d3ee; }
+    .clin-section.india .text strong { color:rgba(255,255,255,0.88); }
 
     .sources-list { list-style:none; padding:0; margin:0; }
     .sources-list li { font-size:0.68rem; color:rgba(255,255,255,0.45); line-height:1.55; margin-bottom:0.45rem; padding-left:1.3rem; position:relative; }
@@ -859,6 +864,7 @@
         clinSection('Suggested investigations', pick(r, 'investigations', 'investigations')),
         clinSection('Follow-up', pick(r, 'followUp', 'follow_up')),
         clinSection('Treatment information', pick(r, 'treatmentInformation', 'treatment_information')),
+        clinSection('Care pathway in India', pick(r, 'indiaCarePathway', 'india_care_pathway'), 'india'),
         clinSection('Known limitations of this AI system', pick(r, 'aiLimitations', 'ai_limitations')),
       ].join('');
 

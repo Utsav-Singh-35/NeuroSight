@@ -2,13 +2,12 @@
   "class": "Meningioma",
   "module": "brain_mri",
   "band": "borderline",
-  "text": "The AI model has generated a borderline prediction set that includes two possible categories, one of which aligns with imaging features typical of a meningioma. Because the system evaluates a single imaging slice it cannot assess growth rate, tumour location or histological grade, all of which are essential to distinguish entities that may appear similar on MRI [ncbi-meningioma-statpearls]. Meningioma is a common primary brain tumour that may be discovered incidentally or may cause neurological deficits according to size, location, growth characteristics and grade [ncbi-meningioma-statpearls][nci-meningioma][who-cns5]. The overlap in appearance between different tumour types and between low-grade and higher-grade meningiomas makes confident separation difficult from a solitary study [ncbi-meningioma-statpearls].\n\nIt is therefore appropriate to discuss the findings with a neurosurgical or neurological specialist, who may consider a dedicated contrast-enhanced MRI, a thorough clinical and neurological examination and, where indicated, histological sampling to determine grade and inform management [nci-meningioma][ncbi-meningioma-statpearls]. Management options range from observation with serial imaging to surgical or radiation-based approaches, selected after comprehensive evaluation of location, symptoms, growth and overall condition [nci-meningioma][icom-meningioma-consensus]. Ongoing specialist review and interval imaging are recommended to monitor growth and to reassess if new or progressive neurological symptoms develop [nci-meningioma][icom-meningioma-consensus].",
+  "text": "The system has identified a pattern that is compatible with a meningioma, but the conformal prediction set also includes an alternative class, so it cannot definitively separate the two possibilities. This ambiguity is understandable because many meningiomas are slow-growing and may appear similar on a single MRI slice, yet their clinical significance varies according to location, size, growth rate and histological grade, factors that cannot be resolved from one study alone [ncbi-meningioma-statpearls]. A single-image AI model also cannot assess growth over time or determine tumour grade, both of which influence management decisions [ncbi-meningioma-statpearls]. It is therefore appropriate to discuss further assessment with a qualified clinician, which may include a detailed neurological examination, dedicated contrast-enhanced MRI using a brain-tumour protocol, specialist review and, where tissue is obtained, histological grading [nci-meningioma] [ncbi-meningioma-statpearls]. Ongoing specialist input will guide whether observation, surgical or radiotherapy options, or supportive care are most suitable, and will determine the need for serial imaging and reassessment if symptoms evolve [nci-meningioma] [icom-meningioma-consensus].",
   "grounding": {
     "citations_used": [
       "icom-meningioma-consensus",
       "ncbi-meningioma-statpearls",
-      "nci-meningioma",
-      "who-cns5"
+      "nci-meningioma"
     ],
     "citations_allowed": [
       "icom-meningioma-consensus",
@@ -22,7 +21,7 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 193
+    "word_count": 162
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
@@ -40,13 +39,13 @@
     "error": null,
     "usage": {
       "prompt_tokens": 1172,
-      "completion_tokens": 973,
-      "total_tokens": 2145
+      "completion_tokens": 475,
+      "total_tokens": 1647
     },
     "attempts": 1,
-    "elapsed_seconds": 12.632
+    "elapsed_seconds": 17.284
   },
-  "generated": "2026-09-29T18:25:49.639233+00:00",
+  "generated": "2026-09-30T11:22:30.458396+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

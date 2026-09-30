@@ -2,7 +2,7 @@
   "class": "Pituitary",
   "module": "brain_mri",
   "band": "borderline",
-  "text": "The system has identified features that are typical of a lesion in the sellar region, a location that gives a convolutional network a strong positional cue, but the model evaluates only the visual appearance of the MRI and does not assess hormonal activity or optic-chiasm involvement, which are central to pituitary management [nci-pituitary-pdq] [ncbi-pituitary-adenoma-statpearls]. Because both endocrine disturbance and visual-field compromise can arise from a pituitary tumour, and because other sellar or parasellar pathologies may share a similar appearance, the algorithm cannot reliably separate this possibility from the alternative class in the current case. Consequently, the result should be regarded as an indication for further discussion with a qualified clinician rather than a definitive classification. Relevant matters to discuss include a detailed clinical examination for endocrine symptoms, comprehensive pituitary hormone testing, formal visual-field assessment, and a dedicated pituitary-protocol MRI, together with specialist review by endocrinology, neurosurgery and ophthalmology as appropriate [ncbi-pituitary-adenoma-statpearls] [nci-pituitary-diagnosis]. Prompt assessment is advised if any acute headache, visual change or signs of adrenal insufficiency are present [nci-pituitary-pdq] [ninds-brain-tumors].",
+  "text": "The algorithm has identified features that are typical of a lesion in the sellar region, but it cannot reliably separate this possibility from another class that may share a comparable appearance on a routine brain MRI. Pituitary tumours are strongly anchored to a characteristic anatomical site, which gives a convolutional network a clear positional cue, yet the model evaluates only the visual characteristics of the scan and does not assess hormonal activity or optic-chiasm involvement that are central to pituitary management [nci-pituitary-pdq] [ncbi-pituitary-adenoma-statpearls]. Because the distinction between a pituitary lesion and other nearby pathologies can hinge on endocrine function and visual-field impact, the system's output should be regarded as a starting point for further clinical assessment rather than a definitive classification. It would be appropriate to discuss with a qualified professional the need for a dedicated pituitary-protocol MRI, comprehensive endocrine testing, formal visual-field assessment and multidisciplinary review by endocrinology, neurosurgery and ophthalmology [ncbi-pituitary-adenoma-statpearls] [nci-pituitary-diagnosis]. Prompt evaluation is advised if any sudden headache, visual change or signs of adrenal insufficiency arise [nci-pituitary-pdq] [ninds-brain-tumors].",
   "grounding": {
     "citations_used": [
       "ncbi-pituitary-adenoma-statpearls",
@@ -22,7 +22,7 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 171
+    "word_count": 172
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
@@ -40,13 +40,13 @@
     "error": null,
     "usage": {
       "prompt_tokens": 1363,
-      "completion_tokens": 745,
-      "total_tokens": 2108
+      "completion_tokens": 629,
+      "total_tokens": 1992
     },
     "attempts": 1,
-    "elapsed_seconds": 19.016
+    "elapsed_seconds": 16.351
   },
-  "generated": "2026-09-29T18:27:31.231796+00:00",
+  "generated": "2026-09-30T11:24:03.735882+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

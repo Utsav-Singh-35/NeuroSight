@@ -2,7 +2,7 @@
   "class": "Pituitary",
   "module": "brain_mri",
   "band": "indeterminate",
-  "text": "The AI output indicating a pituitary region finding is inconclusive and must not be used to guide patient care. The model only evaluates image appearance and does not assess hormonal activity or optic-chiasm involvement, which are essential for management [nci-pituitary-pdq] [ncbi-pituitary-adenoma-statpearls]. Consequently the result should be reviewed by a qualified radiologist and, where appropriate, an endocrinologist or neurosurgeon. Definitive assessment normally requires pituitary-protocol MRI together with comprehensive endocrine testing rather than imaging alone [ncbi-pituitary-adenoma-statpearls] [nci-pituitary-pdq]. A clinician may wish to discuss further investigations such as a detailed clinical examination for endocrine symptoms, full pituitary hormone evaluation, formal visual-field testing and specialist multidisciplinary review [ncbi-pituitary-adenoma-statpearls] [nci-pituitary-diagnosis]. Prompt medical assessment is advised if the patient experiences sudden severe headache, rapid visual loss, new double vision or signs of acute adrenal insufficiency [nci-pituitary-pdq] [ninds-brain-tumors].",
+  "text": "The AI output indicating a pituitary classification is inconclusive and must not be acted upon; it requires review by a qualified radiologist or specialist physician. The model evaluates only the appearance of the lesion and provides no information about hormonal activity or visual-pathway involvement, which are the principal factors guiding pituitary management [nci-pituitary-pdq] [ncbi-pituitary-adenoma-statpearls]. Pituitary tumours arise in the sellar region and may disturb hormone secretion and compress the optic chiasm, so diagnosis relies on pituitary-protocol MRI together with comprehensive endocrine testing rather than imaging alone [ncbi-pituitary-adenoma-statpearls] [nci-pituitary-pdq]. A clinician may wish to discuss a clinical examination for endocrine symptoms, detailed pituitary hormone evaluation, formal visual-field testing, a dedicated pituitary MRI protocol and multidisciplinary specialist review with endocrinology, neurosurgery and ophthalmology as appropriate [ncbi-pituitary-adenoma-statpearls] [nci-pituitary-diagnosis]. Symptoms such as sudden severe headache, rapid visual loss, new double vision, altered consciousness or signs of acute adrenal insufficiency should prompt urgent medical assessment [nci-pituitary-pdq] [ninds-brain-tumors].",
   "grounding": {
     "citations_used": [
       "ncbi-pituitary-adenoma-statpearls",
@@ -22,7 +22,7 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 131
+    "word_count": 152
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
@@ -40,13 +40,13 @@
     "error": null,
     "usage": {
       "prompt_tokens": 1363,
-      "completion_tokens": 1374,
-      "total_tokens": 2737
+      "completion_tokens": 801,
+      "total_tokens": 2164
     },
     "attempts": 1,
-    "elapsed_seconds": 14.985
+    "elapsed_seconds": 12.252
   },
-  "generated": "2026-09-29T18:27:46.245014+00:00",
+  "generated": "2026-09-30T11:24:16.022576+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

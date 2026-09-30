@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-29T15:59:34.391502+00:00",
+  "generated": "2026-09-30T11:19:24.996626+00:00",
   "k": 5,
-  "n_chunks": 28,
-  "n_queries": 30,
+  "n_chunks": 32,
+  "n_queries": 36,
   "eval_set": "knowledge/retrieval_eval.json",
   "best_by_mrr": "embedding",
   "metric_notes": {
@@ -12,53 +12,53 @@
     "tfidf": {
       "backend": "tfidf",
       "k": 5,
-      "n_queries": 30,
+      "n_queries": 36,
       "overall": {
         "hit_at_1": 0.5,
-        "hit_at_3": 0.8,
-        "recall_at_k": 0.7472,
-        "precision_at_k": 0.28,
-        "mrr": 0.6389
+        "hit_at_3": 0.8056,
+        "recall_at_k": 0.7731,
+        "precision_at_k": 0.35,
+        "mrr": 0.6528
       },
       "paraphrased_only": {
-        "n": 19,
-        "hit_at_1": 0.4737,
-        "hit_at_3": 0.7368,
-        "recall_at_k": 0.6535,
-        "mrr": 0.5965
+        "n": 23,
+        "hit_at_1": 0.4783,
+        "hit_at_3": 0.7391,
+        "recall_at_k": 0.6884,
+        "mrr": 0.6232
       },
       "literal_only": {
-        "n": 11,
-        "hit_at_1": 0.5455,
-        "hit_at_3": 0.9091,
-        "recall_at_k": 0.9091,
-        "mrr": 0.7121
+        "n": 13,
+        "hit_at_1": 0.5385,
+        "hit_at_3": 0.9231,
+        "recall_at_k": 0.9231,
+        "mrr": 0.7051
       }
     },
     "embedding": {
       "backend": "embedding",
       "k": 5,
-      "n_queries": 30,
+      "n_queries": 36,
       "overall": {
-        "hit_at_1": 0.5333,
-        "hit_at_3": 0.9,
-        "recall_at_k": 0.8194,
-        "precision_at_k": 0.3067,
-        "mrr": 0.7139
+        "hit_at_1": 0.6111,
+        "hit_at_3": 0.8889,
+        "recall_at_k": 0.794,
+        "precision_at_k": 0.3444,
+        "mrr": 0.7532
       },
       "paraphrased_only": {
-        "n": 19,
-        "hit_at_1": 0.4211,
-        "hit_at_3": 0.8947,
-        "recall_at_k": 0.7939,
-        "mrr": 0.6623
+        "n": 23,
+        "hit_at_1": 0.5217,
+        "hit_at_3": 0.8696,
+        "recall_at_k": 0.7536,
+        "mrr": 0.708
       },
       "literal_only": {
-        "n": 11,
-        "hit_at_1": 0.7273,
-        "hit_at_3": 0.9091,
-        "recall_at_k": 0.8636,
-        "mrr": 0.803
+        "n": 13,
+        "hit_at_1": 0.7692,
+        "hit_at_3": 0.9231,
+        "recall_at_k": 0.8654,
+        "mrr": 0.8333
       }
     }
   },
@@ -121,16 +121,16 @@
         "retrieved": [
           "brain_mri/Pituitary/overview",
           "brain_mri/Glioma/overview",
+          "brain_mri/Pituitary/warning_signs",
           "brain_mri/Pituitary/follow_up",
-          "brain_mri/Pituitary/clinical_considerations",
-          "brain_mri/Pituitary/investigations"
+          "brain_mri/Pituitary/clinical_considerations"
         ],
         "hit_at_1": false,
-        "hit_at_3": false,
-        "recall_at_k": 0.0,
-        "precision_at_k": 0.0,
-        "reciprocal_rank": 0.0,
-        "first_relevant_rank": null
+        "hit_at_3": true,
+        "recall_at_k": 0.25,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 0.3333333333333333,
+        "first_relevant_rank": 3
       },
       {
         "id": "q04",
@@ -143,9 +143,9 @@
         "retrieved": [
           "brain_mri/No_Tumor/interpretation",
           "brain_mri/No_Tumor/overview",
-          "brain_mri/Glioma/clinical_considerations",
-          "brain_mri/No_Tumor/warning_signs",
-          "brain_mri/Pituitary/ai_limitations"
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -166,9 +166,9 @@
         "retrieved": [
           "brain_mri/Pituitary/overview",
           "brain_mri/Pituitary/ai_limitations",
-          "brain_mri/Pituitary/treatment_information",
           "brain_mri/Pituitary/investigations",
-          "brain_mri/Glioma/overview"
+          "brain_mri/Pituitary/treatment_information",
+          "brain_mri/Pituitary/follow_up"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -207,18 +207,18 @@
           "brain_mri/Pituitary/overview"
         ],
         "retrieved": [
+          "brain_mri/Pituitary/india_care_pathway",
           "brain_mri/Pituitary/investigations",
-          "brain_mri/Pituitary/ai_limitations",
           "brain_mri/Pituitary/overview",
-          "brain_mri/Pituitary/treatment_information",
-          "brain_mri/No_Tumor/clinical_considerations"
+          "brain_mri/Pituitary/ai_limitations",
+          "brain_mri/Pituitary/treatment_information"
         ],
-        "hit_at_1": true,
+        "hit_at_1": false,
         "hit_at_3": true,
         "recall_at_k": 1.0,
         "precision_at_k": 0.4,
-        "reciprocal_rank": 1.0,
-        "first_relevant_rank": 1
+        "reciprocal_rank": 0.5,
+        "first_relevant_rank": 2
       },
       {
         "id": "q08",
@@ -229,8 +229,8 @@
         ],
         "retrieved": [
           "brain_mri/No_Tumor/treatment_information",
-          "brain_mri/Meningioma/treatment_information",
           "brain_mri/No_Tumor/interpretation",
+          "brain_mri/Meningioma/treatment_information",
           "brain_mri/Meningioma/follow_up",
           "brain_mri/Meningioma/overview"
         ],
@@ -238,8 +238,8 @@
         "hit_at_3": true,
         "recall_at_k": 1.0,
         "precision_at_k": 0.2,
-        "reciprocal_rank": 0.5,
-        "first_relevant_rank": 2
+        "reciprocal_rank": 0.3333333333333333,
+        "first_relevant_rank": 3
       },
       {
         "id": "q09",
@@ -253,9 +253,9 @@
         "retrieved": [
           "brain_mri/Glioma/warning_signs",
           "brain_mri/Pituitary/treatment_information",
-          "brain_mri/Pituitary/follow_up",
-          "brain_mri/Pituitary/clinical_considerations",
-          "brain_mri/Pituitary/investigations"
+          "brain_mri/Glioma/overview",
+          "brain_mri/Pituitary/warning_signs",
+          "brain_mri/Pituitary/follow_up"
         ],
         "hit_at_1": false,
         "hit_at_3": false,
@@ -274,9 +274,9 @@
         "retrieved": [
           "brain_mri/Glioma/ai_limitations",
           "brain_mri/Meningioma/ai_limitations",
+          "brain_mri/Glioma/india_care_pathway",
           "brain_mri/Pituitary/ai_limitations",
-          "brain_mri/No_Tumor/overview",
-          "brain_mri/No_Tumor/interpretation"
+          "brain_mri/No_Tumor/overview"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -297,7 +297,7 @@
           "brain_mri/Glioma/clinical_considerations",
           "brain_mri/Glioma/ai_limitations",
           "brain_mri/No_Tumor/interpretation",
-          "brain_mri/No_Tumor/warning_signs"
+          "brain_mri/No_Tumor/overview"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -315,8 +315,8 @@
         ],
         "retrieved": [
           "brain_mri/Meningioma/follow_up",
-          "brain_mri/Pituitary/follow_up",
           "brain_mri/Meningioma/investigations",
+          "brain_mri/Pituitary/follow_up",
           "brain_mri/No_Tumor/follow_up",
           "brain_mri/Glioma/follow_up"
         ],
@@ -339,9 +339,9 @@
         "retrieved": [
           "brain_mri/No_Tumor/overview",
           "brain_mri/No_Tumor/interpretation",
+          "brain_mri/No_Tumor/india_care_pathway",
           "brain_mri/No_Tumor/follow_up",
-          "brain_mri/No_Tumor/investigations",
-          "brain_mri/Pituitary/warning_signs"
+          "brain_mri/No_Tumor/investigations"
         ],
         "hit_at_1": false,
         "hit_at_3": true,
@@ -362,8 +362,8 @@
           "brain_mri/Glioma/overview",
           "brain_mri/Meningioma/overview",
           "brain_mri/Glioma/investigations",
-          "brain_mri/Pituitary/overview",
-          "brain_mri/Meningioma/investigations"
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -409,7 +409,7 @@
           "brain_mri/Pituitary/ai_limitations",
           "brain_mri/Pituitary/investigations",
           "brain_mri/Glioma/clinical_considerations",
-          "brain_mri/Pituitary/treatment_information"
+          "brain_mri/Pituitary/clinical_considerations"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -426,11 +426,11 @@
           "brain_mri/No_Tumor/interpretation"
         ],
         "retrieved": [
+          "brain_mri/No_Tumor/india_care_pathway",
           "brain_mri/Pituitary/ai_limitations",
           "brain_mri/No_Tumor/treatment_information",
           "brain_mri/No_Tumor/overview",
-          "brain_mri/Meningioma/ai_limitations",
-          "brain_mri/Glioma/ai_limitations"
+          "brain_mri/Meningioma/ai_limitations"
         ],
         "hit_at_1": false,
         "hit_at_3": false,
@@ -448,10 +448,10 @@
         ],
         "retrieved": [
           "brain_mri/Glioma/ai_limitations",
+          "brain_mri/Glioma/india_care_pathway",
           "brain_mri/Glioma/clinical_considerations",
-          "brain_mri/No_Tumor/warning_signs",
-          "brain_mri/Pituitary/ai_limitations",
-          "brain_mri/No_Tumor/interpretation"
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
         ],
         "hit_at_1": false,
         "hit_at_3": false,
@@ -471,8 +471,8 @@
           "brain_mri/Pituitary/treatment_information",
           "brain_mri/Glioma/clinical_considerations",
           "brain_mri/Meningioma/overview",
-          "brain_mri/Glioma/ai_limitations",
-          "brain_mri/Meningioma/treatment_information"
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway"
         ],
         "hit_at_1": false,
         "hit_at_3": false,
@@ -495,7 +495,7 @@
           "brain_mri/Meningioma/treatment_information",
           "brain_mri/Glioma/treatment_information",
           "brain_mri/Meningioma/ai_limitations",
-          "brain_mri/Pituitary/follow_up"
+          "brain_mri/Meningioma/india_care_pathway"
         ],
         "hit_at_1": false,
         "hit_at_3": true,
@@ -517,7 +517,7 @@
           "brain_mri/Meningioma/ai_limitations",
           "brain_mri/Glioma/ai_limitations",
           "brain_mri/No_Tumor/interpretation",
-          "brain_mri/Pituitary/ai_limitations"
+          "brain_mri/Glioma/india_care_pathway"
         ],
         "hit_at_1": false,
         "hit_at_3": true,
@@ -541,7 +541,7 @@
           "brain_mri/Glioma/follow_up",
           "brain_mri/No_Tumor/follow_up",
           "brain_mri/No_Tumor/interpretation",
-          "brain_mri/Meningioma/follow_up"
+          "brain_mri/Pituitary/follow_up"
         ],
         "hit_at_1": false,
         "hit_at_3": true,
@@ -562,7 +562,7 @@
           "brain_mri/Pituitary/follow_up",
           "brain_mri/Pituitary/overview",
           "brain_mri/Pituitary/clinical_considerations",
-          "brain_mri/Pituitary/warning_signs"
+          "brain_mri/Pituitary/india_care_pathway"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -582,9 +582,9 @@
         "retrieved": [
           "brain_mri/Meningioma/clinical_considerations",
           "brain_mri/Meningioma/overview",
-          "brain_mri/Glioma/overview",
-          "brain_mri/Pituitary/follow_up",
-          "brain_mri/Pituitary/clinical_considerations"
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Pituitary/warning_signs"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -603,9 +603,9 @@
         "retrieved": [
           "brain_mri/Glioma/ai_limitations",
           "brain_mri/No_Tumor/interpretation",
+          "brain_mri/No_Tumor/india_care_pathway",
           "brain_mri/Glioma/investigations",
-          "brain_mri/Meningioma/clinical_considerations",
-          "brain_mri/No_Tumor/overview"
+          "brain_mri/Meningioma/clinical_considerations"
         ],
         "hit_at_1": false,
         "hit_at_3": true,
@@ -623,11 +623,11 @@
           "brain_mri/Glioma/investigations"
         ],
         "retrieved": [
+          "brain_mri/Glioma/india_care_pathway",
           "brain_mri/Glioma/ai_limitations",
           "brain_mri/Meningioma/ai_limitations",
-          "brain_mri/No_Tumor/overview",
-          "brain_mri/Glioma/overview",
-          "brain_mri/Glioma/follow_up"
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/overview"
         ],
         "hit_at_1": false,
         "hit_at_3": false,
@@ -645,10 +645,10 @@
         ],
         "retrieved": [
           "brain_mri/Pituitary/warning_signs",
-          "brain_mri/No_Tumor/clinical_considerations",
+          "brain_mri/Pituitary/india_care_pathway",
           "brain_mri/Pituitary/overview",
           "brain_mri/Pituitary/ai_limitations",
-          "brain_mri/Pituitary/follow_up"
+          "brain_mri/No_Tumor/clinical_considerations"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -668,9 +668,9 @@
         ],
         "retrieved": [
           "brain_mri/Meningioma/clinical_considerations",
-          "brain_mri/No_Tumor/clinical_considerations",
           "brain_mri/Glioma/clinical_considerations",
           "brain_mri/Meningioma/overview",
+          "brain_mri/No_Tumor/clinical_considerations",
           "brain_mri/Pituitary/clinical_considerations"
         ],
         "hit_at_1": true,
@@ -690,9 +690,9 @@
         "retrieved": [
           "brain_mri/No_Tumor/clinical_considerations",
           "brain_mri/Meningioma/clinical_considerations",
-          "brain_mri/Meningioma/ai_limitations",
-          "brain_mri/Glioma/ai_limitations",
-          "brain_mri/Glioma/overview"
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Meningioma/ai_limitations"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -710,18 +710,160 @@
           "brain_mri/Glioma/overview"
         ],
         "retrieved": [
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway",
           "brain_mri/Pituitary/investigations",
-          "brain_mri/Pituitary/overview",
           "brain_mri/Glioma/investigations",
+          "brain_mri/Pituitary/overview"
+        ],
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "recall_at_k": 0.5,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 0.25,
+        "first_relevant_rank": 4
+      },
+      {
+        "id": "q31",
+        "query": "Is this software an approved medical device in India?",
+        "paraphrase": true,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Pituitary/treatment_information"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.8,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
+      },
+      {
+        "id": "q32",
+        "query": "Which Indian body regulates medical devices and which one governs AI ethics in healthcare?",
+        "paraphrase": false,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Meningioma/warning_signs"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.8,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
+      },
+      {
+        "id": "q33",
+        "query": "Has the model been tested on Indian patients?",
+        "paraphrase": true,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/investigations"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.8,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
+      },
+      {
+        "id": "q34",
+        "query": "Where would a patient in India go for specialist review of a brain tumour?",
+        "paraphrase": true,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
+          "brain_mri/Meningioma/investigations",
+          "brain_mri/Glioma/investigations",
+          "brain_mri/Glioma/follow_up",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway"
+        ],
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "recall_at_k": 0.6666666666666666,
+        "precision_at_k": 0.4,
+        "reciprocal_rank": 0.25,
+        "first_relevant_rank": 4
+      },
+      {
+        "id": "q35",
+        "query": "What proportion of cancers in India are central nervous system tumours?",
+        "paraphrase": false,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
           "brain_mri/Glioma/overview",
-          "brain_mri/Glioma/ai_limitations"
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway"
         ],
         "hit_at_1": false,
         "hit_at_3": true,
         "recall_at_k": 1.0,
-        "precision_at_k": 0.4,
-        "reciprocal_rank": 0.3333333333333333,
-        "first_relevant_rank": 3
+        "precision_at_k": 0.8,
+        "reciprocal_rank": 0.5,
+        "first_relevant_rank": 2
+      },
+      {
+        "id": "q36",
+        "query": "Why does a pituitary finding need endocrine and eye tests, not just imaging?",
+        "paraphrase": true,
+        "relevant": [
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Pituitary/investigations",
+          "brain_mri/Pituitary/overview"
+        ],
+        "retrieved": [
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Pituitary/ai_limitations",
+          "brain_mri/Pituitary/investigations",
+          "brain_mri/Pituitary/follow_up",
+          "brain_mri/Pituitary/overview"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.6,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
       }
     ],
     "embedding": [
@@ -758,16 +900,16 @@
         "retrieved": [
           "brain_mri/No_Tumor/overview",
           "brain_mri/No_Tumor/interpretation",
+          "brain_mri/Meningioma/india_care_pathway",
           "brain_mri/Glioma/ai_limitations",
-          "brain_mri/No_Tumor/warning_signs",
-          "brain_mri/Glioma/clinical_considerations"
+          "brain_mri/No_Tumor/warning_signs"
         ],
         "hit_at_1": false,
-        "hit_at_3": true,
-        "recall_at_k": 0.6666666666666666,
-        "precision_at_k": 0.4,
-        "reciprocal_rank": 0.3333333333333333,
-        "first_relevant_rank": 3
+        "hit_at_3": false,
+        "recall_at_k": 0.3333333333333333,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 0.25,
+        "first_relevant_rank": 4
       },
       {
         "id": "q03",
@@ -781,15 +923,15 @@
         ],
         "retrieved": [
           "brain_mri/Glioma/warning_signs",
+          "brain_mri/No_Tumor/india_care_pathway",
           "brain_mri/Meningioma/warning_signs",
           "brain_mri/No_Tumor/warning_signs",
-          "brain_mri/Glioma/treatment_information",
-          "brain_mri/Pituitary/warning_signs"
+          "brain_mri/Glioma/treatment_information"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
-        "recall_at_k": 1.0,
-        "precision_at_k": 0.8,
+        "recall_at_k": 0.75,
+        "precision_at_k": 0.6,
         "reciprocal_rank": 1.0,
         "first_relevant_rank": 1
       },
@@ -914,14 +1056,14 @@
         "retrieved": [
           "brain_mri/Glioma/treatment_information",
           "brain_mri/No_Tumor/follow_up",
+          "brain_mri/No_Tumor/india_care_pathway",
           "brain_mri/No_Tumor/treatment_information",
-          "brain_mri/Pituitary/treatment_information",
-          "brain_mri/Meningioma/treatment_information"
+          "brain_mri/Pituitary/treatment_information"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
-        "recall_at_k": 0.6666666666666666,
-        "precision_at_k": 0.4,
+        "recall_at_k": 0.3333333333333333,
+        "precision_at_k": 0.2,
         "reciprocal_rank": 1.0,
         "first_relevant_rank": 1
       },
@@ -934,10 +1076,10 @@
         ],
         "retrieved": [
           "brain_mri/Glioma/ai_limitations",
+          "brain_mri/Glioma/india_care_pathway",
           "brain_mri/Glioma/overview",
           "brain_mri/Meningioma/ai_limitations",
-          "brain_mri/No_Tumor/interpretation",
-          "brain_mri/Glioma/clinical_considerations"
+          "brain_mri/No_Tumor/interpretation"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -1023,8 +1165,8 @@
           "brain_mri/Glioma/ai_limitations",
           "brain_mri/Glioma/overview",
           "brain_mri/Glioma/investigations",
-          "brain_mri/Meningioma/ai_limitations",
-          "brain_mri/Glioma/clinical_considerations"
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/ai_limitations"
         ],
         "hit_at_1": false,
         "hit_at_3": true,
@@ -1070,7 +1212,7 @@
           "brain_mri/Pituitary/ai_limitations",
           "brain_mri/Pituitary/investigations",
           "brain_mri/Pituitary/treatment_information",
-          "brain_mri/Meningioma/overview"
+          "brain_mri/Pituitary/india_care_pathway"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -1089,16 +1231,16 @@
         "retrieved": [
           "brain_mri/Meningioma/warning_signs",
           "brain_mri/Glioma/warning_signs",
+          "brain_mri/No_Tumor/india_care_pathway",
           "brain_mri/No_Tumor/clinical_considerations",
-          "brain_mri/No_Tumor/interpretation",
-          "brain_mri/Pituitary/warning_signs"
+          "brain_mri/No_Tumor/interpretation"
         ],
         "hit_at_1": false,
         "hit_at_3": false,
         "recall_at_k": 1.0,
         "precision_at_k": 0.2,
-        "reciprocal_rank": 0.25,
-        "first_relevant_rank": 4
+        "reciprocal_rank": 0.2,
+        "first_relevant_rank": 5
       },
       {
         "id": "q18",
@@ -1110,9 +1252,9 @@
         "retrieved": [
           "brain_mri/Glioma/overview",
           "brain_mri/Glioma/clinical_considerations",
+          "brain_mri/Glioma/india_care_pathway",
           "brain_mri/No_Tumor/overview",
-          "brain_mri/Glioma/warning_signs",
-          "brain_mri/Glioma/ai_limitations"
+          "brain_mri/Glioma/warning_signs"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -1223,7 +1365,7 @@
           "brain_mri/Pituitary/clinical_considerations",
           "brain_mri/Pituitary/follow_up",
           "brain_mri/Pituitary/ai_limitations",
-          "brain_mri/Pituitary/overview"
+          "brain_mri/Pituitary/india_care_pathway"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -1263,10 +1405,10 @@
         ],
         "retrieved": [
           "brain_mri/No_Tumor/interpretation",
+          "brain_mri/No_Tumor/india_care_pathway",
           "brain_mri/No_Tumor/warning_signs",
           "brain_mri/No_Tumor/overview",
-          "brain_mri/No_Tumor/investigations",
-          "brain_mri/No_Tumor/treatment_information"
+          "brain_mri/No_Tumor/investigations"
         ],
         "hit_at_1": true,
         "hit_at_3": true,
@@ -1284,18 +1426,18 @@
           "brain_mri/Glioma/investigations"
         ],
         "retrieved": [
+          "brain_mri/Glioma/india_care_pathway",
           "brain_mri/Glioma/overview",
           "brain_mri/Glioma/clinical_considerations",
           "brain_mri/Glioma/warning_signs",
-          "brain_mri/No_Tumor/investigations",
-          "brain_mri/Glioma/investigations"
+          "brain_mri/No_Tumor/investigations"
         ],
         "hit_at_1": false,
         "hit_at_3": true,
-        "recall_at_k": 1.0,
-        "precision_at_k": 0.4,
-        "reciprocal_rank": 0.5,
-        "first_relevant_rank": 2
+        "recall_at_k": 0.5,
+        "precision_at_k": 0.2,
+        "reciprocal_rank": 0.3333333333333333,
+        "first_relevant_rank": 3
       },
       {
         "id": "q27",
@@ -1332,7 +1474,7 @@
           "brain_mri/No_Tumor/follow_up",
           "brain_mri/Meningioma/warning_signs",
           "brain_mri/Pituitary/warning_signs",
-          "brain_mri/Glioma/warning_signs"
+          "brain_mri/No_Tumor/india_care_pathway"
         ],
         "hit_at_1": false,
         "hit_at_3": false,
@@ -1374,8 +1516,8 @@
           "brain_mri/No_Tumor/interpretation",
           "brain_mri/Glioma/investigations",
           "brain_mri/No_Tumor/investigations",
-          "brain_mri/No_Tumor/treatment_information",
-          "brain_mri/No_Tumor/warning_signs"
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/No_Tumor/treatment_information"
         ],
         "hit_at_1": false,
         "hit_at_3": true,
@@ -1383,6 +1525,148 @@
         "precision_at_k": 0.2,
         "reciprocal_rank": 0.5,
         "first_relevant_rank": 2
+      },
+      {
+        "id": "q31",
+        "query": "Is this software an approved medical device in India?",
+        "paraphrase": true,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/No_Tumor/treatment_information"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.8,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
+      },
+      {
+        "id": "q32",
+        "query": "Which Indian body regulates medical devices and which one governs AI ethics in healthcare?",
+        "paraphrase": false,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/No_Tumor/treatment_information"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.8,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
+      },
+      {
+        "id": "q33",
+        "query": "Has the model been tested on Indian patients?",
+        "paraphrase": true,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/No_Tumor/treatment_information"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.8,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
+      },
+      {
+        "id": "q34",
+        "query": "Where would a patient in India go for specialist review of a brain tumour?",
+        "paraphrase": true,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/No_Tumor/investigations",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.6,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
+      },
+      {
+        "id": "q35",
+        "query": "What proportion of cancers in India are central nervous system tumours?",
+        "paraphrase": false,
+        "relevant": [
+          "brain_mri/Glioma/india_care_pathway",
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/No_Tumor/india_care_pathway",
+          "brain_mri/Pituitary/india_care_pathway"
+        ],
+        "retrieved": [
+          "brain_mri/Meningioma/india_care_pathway",
+          "brain_mri/Meningioma/overview",
+          "brain_mri/Glioma/overview",
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Glioma/india_care_pathway"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 0.75,
+        "precision_at_k": 0.6,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
+      },
+      {
+        "id": "q36",
+        "query": "Why does a pituitary finding need endocrine and eye tests, not just imaging?",
+        "paraphrase": true,
+        "relevant": [
+          "brain_mri/Pituitary/india_care_pathway",
+          "brain_mri/Pituitary/investigations",
+          "brain_mri/Pituitary/overview"
+        ],
+        "retrieved": [
+          "brain_mri/Pituitary/investigations",
+          "brain_mri/Pituitary/overview",
+          "brain_mri/Pituitary/follow_up",
+          "brain_mri/Pituitary/ai_limitations",
+          "brain_mri/Pituitary/clinical_considerations"
+        ],
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "recall_at_k": 0.6666666666666666,
+        "precision_at_k": 0.4,
+        "reciprocal_rank": 1.0,
+        "first_relevant_rank": 1
       }
     ]
   }

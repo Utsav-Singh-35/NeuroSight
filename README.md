@@ -47,11 +47,11 @@ prediction accountable, and each one has a measured number attached to it.
  └──────────┬───────────┘
             ▼
  ┌──────────────────────┐
- │ 7  Cited evidence    │  28 chunks, 12 sources, MiniLM     MRR 0.7139 vs 0.6389 TF-IDF
+ │ 7  Cited evidence    │  32 chunks, 17 sources, MiniLM     MRR 0.7532 vs 0.6528 TF-IDF
  └──────────┬───────────┘
             ▼
  ┌──────────────────────┐
- │ 8  Report + PDF      │  4-page PDF, caveats box           121-139 KB
+ │ 8  Report + PDF      │  4-page PDF, caveats box           121-144 KB
  └──────────────────────┘
 ```
 
@@ -152,14 +152,38 @@ chest X-rays, because they are perfectly good images of the wrong organ.
 
 ### Evidence retrieval — `knowledge/`
 
-30 hand-labelled queries, 19 deliberately paraphrased away from corpus wording, `k = 5`:
+**Sources span three jurisdictions, by design:**
+
+| Jurisdiction | Sources | Role |
+|---|---|---|
+| International | WHO CNS5 classification; *Neuro-Oncology* 2024 consensus review; StatPearls ×2 | Tumour typing and grading — the shared standard Indian centres also use |
+| United States | NCI PDQ ×4, NINDS, NCBI Bookshelf | General clinical fundamentals |
+| **India** | ICMR AI ethics guidelines; CDSCO; National Cancer Grid; ICMR-NCDIR registry; Indian CNS epidemiology review | Care pathway, resource context, epidemiology, regulatory and ethical framework |
+
+The split is deliberate. WHO CNS5 *is* the international standard and Indian tertiary centres grade
+against it too, so there is no Indian alternative to it. What genuinely differs by country is
+everything around the classification — where a patient is seen, what is locally available, and which
+authority governs a tool like this.
+
+Each class file carries a `## Care pathway in India` section, surfaced as its own field in the API,
+dashboard and PDF. It gives the referral context and epidemiological framing, and states plainly that
+this system holds **no CDSCO registration and is therefore not a medical device in India**, and that
+citing Indian authorities does not mean the model was validated on an Indian cohort.
+
+36 hand-labelled queries over 32 chunks, 23 deliberately paraphrased away from corpus
+wording, `k = 5`:
 
 | Metric | TF-IDF | Embedding |
 |--------|--------|-----------|
-| Hit@3 | 0.8000 | **0.9000** |
-| Recall@5 | 0.7472 | **0.8194** |
-| MRR | 0.6389 | **0.7139** |
-| **Complete misses** | **6 / 30** | **2 / 30** |
+| Hit@1 | 0.5000 | **0.6111** |
+| Hit@3 | 0.8056 | **0.8889** |
+| Recall@5 | 0.7731 | **0.7940** |
+| MRR | 0.6528 | **0.7532** |
+| **Complete misses** | **5 / 36** | **2 / 36** |
+
+All six India queries retrieve a relevant chunk at rank 1. Note that Hit@1 and MRR rose partly
+because the new queries are easier — "Is this an approved medical device in India?" has distinctive
+vocabulary — so the comparison against TF-IDF is what the table is for, not the absolute movement.
 
 ### Latency (CPU-only)
 
@@ -352,10 +376,10 @@ frontend/
   dashboard.html              scan + history UI
   index.html, research.html
 knowledge/
-  sources.json                12 cited sources
-  brain_mri/*.md              28 cited chunks
+  sources.json                17 cited sources (WHO + US federal + Indian)
+  brain_mri/*.md              32 cited chunks (incl. India care pathway)
   narratives/*.json           12 pre-authored, review-gated narratives
-  index.npz                   (28, 384) embeddings, 40 KB
+  index.npz                   (32, 384) embeddings, 45 KB
 models/
   calibration/                fitted artefacts + reliability.png + sample PDFs
 presentation.md               full technical write-up
@@ -433,6 +457,12 @@ Stated plainly, because a decision-support tool that hides its failure modes is 
 - JPEG/PNG only — no DICOM, so 12–16-bit depth and windowing metadata are lost.
 - No modality auto-detection: a chest X-ray sent to `brain_mri` is classified as a brain tumour.
 - Single-source Kaggle corpora; no multi-centre or multi-scanner validation.
+- **Not validated on an Indian cohort.** The knowledge base cites ICMR, CDSCO and the National
+  Cancer Grid for care-pathway and governance context, which is the correct framing for use in
+  India — but the model itself was trained on a public corpus of unstated scanner and population
+  provenance. Indian citations are not Indian clinical validation, and the report says so.
+- **No CDSCO registration.** Medical devices in India are regulated under the Drugs and Cosmetics
+  Act, 1940 and the Medical Devices Rules, 2017. This holds no approval under either.
 - No tumour grading, segmentation or volumetry.
 
 **Engineering**
@@ -452,7 +482,7 @@ Stated plainly, because a decision-support tool that hides its failure modes is 
 | [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) | Build log, architecture decisions, known issues, runbook |
 | [`docs/brain_mri_model_results.md`](docs/brain_mri_model_results.md) | Original per-class brain metrics for the single EfficientNet baseline |
 | [`docs/references.md`](docs/references.md) | Every method citation, tied to where it is implemented |
-| [`knowledge/sources.json`](knowledge/sources.json) | The 12 cited clinical sources and their verification status |
+| [`knowledge/sources.json`](knowledge/sources.json) | The 17 cited sources, their jurisdiction and verification status |
 | [`data/dataset_links.md`](data/dataset_links.md) | Dataset sources |
 | `models/calibration/*.json` | Every fitted number, with the inputs that produced it |
 

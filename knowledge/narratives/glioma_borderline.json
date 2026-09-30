@@ -2,15 +2,23 @@
   "class": "Glioma",
   "module": "brain_mri",
   "band": "borderline",
-  "text": "The model's conformal prediction set includes two possible tumour categories, so the system cannot definitively separate them. This ambiguity is understandable because glioma and other tumours such as meningioma can show similar contrast enhancement on T1-weighted MRI, a recognised source of mis-classification for image-only classifiers [nci-cns-pdq-hp]. Moreover, an image-based output does not convey tumour grade, molecular subtype, margins or volume, all of which are essential for accurate characterisation and cannot be inferred reliably from a single slice [nci-cns-pdq-hp]. Symptoms and prognosis depend more on location, size and growth rate than on the broad tumour label alone, and management requires multidisciplinary input rather than imaging in isolation [nci-cns-pdq-hp] [ninds-brain-tumors]. It is therefore appropriate to discuss further investigations with a qualified professional, which may include a dedicated contrast-enhanced brain-tumour MRI protocol, specialist neurological or neurosurgical review, and, where tissue is obtained, histopathological and molecular characterisation in line with current WHO classification [nci-cns-pdq-hp] [who-cns5].",
+  "text": "The model has produced a borderline result that includes glioma together with an alternative tumour class, and it cannot reliably distinguish which of the two is more likely. This ambiguity is expected because glioma was the least reliably recalled category in the system's own testing, with many true gliomas being mis-assigned to the meningioma group, a confusion that is radiologically plausible given similar T1 enhancement patterns [nci-cns-pdq-hp]. An image-only classifier does not determine tumour grade, molecular subtype, margins or volume, and those factors dominate prognosis and treatment decisions [nci-cns-pdq-hp] [ninds-brain-tumors]. Consequently, the output should be interpreted only as indicating that features associated with glioma are present, not as a confirmed tumour type. Management of a possible glioma requires multidisciplinary neuro-oncology review, involving neurosurgery, neuro-radiology, pathology and radiation oncology, as recommended in national guidelines [who-cns5] [nci-cns-pdq-hp]. It is essential to discuss these findings with a qualified healthcare professional promptly, especially if any neurological red-flag symptoms are present [ninds-brain-tumors]. The tool is not a registered medical device and has not been validated on an Indian patient cohort, underscoring the need for expert clinical assessment [neurasight-system] [cdsco-md-rules].",
   "grounding": {
     "citations_used": [
+      "cdsco-md-rules",
       "nci-cns-pdq-hp",
+      "neurasight-system",
       "ninds-brain-tumors",
       "who-cns5"
     ],
     "citations_allowed": [
+      "cdsco-md-rules",
+      "icmr-ai-ethics",
+      "icmr-ncdir-ncrp",
+      "indian-cns-data",
+      "ncg-india",
       "nci-cns-pdq-hp",
+      "neurasight-system",
       "ninds-brain-tumors",
       "who-cns5"
     ],
@@ -20,16 +28,16 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 151
+    "word_count": 184
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
   "evidence_chunks": [
     "brain_mri/Glioma/overview",
     "brain_mri/Glioma/clinical_considerations",
+    "brain_mri/Glioma/india_care_pathway",
     "brain_mri/Glioma/warning_signs",
-    "brain_mri/Glioma/ai_limitations",
-    "brain_mri/Glioma/investigations"
+    "brain_mri/Glioma/ai_limitations"
   ],
   "llm": {
     "model": "openai/gpt-oss-120b",
@@ -37,14 +45,14 @@
     "ok": true,
     "error": null,
     "usage": {
-      "prompt_tokens": 1309,
-      "completion_tokens": 675,
-      "total_tokens": 1984
+      "prompt_tokens": 1884,
+      "completion_tokens": 626,
+      "total_tokens": 2510
     },
     "attempts": 1,
-    "elapsed_seconds": 2.917
+    "elapsed_seconds": 2.297
   },
-  "generated": "2026-09-29T18:25:29.272125+00:00",
+  "generated": "2026-09-30T11:21:54.916257+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

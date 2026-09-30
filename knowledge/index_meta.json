@@ -1,7 +1,7 @@
 {
   "model": "sentence-transformers/all-MiniLM-L6-v2",
   "dimension": 384,
-  "chunk_count": 28,
+  "chunk_count": 32,
   "chunk_ids": [
     "brain_mri/Glioma/overview",
     "brain_mri/Glioma/ai_limitations",
@@ -10,6 +10,7 @@
     "brain_mri/Glioma/follow_up",
     "brain_mri/Glioma/warning_signs",
     "brain_mri/Glioma/treatment_information",
+    "brain_mri/Glioma/india_care_pathway",
     "brain_mri/Meningioma/overview",
     "brain_mri/Meningioma/ai_limitations",
     "brain_mri/Meningioma/investigations",
@@ -17,6 +18,7 @@
     "brain_mri/Meningioma/follow_up",
     "brain_mri/Meningioma/warning_signs",
     "brain_mri/Meningioma/treatment_information",
+    "brain_mri/Meningioma/india_care_pathway",
     "brain_mri/No_Tumor/overview",
     "brain_mri/No_Tumor/interpretation",
     "brain_mri/No_Tumor/investigations",
@@ -24,12 +26,14 @@
     "brain_mri/No_Tumor/follow_up",
     "brain_mri/No_Tumor/warning_signs",
     "brain_mri/No_Tumor/treatment_information",
+    "brain_mri/No_Tumor/india_care_pathway",
     "brain_mri/Pituitary/overview",
     "brain_mri/Pituitary/ai_limitations",
     "brain_mri/Pituitary/investigations",
     "brain_mri/Pituitary/clinical_considerations",
     "brain_mri/Pituitary/follow_up",
     "brain_mri/Pituitary/warning_signs",
-    "brain_mri/Pituitary/treatment_information"
+    "brain_mri/Pituitary/treatment_information",
+    "brain_mri/Pituitary/india_care_pathway"
   ]
 }

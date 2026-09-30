@@ -2,15 +2,22 @@
   "class": "Glioma",
   "module": "brain_mri",
   "band": "confident",
-  "text": "The AI system has identified imaging features that it associates with glioma. Glioma is a broad term for tumours that arise from glial cells, the supporting cells of the central nervous system, and includes lesions that range from slow-growing to highly aggressive forms [nci-cns-pdq-hp] [who-cns5]. This output is a classification based solely on the image and does not constitute a confirmed diagnosis; it does not provide information on tumour grade, molecular subtype, margins or volume [nci-cns-pdq-hp]. Clinical symptoms are influenced more by the tumour's location, size and growth rate than by the label alone, and urgent neurological signs such as sudden severe headache, new seizures or rapid weakness should prompt prompt medical assessment [ninds-brain-tumors]. Further evaluation that would normally be discussed with a qualified clinician includes a detailed neurological examination, a dedicated contrast-enhanced brain-tumour MRI protocol, specialist review by neurology, neurosurgery or neuro-oncology, and, where tissue is obtained, histopathological and molecular characterisation in line with the current WHO classification [nci-cns-pdq-hp] [who-cns5].",
+  "text": "The model has identified features that it associates with glioma. Glioma is a broad term for tumours that arise from the glial cells of the central nervous system and can range from slowly growing lesions to aggressive high-grade tumours; the term alone does not convey type or grade, which are required for prognosis and management [nci-cns-pdq-hp] [who-cns5]. Imaging alone cannot determine grade or molecular subtype, and the classifier does not provide information on tumour margins or volume [nci-cns-pdq-hp]. Consequently this output should be understood as a classification, not a confirmed diagnosis. Clinical correlation is essential, and the finding should be discussed with a qualified neuro-oncology team, including neurosurgery, neuro-radiology and pathology, to consider further imaging, possible biopsy and molecular characterisation as per current WHO guidelines [who-cns5] [nci-cns-pdq-hp]. In India, referral to a multidisciplinary centre within the National Cancer Grid is the usual pathway for suspected glioma [ncg-india] [who-cns5]. Prompt assessment is advised if any neurological red-flag symptoms develop [ninds-brain-tumors].",
   "grounding": {
     "citations_used": [
+      "ncg-india",
       "nci-cns-pdq-hp",
       "ninds-brain-tumors",
       "who-cns5"
     ],
     "citations_allowed": [
+      "cdsco-md-rules",
+      "icmr-ai-ethics",
+      "icmr-ncdir-ncrp",
+      "indian-cns-data",
+      "ncg-india",
       "nci-cns-pdq-hp",
+      "neurasight-system",
       "ninds-brain-tumors",
       "who-cns5"
     ],
@@ -20,16 +27,16 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 161
+    "word_count": 159
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
   "evidence_chunks": [
     "brain_mri/Glioma/overview",
     "brain_mri/Glioma/clinical_considerations",
+    "brain_mri/Glioma/india_care_pathway",
     "brain_mri/Glioma/warning_signs",
-    "brain_mri/Glioma/ai_limitations",
-    "brain_mri/Glioma/investigations"
+    "brain_mri/Glioma/ai_limitations"
   ],
   "llm": {
     "model": "openai/gpt-oss-120b",
@@ -37,14 +44,14 @@
     "ok": true,
     "error": null,
     "usage": {
-      "prompt_tokens": 1308,
-      "completion_tokens": 1154,
-      "total_tokens": 2462
+      "prompt_tokens": 1883,
+      "completion_tokens": 1038,
+      "total_tokens": 2921
     },
     "attempts": 1,
-    "elapsed_seconds": 5.616
+    "elapsed_seconds": 3.66
   },
-  "generated": "2026-09-29T18:25:26.305226+00:00",
+  "generated": "2026-09-30T11:21:52.595115+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

@@ -2,15 +2,24 @@
   "class": "Glioma",
   "module": "brain_mri",
   "band": "indeterminate",
-  "text": "The AI output indicating features that the model associates with glioma is inconclusive and must not be acted upon; the result requires review by a qualified radiologist or specialist physician. Imaging alone cannot establish tumour type, grade, molecular subtype or margins, and the model's uncertainty is high when several classes are possible [nci-cns-pdq-hp]. Clinical and neurological assessment is essential because symptoms depend on tumour location, size and growth rate rather than on tumour type alone [nci-cns-pdq-hp] [ninds-brain-tumors]. Any sudden severe headache, new seizure activity, loss of consciousness, weakness, visual change, confusion or persistent vomiting with headache should prompt prompt medical assessment [ninds-brain-tumors]. Discuss with a specialist the possibility of a dedicated contrast-enhanced MRI brain-tumour protocol, a thorough clinical examination, specialist review and, where tissue is obtained, histopathological and molecular characterisation, all of which are required for definitive typing and grading under current WHO criteria [who-cns5] [nci-cns-pdq-hp].",
+  "text": "The AI output indicating glioma is indeterminate and should be regarded as inconclusive; it does not constitute a diagnosis and must not be used to guide treatment. Glioma is a broad term for tumours arising from glial cells, and the group spans a wide range of biological behaviour, so the label alone is not a complete clinical description [nci-cns-pdq-hp] [who-cns5]. The system assigns only a broad tumour category from image data and cannot determine grade, molecular subtype, margins or volume, and an imaging appearance suggestive of glioma does not establish grade, which is the dominant driver of prognosis [nci-cns-pdq-hp]. In the project's own evaluation glioma was the weakest class for recall, remaining the least reliable of the four tumour categories [nci-cns-pdq-hp]. Consequently the result requires review by a qualified radiologist and the multidisciplinary neuro-oncology team, with clinical correlation and discussion of any neurological red-flag symptoms with a specialist physician [nci-cns-pdq-hp] [ninds-brain-tumors] [ninds-brain-tumors]. The tool holds no CDSCO registration and is not a medical device, and its use must comply with ethical guidelines that require validation before patient care [cdsco-md-rules] [neurasight-system] [icmr-ai-ethics]. Until a qualified professional has examined the imaging and clinical context, the finding must not be acted upon.",
   "grounding": {
     "citations_used": [
+      "cdsco-md-rules",
+      "icmr-ai-ethics",
       "nci-cns-pdq-hp",
+      "neurasight-system",
       "ninds-brain-tumors",
       "who-cns5"
     ],
     "citations_allowed": [
+      "cdsco-md-rules",
+      "icmr-ai-ethics",
+      "icmr-ncdir-ncrp",
+      "indian-cns-data",
+      "ncg-india",
       "nci-cns-pdq-hp",
+      "neurasight-system",
       "ninds-brain-tumors",
       "who-cns5"
     ],
@@ -20,16 +29,16 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 146
+    "word_count": 199
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
   "evidence_chunks": [
     "brain_mri/Glioma/overview",
     "brain_mri/Glioma/clinical_considerations",
+    "brain_mri/Glioma/india_care_pathway",
     "brain_mri/Glioma/warning_signs",
-    "brain_mri/Glioma/ai_limitations",
-    "brain_mri/Glioma/investigations"
+    "brain_mri/Glioma/ai_limitations"
   ],
   "llm": {
     "model": "openai/gpt-oss-120b",
@@ -37,14 +46,14 @@
     "ok": true,
     "error": null,
     "usage": {
-      "prompt_tokens": 1309,
-      "completion_tokens": 661,
-      "total_tokens": 1970
+      "prompt_tokens": 1884,
+      "completion_tokens": 1039,
+      "total_tokens": 2923
     },
     "attempts": 1,
-    "elapsed_seconds": 2.91
+    "elapsed_seconds": 3.368
   },
-  "generated": "2026-09-29T18:25:32.228448+00:00",
+  "generated": "2026-09-30T11:21:58.322510+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

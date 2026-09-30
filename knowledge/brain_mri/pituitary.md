@@ -3,7 +3,7 @@ class: Pituitary
 module: brain_mri
 risk_tier: Medium
 requires_clinical_review: true
-sources: [nci-pituitary-pdq, nci-pituitary-diagnosis, ncbi-pituitary-adenoma-statpearls, ninds-brain-tumors]
+sources: [nci-pituitary-pdq, nci-pituitary-diagnosis, ncbi-pituitary-adenoma-statpearls, ninds-brain-tumors, who-cns5, ncg-india, icmr-ai-ethics, cdsco-md-rules, icmr-ncdir-ncrp, indian-cns-data, neurasight-system]
 ---
 
 ## Overview
@@ -92,3 +92,52 @@ Which category applies depends strongly on whether the tumour secretes hormones 
 involved — some pituitary tumour types respond to medical therapy in a way that other CNS tumours do
 not. Selection is a specialist decision made after endocrine and ophthalmological evaluation, not
 from imaging. [nci-pituitary-pdq]
+
+## Care pathway in India
+
+This section is jurisdictional, not medical. Typing and grading above follow the WHO CNS
+classification, which Indian tertiary centres use as well. [who-cns5] What differs by country is
+where a patient is seen, what is locally available, and which authority governs a tool like this
+one.
+
+**Where specialist review happens.** India's National Cancer Grid is a network of major cancer
+centres, research institutes and patient groups with the mandate of establishing uniform standards
+for prevention, diagnosis and treatment, and it publishes resource-stratified guidelines so
+evidence-based management stays implementable at centres with differing infrastructure. [ncg-india]
+
+**This class needs more than imaging.** A pituitary finding is characteristically an endocrine as
+well as a radiological matter: diagnosis relies on a pituitary-protocol MRI together with
+comprehensive endocrine testing, and management is individualised depending on tumour type and
+functional status. [ncbi-pituitary-adenoma-statpearls] Visual field assessment is also relevant,
+covering central and peripheral vision with each eye tested separately. [nci-pituitary-diagnosis]
+Pathway implication: specialist input is typically endocrinology and ophthalmology alongside
+neurosurgery, so a referral limited to one of those may be incomplete. Hormone assays and formal
+perimetry are widely available in Indian tertiary and many secondary centres, so this is usually a
+question of arranging the right tests rather than of access.
+
+**What this model cannot contribute here.** The classifier reports a class from a single image slice.
+It does not measure hormone levels, assess visual fields, or distinguish functioning from
+non-functioning lesions, and those are the findings that drive management for this class.
+[neurasight-system]
+
+**Epidemiological context.** Central nervous system tumours make up roughly 2% of all malignancies,
+with the burden weighted towards younger and middle-aged patients. [indian-cns-data] Indian
+incidence by age, sex and site is published through the National Cancer Registry Programme; specific
+figures are deliberately not restated here, because they vary by registry and reporting year.
+[icmr-ncdir-ncrp]
+
+**Regulatory status of this tool.** Medical devices in India are regulated by CDSCO under the Drugs
+and Cosmetics Act, 1940 and the Medical Devices Rules, 2017. [cdsco-md-rules] This system holds no
+CDSCO registration or approval and is therefore **not** a medical device for use in India.
+[neurasight-system]
+
+**Ethical framework.** ICMR's ethical guidelines for AI in biomedical research and healthcare
+require that AI health technologies undergo clinical and field validation before being applied to
+patients, place ethics review with an ethics committee, and address accountability when a system
+errs. [icmr-ai-ethics]
+
+**What citing Indian authorities does not mean.** This model was trained and evaluated on a public
+image corpus of unstated scanner and population provenance. It has **not** been validated on an
+Indian patient cohort, and no multi-centre or multi-scanner validation has been performed. The
+Indian sources above supply care-pathway and governance context only; they must not be read as
+evidence of Indian clinical validation. [neurasight-system]

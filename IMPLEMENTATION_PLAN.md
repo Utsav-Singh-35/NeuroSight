@@ -400,10 +400,10 @@ dictionary. This is reported honestly per-response via `evidence_grounded: false
 ### 4.5 Evidence retrieval / RAG results (task 9)
 
 Files: `app/services/retrieval.py`, `scripts/build_index.py`, `scripts/eval_retrieval.py`,
-`knowledge/index.npz` (39 KB), `knowledge/index_meta.json`, `knowledge/retrieval_eval.json`
-(30 hand-labelled queries), `knowledge/retrieval_results.json`.
+`knowledge/index.npz` (45 KB), `knowledge/index_meta.json`, `knowledge/retrieval_eval.json`
+(36 hand-labelled queries), `knowledge/retrieval_results.json`.
 
-**No vector database, no LangChain.** The corpus is 28 chunks, so the whole index is a `(28, 384)`
+**No vector database, no LangChain.** The corpus is 32 chunks, so the whole index is a `(32, 384)`
 float32 array and search is one matrix–vector product. Vectors are L2-normalised at index time, so
 cosine similarity reduces to a dot product.
 
@@ -411,8 +411,8 @@ cosine similarity reduces to a dot product.
 
 | Backend | Hit@1 | Hit@3 | Recall@5 | MRR | P@5 | Complete misses |
 |---------|-------|-------|----------|-----|-----|-----------------|
-| tfidf (sklearn baseline) | 0.5000 | 0.8000 | 0.7472 | 0.6389 | 0.2800 | 6 / 30 |
-| **embedding (MiniLM-L6-v2)** | **0.5333** | **0.9000** | **0.8194** | **0.7139** | 0.3067 | **2 / 30** |
+| tfidf (sklearn baseline) | 0.5000 | 0.8056 | 0.7731 | 0.6528 | 0.3500 | 5 / 36 |
+| **embedding (MiniLM-L6-v2)** | **0.6111** | **0.8889** | **0.7940** | **0.7532** | 0.3444 | **2 / 36** |
 
 Breakdown by query type (19 deliberately paraphrased away from corpus wording, 11 literal):
 
@@ -425,7 +425,7 @@ Breakdown by query type (19 deliberately paraphrased away from corpus wording, 1
 
 **Findings:**
 
-- The embedding backend wins overall, and the clearest signal is **complete misses: 2/30 vs 6/30**.
+- The embedding backend wins overall, and the clearest signal is **complete misses: 2/36 vs 5/36**.
   For grounding a narrative, "retrieved nothing relevant at all" is the failure that matters.
 - **The semantic advantage is in Hit@3 and Recall, not Hit@1.** On paraphrased queries TF-IDF
   actually edges Hit@1 (0.4737 vs 0.4211) by occasional lexical luck, while embedding lifts Hit@3
@@ -444,7 +444,7 @@ Breakdown by query type (19 deliberately paraphrased away from corpus wording, 1
 
 **Citation completeness audit.** An initial audit found **4 uncited chunks**, all in `No Tumor`.
 Rather than bolt a medical reference onto statements about our own software, a `neurasight-system`
-self-reference source was registered and applied, so **every one of the 28 chunks now has declared
+self-reference source was registered and applied, so **every one of the 32 chunks now has declared
 provenance** — either an external medical source or an explicit self-reference. Result: **0 uncited
 chunks.** Keeping the two kinds of provenance distinct is what makes the audit meaningful.
 
@@ -452,7 +452,7 @@ chunks.** Keeping the two kinds of provenance distinct is what makes the audit m
 with citations attached to every hit.
 
 **`.gitignore` exceptions added** so the runtime artefacts survive a fresh clone:
-`!knowledge/index.npz` (39 KB — avoids needing the model download) and `!models/calibration/*.png`
+`!knowledge/index.npz` (45 KB — avoids needing the model download) and `!models/calibration/*.png`
 (evaluation figures are results, not data). The calibration/conformal/OOD JSON artefacts were
 already committable; only `*.npy` probability matrices remain ignored, and those are regenerable.
 
@@ -553,7 +553,7 @@ false, `models_skipped` non-empty, ensemble inactive, validation failed, or OOD 
 1. **Images silently failed to embed.** reportlab's `Image` flowable takes a path or a file-like
    object; passing an `ImageReader` raises `expected str, bytes or os.PathLike object`. The error was
    caught and logged, so the PDF still built — just with no images, at 9.8 KB. Fixed by passing
-   `BytesIO` directly; PDFs are now 121–139 KB with both panels present.
+   `BytesIO` directly; PDFs are now 121–144 KB with both panels present.
 2. **Risk escalation was not wired for brain MRI.** `BrainMRIModule.report()` called
    `generate_report` *without* the uncertainty payload, so a borderline case was reported with its
    class's default risk tier — `Meningioma` at 94.86% came out as `risk: Medium, escalated: False`

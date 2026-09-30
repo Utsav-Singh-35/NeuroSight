@@ -2,7 +2,7 @@
   "class": "Meningioma",
   "module": "brain_mri",
   "band": "indeterminate",
-  "text": "The AI classification suggests a possible meningioma but the conformal prediction set includes multiple classes, making the result inconclusive and not suitable for clinical action. The finding should be reviewed by a qualified radiologist or specialist physician. Meningiomas arise from the meninges and are the commonest primary brain tumour, often discovered incidentally and may be slow-growing [nci-meningioma]. Presentation depends on location, size, growth rate and histological grade, and two lesions with similar appearance can require very different management [ncbi-meningioma-statpearls]. A single-slice AI output cannot assess growth rate or grade [ncbi-meningioma-statpearls]. Clinicians may discuss a detailed neurological examination, dedicated contrast-enhanced MRI with a tumour protocol, specialist review and, where appropriate, histological sampling to inform grading [nci-meningioma][ncbi-meningioma-statpearls]. Management options range from observation with serial imaging to surgery or radiation, decisions that require specialist assessment after full clinical evaluation [icom-meningioma-consensus][nci-meningioma]. Follow-up planning, including interval imaging and reassessment if symptoms evolve, should also be determined by the treating team [icom-meningioma-consensus][nci-meningioma].",
+  "text": "The AI output for this brain MRI is inconclusive and must not be acted upon; it requires review by a qualified radiologist or specialist physician. A single-slice classification cannot assess growth rate or tumour grade, and therefore cannot provide a definitive assessment of the lesion's significance [ncbi-meningioma-statpearls]. Clinical and neurological examination, dedicated contrast-enhanced MRI using a brain-tumour protocol, specialist review and, where appropriate, histological grading are matters to discuss with a healthcare professional, as these investigations inform management decisions [ncbi-meningioma-statpearls] [nci-meningioma]. Management decisions depend on tumour location, size, symptoms, growth characteristics, histological grade and the patient's overall condition, with options that may include observation with serial imaging, surgical intervention, radiation-based approaches or supportive care, all of which are specialist decisions after diagnostic confirmation [nci-meningioma] [icom-meningioma-consensus]. Ongoing follow-up typically involves specialist review, interval imaging to monitor growth, comparison with prior studies and reassessment if new neurological symptoms develop [nci-meningioma] [icom-meningioma-consensus].",
   "grounding": {
     "citations_used": [
       "icom-meningioma-consensus",
@@ -21,7 +21,7 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 156
+    "word_count": 149
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
@@ -39,13 +39,13 @@
     "error": null,
     "usage": {
       "prompt_tokens": 1172,
-      "completion_tokens": 999,
-      "total_tokens": 2171
+      "completion_tokens": 678,
+      "total_tokens": 1850
     },
     "attempts": 1,
-    "elapsed_seconds": 20.181
+    "elapsed_seconds": 14.411
   },
-  "generated": "2026-09-29T18:26:09.877643+00:00",
+  "generated": "2026-09-30T11:22:44.910374+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

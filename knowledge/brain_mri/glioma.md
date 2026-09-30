@@ -3,7 +3,7 @@ class: Glioma
 module: brain_mri
 risk_tier: High
 requires_clinical_review: true
-sources: [nci-cns-pdq-hp, nci-cns-pdq-patient, who-cns5, ninds-brain-tumors]
+sources: [nci-cns-pdq-hp, nci-cns-pdq-patient, who-cns5, ninds-brain-tumors, ncg-india, icmr-ai-ethics, cdsco-md-rules, icmr-ncdir-ncrp, indian-cns-data, neurasight-system]
 ---
 
 ## Overview
@@ -96,3 +96,47 @@ described in the literature include:
 
 Which categories apply, in what sequence, and with what intent is a specialist decision made after
 diagnostic confirmation and full clinical evaluation. [nci-cns-pdq-hp] [nci-cns-pdq-patient]
+
+## Care pathway in India
+
+This section is jurisdictional, not medical. Typing and grading above follow the WHO CNS
+classification, which Indian tertiary centres use as well. [who-cns5] What differs by country is
+where a patient is seen, what is locally available, and which authority governs a tool like this
+one.
+
+**Where specialist review happens.** India's National Cancer Grid is a network of major cancer
+centres, research institutes and patient groups with the mandate of establishing uniform standards
+for prevention, diagnosis and treatment, so comparable care is reachable without every patient
+travelling to one institution. It publishes resource-stratified guidelines so that evidence-based
+management stays implementable at centres with differing infrastructure. [ncg-india] A suspected
+glioma is a neuro-oncology multidisciplinary matter — neurosurgery, neuro-radiology, pathology and
+radiation oncology — and molecular characterisation influences both classification and management.
+[who-cns5] [nci-cns-pdq-hp]
+
+**Why the timeline matters here.** Glioma is the class this model is weakest on: recall was 0.81 at
+the single-model baseline and 0.90 after stacking, so roughly one in ten gliomas in evaluation was
+still assigned elsewhere. [neurasight-system] Central nervous system tumours make up roughly 2% of
+all malignancies but fall disproportionately on younger and middle-aged patients, so a delay carries
+a high cost in life-years. [indian-cns-data] A borderline or indeterminate output on a possible
+glioma should accelerate specialist referral, not defer it.
+
+**Epidemiological context.** Indian incidence by age, sex and site is published through the National
+Cancer Registry Programme. This knowledge base deliberately does not restate specific figures,
+because they vary by registry and reporting year and should be read from the source.
+[icmr-ncdir-ncrp]
+
+**Regulatory status of this tool.** Medical devices in India are regulated by CDSCO under the Drugs
+and Cosmetics Act, 1940 and the Medical Devices Rules, 2017. [cdsco-md-rules] This system holds no
+CDSCO registration or approval and is therefore **not** a medical device for use in India.
+[neurasight-system]
+
+**Ethical framework.** ICMR's ethical guidelines for AI in biomedical research and healthcare
+require that AI health technologies undergo clinical and field validation before being applied to
+patients, place ethics review with an ethics committee, and address accountability when a system
+errs. [icmr-ai-ethics]
+
+**What citing Indian authorities does not mean.** This model was trained and evaluated on a public
+image corpus of unstated scanner and population provenance. It has **not** been validated on an
+Indian patient cohort, and no multi-centre or multi-scanner validation has been performed. The
+Indian sources above supply care-pathway and governance context only; they must not be read as
+evidence of Indian clinical validation. [neurasight-system]

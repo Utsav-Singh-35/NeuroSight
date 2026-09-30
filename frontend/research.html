@@ -316,13 +316,13 @@
         </div>
         <div class="stage">
           <div class="n">7</div>
-          <div class="what">Cited evidence retrieval<span>28 chunks from 12 clinical sources, local embeddings</span></div>
-          <div class="num">MRR 0.7139<br>vs 0.6389 TF-IDF</div>
+          <div class="what">Cited evidence retrieval<span>32 chunks from 17 sources: WHO, US federal and Indian</span></div>
+          <div class="num">MRR 0.7532<br>vs 0.6528 TF-IDF</div>
         </div>
         <div class="stage">
           <div class="n">8</div>
           <div class="what">Report and PDF<span>Caveats box, prediction set, resolved citations</span></div>
-          <div class="num">4 pages<br>121-139 KB</div>
+          <div class="num">4 pages<br>121-144 KB</div>
         </div>
       </div>
 
@@ -637,30 +637,69 @@
       <div class="card">
         <h3>Retrieval over a cited knowledge base</h3>
         <p>
-          Clinical guidance in the report is retrieved from a knowledge base of <strong>28 chunks</strong>
-          drawn from <strong>12 cited sources</strong> — NCI and NINDS clinical summaries, StatPearls
-          reference articles, a 2024 <em>Neuro-Oncology</em> consensus review, and the WHO CNS5
-          classification standard. Every chunk carries at least one citation, enforced at build time.
+          Clinical guidance in the report is retrieved from a knowledge base of <strong>32 chunks</strong>
+          drawn from <strong>17 cited sources across three jurisdictions</strong>. Every chunk carries
+          at least one citation, enforced at build time.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Jurisdiction</th><th>Sources</th><th>What they supply</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>International</td>
+                <td>WHO CNS5 classification; <em>Neuro-Oncology</em> 2024 consensus review; StatPearls &times;2</td>
+                <td>Tumour typing and grading</td>
+              </tr>
+              <tr>
+                <td>United States</td>
+                <td>NCI PDQ &times;4, NINDS, NCBI Bookshelf</td>
+                <td>General clinical fundamentals</td>
+              </tr>
+              <tr class="best">
+                <td><strong>India</strong></td>
+                <td>ICMR AI ethics guidelines; CDSCO; National Cancer Grid; ICMR-NCDIR registry; Indian CNS epidemiology review</td>
+                <td>Care pathway, resource context, epidemiology, regulatory and ethical framework</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <strong>The split is a division of labour, not hedging.</strong> WHO CNS5 <em>is</em> the
+          international standard, and Indian tertiary centres grade against it too — there is no
+          Indian alternative to it and none is wanted. What genuinely differs by country is everything
+          around the classification: where a patient is seen, what is locally available, and which
+          authority governs a tool like this one. Each class carries a dedicated
+          <span class="highlight">Care pathway in India</span> section, kept separate from the clinical
+          text so the medical content stays portable and so a statement about Indian regulation is
+          never dressed up as a medical citation.
+        </p>
+        <p>
+          Those sections state the referral context (the National Cancer Grid's resource-stratified
+          network), the epidemiological framing, the regulatory status — <strong>no CDSCO
+          registration, therefore not a medical device in India</strong> — and the ICMR requirement
+          that AI health technologies be clinically and field validated before patient use. They
+          deliberately do <em>not</em> restate per-class Indian incidence figures, because those vary
+          by registry and reporting year; the registry is cited as where to obtain them instead.
         </p>
         <p>
           Retrieval uses <code>all-MiniLM-L6-v2</code> sentence embeddings. The entire corpus is a
-          (28 × 384) array of about 40 KB, so there is <strong>deliberately no vector database</strong>:
+          (32 × 384) array of about 45 KB, so there is <strong>deliberately no vector database</strong>:
           brute-force cosine similarity over a NumPy array is both faster and simpler than any index at
           this scale. Warm retrieval takes 15.3 ms.
         </p>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Metric (30 hand-labelled queries, k = 5)</th><th>TF-IDF</th><th>Embeddings</th></tr></thead>
+            <thead><tr><th>Metric (36 hand-labelled queries, k = 5)</th><th>TF-IDF</th><th>Embeddings</th></tr></thead>
             <tbody>
-              <tr><td>Hit@3</td><td class="num">0.8000</td><td class="num">0.9000</td></tr>
-              <tr><td>Recall@5</td><td class="num">0.7472</td><td class="num">0.8194</td></tr>
-              <tr><td>Mean reciprocal rank</td><td class="num">0.6389</td><td class="num">0.7139</td></tr>
-              <tr class="best"><td>Complete misses (nothing relevant in top 5)</td><td class="num">6 / 30</td><td class="num">2 / 30</td></tr>
+              <tr><td>Hit@3</td><td class="num">0.8056</td><td class="num">0.8889</td></tr>
+              <tr><td>Recall@5</td><td class="num">0.7731</td><td class="num">0.7940</td></tr>
+              <tr><td>Mean reciprocal rank</td><td class="num">0.6528</td><td class="num">0.7532</td></tr>
+              <tr class="best"><td>Complete misses (nothing relevant in top 5)</td><td class="num">5 / 36</td><td class="num">2 / 36</td></tr>
             </tbody>
           </table>
         </div>
         <p>
-          Nineteen of the thirty queries were deliberately paraphrased away from the corpus wording, and
+          Twenty-three of the thirty-six queries were deliberately paraphrased away from corpus wording, and
           that is where the gain concentrates — Hit@3 on paraphrased queries goes from 0.7368 to 0.8947.
           <strong>Complete misses is the metric that matters clinically</strong>: a retriever that returns
           nothing relevant leaves a statement ungrounded. Embeddings cut those by two thirds.
@@ -838,6 +877,18 @@
           <strong>Single-source datasets.</strong> No multi-centre or multi-scanner validation, so
           scanner-specific artefacts may have been learned as shortcuts. No tumour grading, segmentation
           or volumetry.
+        </li>
+        <li class="limit-item">
+          <strong>Not validated on an Indian cohort.</strong> The knowledge base cites ICMR, CDSCO and
+          the National Cancer Grid, which is the correct governance framing for use in India. The model
+          itself was trained on a public corpus of unstated scanner and population provenance. Indian
+          citations are not Indian clinical validation, and every report states this explicitly rather
+          than leaving a reader to infer otherwise.
+        </li>
+        <li class="limit-item">
+          <strong>No regulatory approval anywhere.</strong> Medical devices in India are regulated
+          under the Drugs and Cosmetics Act, 1940 and the Medical Devices Rules, 2017. This system holds
+          no CDSCO registration, and no clearance from any other regulator either.
         </li>
         <li class="limit-item">
           <strong>No authentication on any endpoint</strong>, and CORS is permissive. This is a research

@@ -1,12 +1,13 @@
 {
   "version": "1.0",
   "created": "2026-09-29",
-  "purpose": "Hand-labelled query set for evaluating evidence retrieval over the brain MRI knowledge base. Each query lists the chunk IDs that genuinely answer it. Built by hand against the 28 chunks produced by KnowledgeBase.chunks('brain_mri').",
+  "purpose": "Hand-labelled query set for evaluating evidence retrieval over the brain MRI knowledge base. Each query lists the chunk IDs that genuinely answer it. Built by hand against the 32 chunks produced by KnowledgeBase.chunks('brain_mri') - originally 28, extended to 32 when the India care-pathway sections were added.",
   "labelling_notes": [
     "Relevance is judged as 'would a reader asking this question be satisfied by this chunk'.",
     "Several queries are intentionally paraphrased away from the corpus wording, so a purely lexical retriever should struggle on them. Those are marked paraphrase: true.",
     "Queries with more than one relevant chunk reflect genuinely distributed answers, not hedging.",
-    "Because relevant sets are small (1-4), precision@5 is capped well below 1.0 by construction. Recall@5, MRR and Hit@1 are the informative metrics here; precision@5 is reported only for completeness."
+    "Because relevant sets are small (1-4), precision@5 is capped well below 1.0 by construction. Recall@5, MRR and Hit@1 are the informative metrics here; precision@5 is reported only for completeness.",
+    "q31-q36 target the India care-pathway chunks added in the second pass. Four of them have four relevant chunks, one per class, because the regulatory and non-validation statements are deliberately repeated across all four classes: a user who only ever sees one class must still be told the tool holds no CDSCO approval. Recall@5 is therefore genuinely achievable on those queries, unlike the small-set queries above."
   ],
   "queries": [
     {
@@ -187,6 +188,70 @@
       "id": "q30",
       "query": "Does molecular testing matter for diagnosis?",
       "relevant": ["brain_mri/Glioma/investigations", "brain_mri/Glioma/overview"],
+      "paraphrase": true
+    },
+    {
+      "id": "q31",
+      "query": "Is this software an approved medical device in India?",
+      "relevant": [
+        "brain_mri/Glioma/india_care_pathway",
+        "brain_mri/Meningioma/india_care_pathway",
+        "brain_mri/No_Tumor/india_care_pathway",
+        "brain_mri/Pituitary/india_care_pathway"
+      ],
+      "paraphrase": true
+    },
+    {
+      "id": "q32",
+      "query": "Which Indian body regulates medical devices and which one governs AI ethics in healthcare?",
+      "relevant": [
+        "brain_mri/Glioma/india_care_pathway",
+        "brain_mri/Meningioma/india_care_pathway",
+        "brain_mri/No_Tumor/india_care_pathway",
+        "brain_mri/Pituitary/india_care_pathway"
+      ],
+      "paraphrase": false
+    },
+    {
+      "id": "q33",
+      "query": "Has the model been tested on Indian patients?",
+      "relevant": [
+        "brain_mri/Glioma/india_care_pathway",
+        "brain_mri/Meningioma/india_care_pathway",
+        "brain_mri/No_Tumor/india_care_pathway",
+        "brain_mri/Pituitary/india_care_pathway"
+      ],
+      "paraphrase": true
+    },
+    {
+      "id": "q34",
+      "query": "Where would a patient in India go for specialist review of a brain tumour?",
+      "relevant": [
+        "brain_mri/Glioma/india_care_pathway",
+        "brain_mri/Meningioma/india_care_pathway",
+        "brain_mri/Pituitary/india_care_pathway"
+      ],
+      "paraphrase": true
+    },
+    {
+      "id": "q35",
+      "query": "What proportion of cancers in India are central nervous system tumours?",
+      "relevant": [
+        "brain_mri/Glioma/india_care_pathway",
+        "brain_mri/Meningioma/india_care_pathway",
+        "brain_mri/No_Tumor/india_care_pathway",
+        "brain_mri/Pituitary/india_care_pathway"
+      ],
+      "paraphrase": false
+    },
+    {
+      "id": "q36",
+      "query": "Why does a pituitary finding need endocrine and eye tests, not just imaging?",
+      "relevant": [
+        "brain_mri/Pituitary/india_care_pathway",
+        "brain_mri/Pituitary/investigations",
+        "brain_mri/Pituitary/overview"
+      ],
       "paraphrase": true
     }
   ]

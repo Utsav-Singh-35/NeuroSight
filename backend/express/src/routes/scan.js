@@ -159,6 +159,7 @@ router.post('/', imageValidator, async (req, res, next) => {
       investigations: report.investigations || null,
       followUp: report.follow_up || null,
       treatmentInformation: report.treatment_information || null,
+      indiaCarePathway: report.india_care_pathway || null,
       aiLimitations: report.ai_limitations || null,
       sources: report.sources || [],
       clinicalReviewRequired: report.clinical_review_required !== false,

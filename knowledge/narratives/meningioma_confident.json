@@ -2,7 +2,7 @@
   "class": "Meningioma",
   "module": "brain_mri",
   "band": "confident",
-  "text": "The AI model has classified the brain MRI as consistent with a meningioma. This classification reflects that the imaging appearance is typical of a tumour arising from the meninges, the membranes covering the brain and spinal cord, which is the most common primary brain tumour [nci-meningioma]. Most meningiomas grow slowly and are often discovered incidentally; however, clinical effects vary according to the lesion's location, size, growth rate and histological grade, so two lesions that look similar may require different management [ncbi-meningioma-statpearls]. It is important to note that this output is a classification, not a definitive diagnosis. A clinician would normally discuss further evaluation, including a detailed clinical and neurological examination and a dedicated contrast-enhanced MRI performed with a brain-tumour protocol, as well as review by a neurosurgical or neurological specialist and, where tissue is obtained, histological grading to inform management [nci-meningioma] [ncbi-meningioma-statpearls]. Management options that may be considered after diagnostic confirmation include observation with serial imaging, surgical resection, radiation-based techniques or supportive care, all decided in specialist consultation [nci-meningioma] [icom-meningioma-consensus]. Ongoing follow-up typically involves specialist review, interval imaging to monitor growth and reassessment if new neurological symptoms arise [nci-meningioma] [icom-meningioma-consensus].",
+  "text": "The AI model has identified a pattern on the brain MRI that is consistent with a meningioma, a tumour that arises from the meninges and is the most common primary brain tumour [nci-meningioma]. This output represents a classification of the imaging appearance, not a definitive diagnosis, and it does not convey information about tumour grade or growth rate, which cannot be judged from a single study [ncbi-meningioma-statpearls]. Meningiomas are often slow-growing and may be discovered incidentally, although clinical effects depend on location, size, growth and histological grade [ncbi-meningioma-statpearls]. A clinician would typically discuss a detailed neurological examination and a dedicated contrast-enhanced MRI using a brain-tumour protocol, as well as review by a neurosurgical or neurological specialist [nci-meningioma][ncbi-meningioma-statpearls]. If tissue is obtained, histological grading can inform management, and interval imaging is useful to establish growth rate [nci-meningioma][ncbi-meningioma-statpearls]. Ongoing specialist review, serial imaging and reassessment if new symptoms appear are part of standard follow-up considerations [icom-meningioma-consensus][nci-meningioma].",
   "grounding": {
     "citations_used": [
       "icom-meningioma-consensus",
@@ -21,7 +21,7 @@
     "contains_percentages": [],
     "non_ascii_characters": [],
     "ascii_clean": true,
-    "word_count": 190
+    "word_count": 154
   },
   "grounding_attempts_used": 1,
   "grounded_on_first_attempt": true,
@@ -39,13 +39,13 @@
     "error": null,
     "usage": {
       "prompt_tokens": 1171,
-      "completion_tokens": 1501,
-      "total_tokens": 2672
+      "completion_tokens": 1315,
+      "total_tokens": 2486
     },
     "attempts": 1,
-    "elapsed_seconds": 4.664
+    "elapsed_seconds": 14.781
   },
-  "generated": "2026-09-29T18:25:36.950480+00:00",
+  "generated": "2026-09-30T11:22:13.135860+00:00",
   "reviewed": false,
   "reviewed_by": null,
   "reviewed_at": null,

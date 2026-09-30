@@ -146,6 +146,7 @@ def _unknown_report(prediction: str, confidence: float, probabilities: dict, mod
         "investigations": None,
         "follow_up": None,
         "treatment_information": None,
+        "india_care_pathway": None,
         "sources": [],
         "evidence_grounded": False,
         "clinical_review_required": True,
@@ -214,6 +215,10 @@ def generate_report(
             "follow_up": entry.plain("follow_up"),
             "warning_signs": entry.plain("warning_signs"),
             "treatment_information": entry.plain("treatment_information"),
+            # Jurisdictional context: Indian care pathway, resource setting and
+            # regulatory status. Separate from the clinical fields so the report
+            # stays portable if another jurisdiction is added later.
+            "india_care_pathway": entry.plain("india_care_pathway"),
             "sources": knowledge.resolve_sources(entry.all_citations()),
             "evidence_grounded": True,
             "clinical_review_required": entry.requires_clinical_review,
@@ -268,6 +273,8 @@ def generate_report(
         "investigations": None,
         "follow_up": None,
         "treatment_information": None,
+        # Chest has no knowledge-base entry, so no jurisdictional section either.
+        "india_care_pathway": None,
         "sources": [],
         # Stated explicitly: this module's text is not yet cited.
         "evidence_grounded": False,

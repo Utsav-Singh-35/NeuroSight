@@ -3,7 +3,7 @@ class: Meningioma
 module: brain_mri
 risk_tier: Medium
 requires_clinical_review: true
-sources: [nci-meningioma, ncbi-meningioma-statpearls, icom-meningioma-consensus, who-cns5, ninds-brain-tumors]
+sources: [nci-meningioma, ncbi-meningioma-statpearls, icom-meningioma-consensus, who-cns5, ninds-brain-tumors, ncg-india, icmr-ai-ethics, cdsco-md-rules, icmr-ncdir-ncrp, indian-cns-data, neurasight-system]
 ---
 
 ## Overview
@@ -90,3 +90,41 @@ and the patient's overall clinical condition. Broad categories described in the 
 
 Selection among these is a specialist decision made after diagnostic confirmation and complete
 clinical evaluation. [nci-meningioma] [icom-meningioma-consensus]
+
+## Care pathway in India
+
+This section is jurisdictional, not medical. Tumour typing and grading above follow the WHO CNS
+classification, which Indian tertiary centres use as well. [who-cns5] What differs by country is
+where a patient is seen, what is locally available, and which authority governs a tool like this
+one.
+
+**Where specialist review happens.** India's National Cancer Grid is a network of major cancer
+centres, research institutes and patient groups with the mandate of establishing uniform standards
+for prevention, diagnosis and treatment, so that comparable care is available without a patient
+having to travel to a single institution. It publishes resource-stratified guidelines, so that
+evidence-based management remains implementable at centres with differing infrastructure. A
+suspected meningioma would be discussed at a centre with neurosurgical and neuro-radiology input
+rather than acted on from imaging alone. [ncg-india]
+
+**Epidemiological context.** Central nervous system tumours make up roughly 2% of all malignancies,
+and the burden falls disproportionately on younger and middle-aged patients, which raises the
+clinical cost of a missed or delayed diagnosis. [indian-cns-data] Indian incidence by age, sex and
+site is published through the National Cancer Registry Programme; this knowledge base deliberately
+does not restate specific figures, because they vary by registry and reporting year and should be
+read from the source. [icmr-ncdir-ncrp]
+
+**Regulatory status of this tool.** Medical devices in India are regulated by CDSCO under the Drugs
+and Cosmetics Act, 1940 and the Medical Devices Rules, 2017. [cdsco-md-rules] This system holds no
+CDSCO registration or approval and is therefore **not** a medical device for use in India.
+[neurasight-system]
+
+**Ethical framework.** ICMR's ethical guidelines for AI in biomedical research and healthcare
+require that AI health technologies undergo clinical and field validation before being applied to
+patients, place the ethics review of such work with an ethics committee, and address accountability
+when a system errs. [icmr-ai-ethics]
+
+**What citing Indian authorities does not mean.** This model was trained and evaluated on a public
+image corpus of unstated scanner and population provenance. It has **not** been validated on an
+Indian patient cohort, and no multi-centre or multi-scanner validation has been performed. The
+Indian sources above supply care-pathway and governance context only; they must not be read as
+evidence of Indian clinical validation. [neurasight-system]
