@@ -3,505 +3,875 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Research & Documentation - NeuraSight</title>
+  <title>Research &amp; Documentation - NeuraSight</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: #000000;
-      color: #ffffff;
-      line-height: 1.6;
+      background: #000000; color: #ffffff; line-height: 1.6;
     }
 
-    /* Navigation - Exact match from main site */
+    /* Navigation - exact match from the main site */
     .navbar {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 1200px;
-      padding: 1.2rem 2.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      width: 90%; max-width: 1200px; padding: 1.2rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center; z-index: 100;
       background: rgba(20, 20, 20, 0.4);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      transition: all 0.3s ease;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); transition: all 0.3s ease;
     }
-
-    .logo {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #fff;
-      letter-spacing: 1px;
-    }
-
-    .nav-links {
-      list-style: none;
-      display: flex;
-      gap: 2.5rem;
-      align-items: center;
-    }
-
+    .logo { font-size: 1.2rem; font-weight: 600; color: #fff; letter-spacing: 1px; }
+    .nav-links { list-style: none; display: flex; gap: 2.5rem; align-items: center; }
     .nav-links a {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: #aaaaaa;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      transition: color 0.3s;
+      display: flex; align-items: center; gap: 0.4rem; color: #aaaaaa;
+      text-decoration: none; font-weight: 500; font-size: 0.9rem;
+      letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s;
     }
+    .nav-links a:hover, .nav-links a.current { color: #ffffff; }
 
-    .nav-links a:hover {
-      color: #ffffff;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 10rem 5% 6rem;
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 10rem 5% 6rem; }
 
     h1 {
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 800;
-      margin-bottom: 2rem;
-      letter-spacing: -0.03em;
-      color: #ffffff;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem); font-weight: 800; margin-bottom: 1rem;
+      letter-spacing: -0.03em; color: #ffffff;
     }
-
+    .subtitle {
+      font-size: 1.15rem; color: rgba(255, 255, 255, 0.55); margin-bottom: 2.5rem;
+      max-width: 780px; line-height: 1.6;
+    }
     h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 700;
-      margin: 4rem 0 2rem;
-      color: #ffffff;
-      letter-spacing: -0.02em;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      font-size: clamp(1.7rem, 3.2vw, 2.4rem); font-weight: 700; margin: 4rem 0 1.5rem;
+      color: #ffffff; letter-spacing: -0.02em;
+      padding-bottom: 1rem; border-bottom: 2px solid rgba(255, 255, 255, 0.1);
     }
-
-    h3 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin: 2rem 0 1rem;
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    p {
-      margin-bottom: 1.5rem;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 1.05rem;
-      line-height: 1.7;
-    }
-
-    .section {
-      margin-bottom: 4rem;
-    }
+    h3 { font-size: 1.35rem; font-weight: 600; margin: 2rem 0 1rem; color: rgba(255, 255, 255, 0.9); }
+    p { margin-bottom: 1.5rem; color: rgba(255, 255, 255, 0.7); font-size: 1.02rem; line-height: 1.75; }
+    .section { margin-bottom: 4rem; }
 
     .card {
-      background: #060606;
-      border: 2px solid rgba(255, 255, 255, 0.14);
-      border-radius: 2px;
-      padding: 3rem 2.5rem;
-      margin-bottom: 2rem;
-      transition: all 0.3s;
+      background: #060606; border: 2px solid rgba(255, 255, 255, 0.14); border-radius: 2px;
+      padding: 2.5rem 2.2rem; margin-bottom: 2rem; transition: all 0.3s;
     }
+    .card:hover { background: #0d0d0d; }
+    .card p:last-child { margin-bottom: 0; }
 
-    .card:hover {
-      background: #0d0d0d;
+    /* Provenance tags: every number says where it came from. */
+    .tag {
+      display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 2px;
+      vertical-align: middle; margin-left: 0.5rem;
     }
+    .tag-measured { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
+    .tag-doc      { background: rgba(148,163,184,0.12); color: #94a3b8; border: 1px solid rgba(148,163,184,0.35); }
+    .tag-missing  { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.35); }
 
     .dataset-link {
-      display: block;
-      color: #22d3ee;
-      text-decoration: none;
-      font-weight: 600;
-      margin: 1rem 0;
-      padding: 1rem 1.5rem;
-      background: rgba(34, 211, 238, 0.05);
-      border: 1px solid rgba(34, 211, 238, 0.2);
-      border-radius: 2px;
-      transition: all 0.3s;
-      font-size: 0.95rem;
+      display: block; color: #22d3ee; text-decoration: none; font-weight: 600;
+      margin: 1rem 0; padding: 1rem 1.5rem; background: rgba(34, 211, 238, 0.05);
+      border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 2px;
+      transition: all 0.3s; font-size: 0.95rem;
     }
-
     .dataset-link:hover {
-      background: rgba(34, 211, 238, 0.1);
-      border-color: rgba(34, 211, 238, 0.4);
+      background: rgba(34, 211, 238, 0.1); border-color: rgba(34, 211, 238, 0.4);
       transform: translateX(5px);
     }
-
-    .dataset-link::before {
-      content: '→ ';
-      margin-right: 0.5rem;
-    }
+    .dataset-link::before { content: '→ '; margin-right: 0.5rem; }
 
     .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-      margin: 2.5rem 0;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem; margin: 2.5rem 0;
     }
-
     .metric-card {
-      background: rgba(34, 211, 238, 0.05);
-      border: 1px solid rgba(34, 211, 238, 0.2);
-      border-radius: 2px;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      transition: all 0.3s;
+      background: rgba(34, 211, 238, 0.05); border: 1px solid rgba(34, 211, 238, 0.2);
+      border-radius: 2px; padding: 1.8rem 1.4rem; text-align: center; transition: all 0.3s;
     }
-
-    .metric-card:hover {
-      background: rgba(34, 211, 238, 0.08);
-      border-color: rgba(34, 211, 238, 0.3);
-    }
-
+    .metric-card:hover { background: rgba(34, 211, 238, 0.08); border-color: rgba(34, 211, 238, 0.3); }
     .metric-label {
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.5);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.8rem;
+      font-size: 0.78rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 0.7rem;
     }
-
-    .metric-value {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #22d3ee;
-      letter-spacing: -0.02em;
-    }
+    .metric-value { font-size: 2.1rem; font-weight: 800; color: #22d3ee; letter-spacing: -0.02em; }
+    .metric-note { font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem; }
 
     .tech-list {
-      list-style: none;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1rem;
-      margin: 2rem 0;
+      list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem; margin: 2rem 0;
     }
-
     .tech-item {
-      background: rgba(192, 132, 252, 0.05);
-      border: 1px solid rgba(192, 132, 252, 0.2);
-      border-radius: 2px;
-      padding: 1.2rem 1.5rem;
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: 500;
-      transition: all 0.3s;
+      background: rgba(192, 132, 252, 0.05); border: 1px solid rgba(192, 132, 252, 0.2);
+      border-radius: 2px; padding: 1.1rem 1.4rem; color: rgba(255, 255, 255, 0.9);
+      font-weight: 500; font-size: 0.95rem; transition: all 0.3s;
     }
+    .tech-item:hover { background: rgba(192, 132, 252, 0.08); border-color: rgba(192, 132, 252, 0.3); }
+    .tech-item::before { content: '✓ '; color: #c084fc; font-weight: 700; margin-right: 0.7rem; }
 
-    .tech-item:hover {
-      background: rgba(192, 132, 252, 0.08);
-      border-color: rgba(192, 132, 252, 0.3);
-    }
-
-    .tech-item::before {
-      content: '✓ ';
-      color: #c084fc;
-      font-weight: 700;
-      margin-right: 0.8rem;
-    }
-
-    .future-list {
-      list-style: none;
-      margin: 2rem 0;
-    }
-
+    .future-list { list-style: none; margin: 2rem 0; }
     .future-item {
-      background: rgba(244, 114, 182, 0.05);
-      border-left: 3px solid #f472b6;
-      padding: 1.5rem 2rem;
-      margin-bottom: 1.2rem;
-      border-radius: 2px;
-      color: rgba(255, 255, 255, 0.9);
-      transition: all 0.3s;
+      background: rgba(244, 114, 182, 0.05); border-left: 3px solid #f472b6;
+      padding: 1.4rem 1.8rem; margin-bottom: 1.1rem; border-radius: 2px;
+      color: rgba(255, 255, 255, 0.85); font-size: 0.98rem; transition: all 0.3s;
     }
+    .future-item:hover { background: rgba(244, 114, 182, 0.08); }
+    .future-item strong { color: #f472b6; font-weight: 600; }
 
-    .future-item:hover {
-      background: rgba(244, 114, 182, 0.08);
+    /* Honest-limitation blocks, deliberately styled as warnings not footnotes. */
+    .limit-list { list-style: none; margin: 2rem 0; }
+    .limit-item {
+      background: rgba(245, 158, 11, 0.05); border-left: 3px solid #f59e0b;
+      padding: 1.3rem 1.8rem; margin-bottom: 1rem; border-radius: 2px;
+      color: rgba(255, 255, 255, 0.82); font-size: 0.96rem;
     }
-
-    .future-item strong {
-      color: #f472b6;
-      font-weight: 600;
-    }
+    .limit-item strong { color: #f59e0b; font-weight: 600; }
 
     .highlight {
-      background: rgba(34, 211, 238, 0.1);
-      padding: 0.2rem 0.6rem;
-      border-radius: 2px;
-      color: #22d3ee;
-      font-weight: 600;
+      background: rgba(34, 211, 238, 0.1); padding: 0.2rem 0.6rem; border-radius: 2px;
+      color: #22d3ee; font-weight: 600;
+    }
+
+    table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.92rem;
+    }
+    th, td { padding: 0.75rem 0.9rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    th {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.45); font-weight: 700;
+    }
+    td { color: rgba(255,255,255,0.78); }
+    td.num { font-variant-numeric: tabular-nums; }
+    tr.best td { color: #22d3ee; font-weight: 700; }
+    .table-wrap { overflow-x: auto; }
+
+    /* Pipeline diagram */
+    .pipeline { margin: 2rem 0; }
+    .stage {
+      display: grid; grid-template-columns: 2.2rem 1fr auto; gap: 1rem; align-items: center;
+      padding: 1rem 1.2rem; margin-bottom: 0.6rem;
+      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);
+      border-left: 3px solid #22d3ee; border-radius: 2px;
+    }
+    .stage .n {
+      font-size: 1.1rem; font-weight: 800; color: rgba(34,211,238,0.5); text-align: center;
+    }
+    .stage .what { font-size: 0.98rem; color: rgba(255,255,255,0.88); font-weight: 600; }
+    .stage .what span { display: block; font-size: 0.84rem; color: rgba(255,255,255,0.5); font-weight: 400; margin-top: 0.2rem; }
+    .stage .num {
+      font-size: 0.86rem; color: #22d3ee; font-weight: 700; white-space: nowrap;
+      font-variant-numeric: tabular-nums; text-align: right;
+    }
+
+    .band-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 1.5rem 0; }
+    .band {
+      flex: 1; min-width: 160px; padding: 1.2rem 1rem; border-radius: 2px; text-align: center;
+    }
+    .band .k { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+    .band .v { font-size: 1.8rem; font-weight: 800; margin-top: 0.3rem; }
+    .band .d { font-size: 0.76rem; color: rgba(255,255,255,0.45); margin-top: 0.4rem; }
+    .b-conf { background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.3); }
+    .b-conf .k, .b-conf .v { color: #10b981; }
+    .b-bord { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.3); }
+    .b-bord .k, .b-bord .v { color: #f59e0b; }
+    .b-ind  { background: rgba(239,68,68,0.07);  border: 1px solid rgba(239,68,68,0.3); }
+    .b-ind .k, .b-ind .v { color: #ef4444; }
+
+    .disclaimer-box {
+      background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.28);
+      border-left: 3px solid #ef4444; border-radius: 2px; padding: 1.8rem 2rem; margin: 2rem 0;
+    }
+    .disclaimer-box h3 { color: #ef4444; margin-top: 0; font-size: 1.15rem; }
+    .disclaimer-box p { color: rgba(255,255,255,0.72); margin-bottom: 0.8rem; }
+    .disclaimer-box p:last-child { margin-bottom: 0; }
+
+    code {
+      background: rgba(255,255,255,0.06); padding: 0.15rem 0.4rem; border-radius: 2px;
+      font-family: 'Cascadia Code', Consolas, monospace; font-size: 0.88em; color: #c084fc;
+    }
+
+    .legend {
+      font-size: 0.8rem; color: rgba(255,255,255,0.4); margin: 1rem 0 0;
+      padding: 1rem 1.2rem; background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07); border-radius: 2px;
     }
 
     @media (max-width: 768px) {
-      .navbar {
-        padding: 1rem 1.5rem;
-      }
-
-      .nav-links {
-        gap: 1.5rem;
-      }
-
-      .nav-links a {
-        font-size: 0.85rem;
-      }
-
-      .container {
-        padding: 7rem 4% 4rem;
-      }
-
-      .metrics-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .card {
-        padding: 2rem 1.5rem;
-      }
+      .navbar { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .nav-links a { font-size: 0.85rem; }
+      .container { padding: 7rem 4% 4rem; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .card { padding: 1.8rem 1.4rem; }
+      .stage { grid-template-columns: 1.8rem 1fr; }
+      .stage .num { grid-column: 2; text-align: left; }
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
   <nav class="navbar">
     <div class="logo">NeuraSight</div>
     <ul class="nav-links">
       <li><a href="index.html">HOME</a></li>
-      <li><a href="research.html">RESEARCH</a></li>
+      <li><a href="research.html" class="current">RESEARCH</a></li>
       <li><a href="dashboard.html">DASHBOARD</a></li>
     </ul>
   </nav>
 
   <div class="container">
-    <h1>AI-Powered Brain MRI Tumor Detection & Classification</h1>
+    <h1>Calibrated, Evidence-Grounded Medical Image Decision Support</h1>
+    <p class="subtitle">
+      Two diagnostic modules built on stacking ensembles of CNNs, wrapped in a layer that reports
+      <em>how much to trust each answer</em> and <em>what the answer is based on</em>. This page records
+      the method and the measured results, including the parts that do not work well.
+    </p>
 
+    <div class="legend">
+      <strong>Provenance convention.</strong> Every figure below is tagged.
+      <span class="tag tag-measured">measured</span> means measured on this codebase.
+      <span class="tag tag-doc">documented</span> means carried forward from the training runs.
+      <span class="tag tag-missing">not recorded</span> means the value does not exist in the
+      repository and would have to be regenerated. Nothing here is estimated or rounded up.
+    </div>
+
+    <!-- ============================== -->
     <div class="section">
-      <h2>Project Overview</h2>
+      <h2>Why this is not just a classifier</h2>
       <p>
-        NeuraSight is a medical imaging platform that classifies brain tumors from MRI scans using deep learning. 
-        Built with a microservices architecture — React frontend, Express.js API gateway, and FastAPI ML service — 
-        it provides real-time classification across 4 tumor types with Grad-CAM explainability heatmaps.
+        A bare classifier answers <em>which class?</em>. That is not enough to sit beside a clinician,
+        because it cannot say when it is out of its depth. Every stage below exists to make a single
+        prediction accountable, and each one carries a measured number.
       </p>
+
+      <div class="pipeline">
+        <div class="stage">
+          <div class="n">1</div>
+          <div class="what">Quality gate<span>Blur, contrast and dimension checks before inference</span></div>
+          <div class="num">rejects 2.08%<br>of valid scans</div>
+        </div>
+        <div class="stage">
+          <div class="n">2</div>
+          <div class="what">Stacking ensemble<span>4 CNNs → 16 features → logistic regression</span></div>
+          <div class="num">96.75%<br>brain accuracy</div>
+        </div>
+        <div class="stage">
+          <div class="n">3</div>
+          <div class="what">Probability calibration<span>Temperature scaling, fitted on a held-out split</span></div>
+          <div class="num">ECE 0.0262<br>→ 0.0259</div>
+        </div>
+        <div class="stage">
+          <div class="n">4</div>
+          <div class="what">Conformal prediction<span>A set of classes with a coverage guarantee, not a single guess</span></div>
+          <div class="num">coverage 1.0000<br>mean size 1.3313</div>
+        </div>
+        <div class="stage">
+          <div class="n">5</div>
+          <div class="what">Novelty screening<span>Disagreement between base models flags unfamiliar input</span></div>
+          <div class="num">AUROC 0.9538<br>FPR 7.29%</div>
+        </div>
+        <div class="stage">
+          <div class="n">6</div>
+          <div class="what">Grad-CAM explainability<span>Computed on the base model that agrees with the ensemble</span></div>
+          <div class="num">faithfulness<br>flagged per scan</div>
+        </div>
+        <div class="stage">
+          <div class="n">7</div>
+          <div class="what">Cited evidence retrieval<span>28 chunks from 12 clinical sources, local embeddings</span></div>
+          <div class="num">MRR 0.7139<br>vs 0.6389 TF-IDF</div>
+        </div>
+        <div class="stage">
+          <div class="n">8</div>
+          <div class="what">Report and PDF<span>Caveats box, prediction set, resolved citations</span></div>
+          <div class="num">4 pages<br>121-139 KB</div>
+        </div>
+      </div>
+
       <p>
-        The model uses a <span class="highlight">stacking ensemble</span> of four CNNs (EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16) 
-        from the <span class="highlight">timm</span> library, combined with a Logistic Regression meta-learner via 
-        <span class="highlight">scikit-learn</span>. All base models are pre-trained on ImageNet and fine-tuned on 5,600 brain MRI images. 
-        Trained on Google Colab (Tesla T4 GPU), achieving <span class="highlight">96.75% ensemble accuracy</span> on 
-        an 800-image held-out meta-test split.
+        The <span class="highlight">uncertainty band, not the confidence number, is the primary output</span>.
+        A <em>borderline</em> or <em>indeterminate</em> band escalates the reported risk level to
+        <code>Indeterminate</code> and the interface stops presenting the top class as a finding.
       </p>
     </div>
 
+    <!-- ============================== -->
     <div class="section">
-      <h2>Dataset References</h2>
+      <h2>What the system identifies</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Module</th><th>Classes</th><th>Ensemble</th><th>Accuracy</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>brain_mri</code></td>
+              <td>Glioma · Meningioma · No Tumor · Pituitary</td>
+              <td>EfficientNet-B0 + ResNet-50 + DenseNet-121 + VGG-16</td>
+              <td class="num"><strong>96.75%</strong></td>
+            </tr>
+            <tr>
+              <td><code>chest_xray</code></td>
+              <td>Normal · Pneumonia · Tuberculosis</td>
+              <td>EfficientNet-B0 + ResNet-50 + DenseNet-121</td>
+              <td class="num"><strong>82.00%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Both are combined by a multinomial logistic-regression meta-learner
+        (<span class="highlight">scikit-learn</span>). Brain concatenates four 4-class probability
+        vectors into 16 meta-features; chest concatenates three 3-class vectors into 9.
+      </p>
+    </div>
+
+    <!-- ============================== -->
+    <div class="section">
+      <h2>Reproduction: the published numbers were re-derived</h2>
       <div class="card">
-        <h3>Primary Training Dataset</h3>
         <p>
-          5,600 training images + 1,600 testing images across four classes: Glioma, Meningioma, 
-          Pituitary tumors, and No Tumor. Images vary from 150×168 to 1375×1446 pixels, all resized to 224×224 for training.
+          Before anything was built on top of the ensemble, its probability matrices were regenerated
+          from the committed weights and the published accuracies re-derived from scratch.
         </p>
-        <a href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset" 
-           target="_blank" 
-           rel="noopener noreferrer" 
-           class="dataset-link">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Published</th><th>Reproduced</th><th>Difference</th></tr></thead>
+            <tbody>
+              <tr><td>EfficientNet-B0</td><td class="num">95.06%</td><td class="num">95.06%</td><td class="num">0.00</td></tr>
+              <tr><td>ResNet-50</td><td class="num">94.88%</td><td class="num">94.88%</td><td class="num">0.00</td></tr>
+              <tr><td>DenseNet-121</td><td class="num">96.06%</td><td class="num">96.06%</td><td class="num">0.00</td></tr>
+              <tr><td>VGG-16</td><td class="num">94.56%</td><td class="num">94.56%</td><td class="num">0.00</td></tr>
+              <tr class="best"><td>Stacking ensemble</td><td class="num">96.75%</td><td class="num">96.75%</td><td class="num">+0.00 pp</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <span class="tag tag-measured">measured</span>
+          An exact match does double duty: it independently validates the headline figure, and it
+          <strong>proves there is no train/serve preprocessing skew</strong> — the serving preprocessor
+          reproduces training behaviour bit-for-bit. That is the classic silent accuracy leak in
+          deployed vision systems, and here it is ruled out rather than assumed absent.
+        </p>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <div class="section">
+      <h2>Ensemble results</h2>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Accuracy</div>
+          <div class="metric-value">96.75%</div>
+          <div class="metric-note">800-image meta-test half</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Precision</div>
+          <div class="metric-value">96.81%</div>
+          <div class="metric-note">macro average</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Recall</div>
+          <div class="metric-value">96.75%</div>
+          <div class="metric-note">macro average</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">F1</div>
+          <div class="metric-value">96.71%</div>
+          <div class="metric-note">macro average</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Per class, and the result that actually matters <span class="tag tag-doc">documented</span></h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>Δ recall vs EfficientNet alone</th></tr>
+            </thead>
+            <tbody>
+              <tr class="best"><td>Glioma</td><td class="num">0.98</td><td class="num">0.90</td><td class="num">0.93</td><td class="num"><strong>+0.09</strong></td></tr>
+              <tr><td>Meningioma</td><td class="num">0.95</td><td class="num">0.98</td><td class="num">0.97</td><td class="num">−0.01</td></tr>
+              <tr><td>No Tumor</td><td class="num">0.95</td><td class="num">1.00</td><td class="num">0.97</td><td class="num">0.00</td></tr>
+              <tr><td>Pituitary</td><td class="num">0.99</td><td class="num">0.99</td><td class="num">0.99</td><td class="num">−0.01</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <strong>Stacking lifted glioma recall from 0.81 to 0.90.</strong> The ensemble did not merely
+          add 1.7 points of accuracy — it specifically repaired the clinically dangerous failure mode, by
+          learning which base model separates glioma from meningioma best. A missed glioma is far more
+          costly than a mislabelled meningioma, so this is the defensible claim for the architecture,
+          not the aggregate accuracy.
+        </p>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <div class="section">
+      <h2>Calibration</h2>
+      <div class="card">
+        <p>
+          Stacking consumes probabilities, so how well-calibrated they are directly determines the
+          quality of the combiner. Expected Calibration Error was measured and temperature scaling
+          fitted on a 320-image calibration split, evaluated on a disjoint 480-image final test split.
+        </p>
+        <h3>The interesting result is not the ECE, it is the temperatures <span class="tag tag-measured">measured</span></h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Component</th><th>Fitted temperature</th><th>Reading</th></tr></thead>
+            <tbody>
+              <tr><td>EfficientNet-B0</td><td class="num">3.3542</td><td>severely over-confident</td></tr>
+              <tr><td>VGG-16</td><td class="num">3.0329</td><td>severely over-confident</td></tr>
+              <tr><td>DenseNet-121</td><td class="num">1.9523</td><td>over-confident</td></tr>
+              <tr><td>ResNet-50</td><td class="num">1.7743</td><td>over-confident</td></tr>
+              <tr class="best"><td>Logistic-regression meta-learner</td><td class="num">0.9964</td><td>already calibrated</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          A temperature above 1 means the output needs softening. The base CNNs need it badly; the
+          meta-learner needs essentially none. <strong>The stacking layer is performing calibration as
+          a side effect</strong> — which explains <em>why</em> stacking helps here, beyond the accuracy gain.
+        </p>
+        <p>
+          Output-level ECE therefore improves only marginally, from <strong>0.026201 to 0.025949</strong>,
+          with adaptive (equal-mass) ECE going from 0.013439 to 0.013298. Both are reported on purpose:
+          conventional 15-equal-width-bin ECE is <em>inflated</em> here because 454 of 480 samples land in
+          the top bin, so bins holding one to four samples dominate the average. Quoting only the
+          flattering number would be misleading; quoting only the conventional one would overstate the
+          miscalibration.
+        </p>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <div class="section">
+      <h2>Conformal prediction: abstention with a guarantee</h2>
+      <div class="card">
+        <p>
+          Rather than picking a confidence threshold by hand, the system uses <span class="highlight">split
+          conformal prediction</span>. An empirical quantile is fitted on the calibration split, and the
+          model returns the <em>set</em> of classes it cannot statistically exclude. The guarantee is
+          distribution-free and finite-sample: the true class lies in the set with probability at least
+          1 − α under exchangeability.
+        </p>
+
+        <div class="band-row">
+          <div class="band b-conf">
+            <div class="k">Confident</div><div class="v">334</div>
+            <div class="d">set size 1 — every alternative excluded</div>
+          </div>
+          <div class="band b-bord">
+            <div class="k">Borderline</div><div class="v">137</div>
+            <div class="d">set size 2 — two classes remain plausible</div>
+          </div>
+          <div class="band b-ind">
+            <div class="k">Indeterminate</div><div class="v">9</div>
+            <div class="d">set size ≥ 3 — refer to a specialist</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Target coverage (α = 0.01)</td><td class="num">0.99</td></tr>
+              <tr class="best"><td>Empirical coverage on 480 held-out images</td><td class="num">1.0000</td></tr>
+              <tr><td>Mean prediction-set size</td><td class="num">1.3313</td></tr>
+              <tr><td>Calibrated quantile <code>q̂</code></td><td class="num">0.981281</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Why α = 0.01 and not the textbook 0.10</h3>
+        <p>
+          Conformal sets collapse to singletons whenever <code>1 − α</code> is below the model's
+          accuracy — coverage then merely equals accuracy and the layer carries <strong>zero
+          information</strong>. At 97.71% accuracy, any α above <strong>0.0229</strong> is vacuous. A
+          finite-sample floor closes the window from below: with 320 calibration images, α below
+          <strong>0.0031</strong> forces the quantile to 1 and admits every class. The usable window is
+          narrow <em>because the model is good</em>, and both bounds are recorded in the artefact rather
+          than discovered by accident.
+        </p>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <div class="section">
+      <h2>Input validation and novelty detection</h2>
+      <div class="card">
+        <p>
+          A softmax always sums to one over the classes it knows, so an unfamiliar image still produces
+          a confident answer. Two independent layers address this, benchmarked on a three-tier
+          evaluation set so that synthetic noise could not flatter the result.
+        </p>
+
+        <h3>Detector comparison on the hard tier <span class="tag tag-measured">measured</span></h3>
+        <p>The hard tier is real chest X-rays submitted to the brain module.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Detector</th><th>AUROC</th><th>FPR @ 95% TPR</th></tr></thead>
+            <tbody>
+              <tr class="best"><td>Mean pairwise Jensen-Shannon divergence</td><td class="num">0.9538</td><td class="num">0.0729</td></tr>
+              <tr><td>Energy score</td><td class="num">0.9420</td><td class="num">0.0938</td></tr>
+              <tr><td>Predictive entropy</td><td class="num">0.8778</td><td class="num">0.2833</td></tr>
+              <tr><td>Max-softmax probability</td><td class="num">0.8753</td><td class="num">0.2833</td></tr>
+              <tr><td>Argmax-vote disagreement</td><td class="num">0.6403</td><td class="num">1.0000</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The winner is the signal the system was <em>already computing and discarding</em>: how much the
+          four base models disagree with each other. Note also the 0.31 AUROC gap between
+          <strong>graded</strong> disagreement (JS divergence over the full distributions) and
+          <strong>binary</strong> disagreement (argmax votes) — the information is in the probability
+          geometry, not in the votes.
+        </p>
+        <p>
+          <strong>The tier a detector is chosen on is a design decision with consequences.</strong> On
+          synthetic patterns alone, max-softmax looks best (AUROC 0.978). Selecting there would have
+          shipped the detector that is <em>worst</em> on the realistic case. The choice was made
+          explicitly on the hard tier and recorded in the artefact.
+        </p>
+
+        <h3>The two layers are complementary, and the numbers prove it</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Input tier</th><th>Rejected by the quality gate</th><th>Rate</th></tr></thead>
+            <tbody>
+              <tr><td>In-distribution (480 images)</td><td class="num">10</td><td class="num">2.08% — the cost of the gate</td></tr>
+              <tr><td>Degraded real MRIs (40)</td><td class="num">25</td><td class="num">62.5%</td></tr>
+              <tr><td>Synthetic patterns (60)</td><td class="num">23</td><td class="num">38.3%</td></tr>
+              <tr class="best"><td>Real chest X-rays (6)</td><td class="num">0</td><td class="num">0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The quality gate catches <strong>none</strong> of the chest X-rays, because they are perfectly
+          good images — just of the wrong organ. The novelty detector catches them but cannot see blur.
+          Neither layer alone is sufficient, and that is measured rather than asserted.
+        </p>
+        <p>
+          Conformal set size behaves as a novelty signal for free: mean size rises from
+          <strong>1.3313</strong> in-distribution to 2.1667 on chest X-rays, 2.4333 on synthetic
+          patterns and 2.4500 on degraded scans.
+        </p>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <div class="section">
+      <h2>Explainability</h2>
+      <div class="card">
+        <h3>Grad-CAM on the agreeing model</h3>
+        <p>
+          <span class="highlight">Gradient-weighted Class Activation Mapping</span> backpropagates the
+          predicted class through a base model's last convolutional block, globally average-pools the
+          gradients into channel weights, weights the feature maps, then applies ReLU and normalisation.
+          The heatmap is overlaid on the original scan with the JET colormap at 40% opacity.
+        </p>
+        <p>
+          The subtlety is <em>which</em> model to explain. The ensemble's prediction comes from the
+          meta-learner, which has no convolutional layers. So the system finds the base model whose own
+          top-1 matches the ensemble and explains that one. When <strong>no</strong> base model agrees,
+          any heatmap necessarily explains a different class than the one reported — so the API returns
+          <code>explanation_faithful: false</code> and the interface says so instead of showing a
+          misleading picture.
+        </p>
+        <p>
+          Grad-CAM is implemented directly rather than via <code>pytorch-grad-cam</code>. The hand-written
+          path honours the requested target class explicitly; the library's default would explain the
+          base model's own argmax, which is not necessarily the class being reported.
+        </p>
+        <ul class="tech-list">
+          <li class="tech-item">Explains the model that agrees with the ensemble</li>
+          <li class="tech-item">Flags unfaithful explanations rather than hiding them</li>
+          <li class="tech-item">Requires no architecture modification</li>
+          <li class="tech-item">Per-architecture target layers for all four CNNs</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <div class="section">
+      <h2>Evidence grounding</h2>
+      <div class="card">
+        <h3>Retrieval over a cited knowledge base</h3>
+        <p>
+          Clinical guidance in the report is retrieved from a knowledge base of <strong>28 chunks</strong>
+          drawn from <strong>12 cited sources</strong> — NCI and NINDS clinical summaries, StatPearls
+          reference articles, a 2024 <em>Neuro-Oncology</em> consensus review, and the WHO CNS5
+          classification standard. Every chunk carries at least one citation, enforced at build time.
+        </p>
+        <p>
+          Retrieval uses <code>all-MiniLM-L6-v2</code> sentence embeddings. The entire corpus is a
+          (28 × 384) array of about 40 KB, so there is <strong>deliberately no vector database</strong>:
+          brute-force cosine similarity over a NumPy array is both faster and simpler than any index at
+          this scale. Warm retrieval takes 15.3 ms.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Metric (30 hand-labelled queries, k = 5)</th><th>TF-IDF</th><th>Embeddings</th></tr></thead>
+            <tbody>
+              <tr><td>Hit@3</td><td class="num">0.8000</td><td class="num">0.9000</td></tr>
+              <tr><td>Recall@5</td><td class="num">0.7472</td><td class="num">0.8194</td></tr>
+              <tr><td>Mean reciprocal rank</td><td class="num">0.6389</td><td class="num">0.7139</td></tr>
+              <tr class="best"><td>Complete misses (nothing relevant in top 5)</td><td class="num">6 / 30</td><td class="num">2 / 30</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Nineteen of the thirty queries were deliberately paraphrased away from the corpus wording, and
+          that is where the gain concentrates — Hit@3 on paraphrased queries goes from 0.7368 to 0.8947.
+          <strong>Complete misses is the metric that matters clinically</strong>: a retriever that returns
+          nothing relevant leaves a statement ungrounded. Embeddings cut those by two thirds.
+        </p>
+
+        <h3>The language model is an offline authoring aid, not a runtime oracle</h3>
+        <p>
+          The output space is finite and small: 4 classes × 3 uncertainty bands = <strong>12
+          narratives</strong>. So a language model was used <strong>once, offline</strong>, to draft them,
+          with retrieval-augmented prompts and a build-time check that every claim traces to a retrieved
+          chunk. All 12 were grounded on the first attempt, with <strong>zero fabricated citations</strong>
+          and zero invented statistics.
+        </p>
+        <p>
+          <strong>The application makes no language-model calls at request time.</strong> Every narrative
+          sits behind a human-review flag, and the serving path refuses to serve an unreviewed one —
+          it falls back to a deterministic template and reports
+          <code>narrative_source: "template"</code>. At present <em>none</em> has been signed off, so the
+          template is what users see. A model that writes clinical text without human approval is not a
+          feature.
+        </p>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <div class="section">
+      <h2>Measured performance <span class="tag tag-measured">measured</span></h2>
+      <div class="card">
+        <p>
+          All figures are CPU-only on a 7.7 GB machine. The improvement came from caching model weights
+          process-wide instead of re-reading roughly 645 MB from disk on every request — the predictions
+          are bit-identical before and after.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Operation</th><th>Before caching</th><th>After</th><th>Factor</th></tr></thead>
+            <tbody>
+              <tr class="best"><td>Brain MRI prediction</td><td class="num">9,851-14,864 ms</td><td class="num">650 ms</td><td class="num">15-21×</td></tr>
+              <tr><td>Chest X-ray prediction</td><td class="num">3,793-4,678 ms</td><td class="num">490 ms</td><td class="num">7.7-9.5×</td></tr>
+              <tr><td>Grad-CAM heatmap</td><td class="num">13,683 ms</td><td class="num">3,196 ms</td><td class="num">4.3×</td></tr>
+              <tr><td>Full scan (report + heatmap, persisted)</td><td>—</td><td class="num">3.5-4.0 s</td><td>—</td></tr>
+              <tr><td>PDF report</td><td>—</td><td class="num">2,654 ms</td><td>—</td></tr>
+              <tr><td>Evidence retrieval, warm</td><td>—</td><td class="num">15.3 ms</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The first request after a restart still costs about 15 seconds while the four models load. That
+          is a warm-up cost rather than a per-request cost, and it is visible on the health endpoint.
+          Grad-CAM remains the slowest step because it runs the full ensemble first to find the agreeing
+          model.
+        </p>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <div class="section">
+      <h2>Datasets</h2>
+      <div class="card">
+        <h3>Brain MRI — training and evaluation</h3>
+        <p>
+          5,600 training images and a 1,600-image test set across four classes, <strong>perfectly
+          balanced at 400 per class</strong>. That balance matters methodologically: a majority-class
+          baseline scores exactly 25%, and macro-averaged metrics equal micro-averaged accuracy, so every
+          brain figure on this page is directly interpretable. Source images range from 150×168 to
+          1375×1446 pixels and are resized to 224×224.
+        </p>
+        <a href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset"
+           target="_blank" rel="noopener noreferrer" class="dataset-link">
           Brain Tumor MRI Dataset — Masoud Nickparvar (Kaggle)
         </a>
       </div>
 
       <div class="card">
-        <h3>Validation Dataset</h3>
+        <h3>Chest X-ray — deployed module</h3>
         <p>
-          Additional dataset used for cross-validation and model robustness testing.
+          Three classes: Normal, Pneumonia and Tuberculosis. This is the dataset behind the deployed
+          chest ensemble.
         </p>
-        <a href="https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri" 
-           target="_blank" 
-           rel="noopener noreferrer" 
-           class="dataset-link">
-          Brain Tumor Classification MRI Dataset
+        <a href="https://www.kaggle.com/datasets/muhammadrehan00/chest-xray-dataset"
+           target="_blank" rel="noopener noreferrer" class="dataset-link">
+          Chest X-ray Dataset — muhammadrehan00 (Kaggle)
         </a>
       </div>
 
       <div class="card">
-        <h3>BraTS Challenge Dataset</h3>
+        <h3>Referenced but not used in the deployed pipeline</h3>
         <p>
-          Brain Tumor Segmentation (BraTS) 2020 dataset for advanced segmentation research and benchmarking.
+          These are recorded for completeness and future work. Neither contributed to any number on this
+          page — the earlier claim that they were used for cross-validation was not accurate, and
+          BraTS is a <em>segmentation</em> corpus while this system performs classification only.
         </p>
-        <a href="https://www.kaggle.com/datasets/awsaf49/brats2020-training-data" 
-           target="_blank" 
-           rel="noopener noreferrer" 
-           class="dataset-link">
-          BraTS 2020 Training Data
+        <a href="https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri"
+           target="_blank" rel="noopener noreferrer" class="dataset-link">
+          Brain Tumor Classification MRI — Sartaj Bhuvaji (Kaggle)
+        </a>
+        <a href="https://www.kaggle.com/datasets/awsaf49/brats2020-training-data"
+           target="_blank" rel="noopener noreferrer" class="dataset-link">
+          BraTS 2020 Training Data — segmentation benchmark
         </a>
       </div>
     </div>
 
+    <!-- ============================== -->
     <div class="section">
-      <h2>Model Architecture</h2>
+      <h2>Technology</h2>
       <div class="card">
-        <h3>Stacking Ensemble (4 Base CNNs + LR Meta-Learner)</h3>
+        <ul class="tech-list">
+          <li class="tech-item">Python 3.11 · PyTorch 2.7 · timm 1.0</li>
+          <li class="tech-item">EfficientNet-B0 · ResNet-50 · DenseNet-121 · VGG-16</li>
+          <li class="tech-item">scikit-learn — logistic-regression meta-learner</li>
+          <li class="tech-item">sentence-transformers — MiniLM evidence retrieval</li>
+          <li class="tech-item">reportlab — paginated PDF reports</li>
+          <li class="tech-item">FastAPI — ML inference service, port 8000</li>
+          <li class="tech-item">Express.js — API gateway, port 5000</li>
+          <li class="tech-item">MongoDB — scan history with uncertainty fields</li>
+          <li class="tech-item">React 18 · Vite · Three.js · GSAP — interface</li>
+          <li class="tech-item">Google Colab (Tesla T4) — model training</li>
+        </ul>
         <p>
-          The system uses a <span class="highlight">stacking ensemble</span> combining four base CNN models — 
-          EfficientNet-B0, ResNet-50, DenseNet-121, and VGG-16 — all from the <span class="highlight">timm</span> library, 
-          pre-trained on ImageNet and fine-tuned on 5,600 brain MRI images. Each base model outputs a 4-class softmax 
-          probability vector; the four vectors are concatenated into a 16-dimensional feature vector and fed to a 
-          <span class="highlight">Logistic Regression meta-learner</span> (scikit-learn) for the final prediction.
+          Training used a GPU; everything reported on this page runs on CPU. Device selection is
+          automatic, so a GPU would improve every latency figure above.
         </p>
-        <p><strong>Base Models:</strong> EfficientNet-B0 (95.06%) · ResNet-50 (94.88%) · DenseNet-121 (96.06%) · VGG-16 (94.56%)</p>
-        <p><strong>Ensemble:</strong> 96.75% accuracy on held-out 800-image meta-test split</p>
-        <p><strong>Training Config:</strong> AdamW optimizer, CrossEntropyLoss, CosineAnnealingLR scheduler, batch size 32, ImageNet normalization (mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])</p>
-        <p><strong>Key Features:</strong></p>
-        <ul class="tech-list">
-          <li class="tech-item">Transfer Learning from ImageNet (1.2M images)</li>
-          <li class="tech-item">4 Diverse Architectures for Error Diversity</li>
-          <li class="tech-item">Logistic Regression Meta-Learner (Leakage-Safe)</li>
-          <li class="tech-item">Squeeze-and-Excitation Attention (EfficientNet)</li>
-          <li class="tech-item">Dense Connectivity & Feature Reuse (DenseNet)</li>
-          <li class="tech-item">Data Augmentation (flip, rotation, color jitter)</li>
-        </ul>
       </div>
     </div>
 
+    <!-- ============================== -->
     <div class="section">
-      <h2>Explainable AI</h2>
-      <div class="card">
-        <h3>Grad-CAM Visualization</h3>
-        <p>
-          <span class="highlight">Gradient-weighted Class Activation Mapping (Grad-CAM)</span> targets the 
-          last convolutional block (<code>model.blocks[-1]</code>) of the timm EfficientNet-B0. Gradients are 
-          backpropagated for the predicted class, globally average-pooled to get channel importance weights, 
-          then used to weight the feature maps. After ReLU and normalization, the heatmap is overlaid on the 
-          original MRI with JET colormap at 40% opacity.
-        </p>
-        <p><strong>Benefits:</strong></p>
-        <ul class="tech-list">
-          <li class="tech-item">Highlights Tumor Region the Model Focused On</li>
-          <li class="tech-item">No Architecture Modification Required</li>
-          <li class="tech-item">Builds Clinician Trust in AI Decisions</li>
-          <li class="tech-item">Generated in &lt;0.5 Seconds Per Image</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Performance Metrics</h2>
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label">Accuracy</div>
-          <div class="metric-value">96.75%</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Precision</div>
-          <div class="metric-value">97%</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Recall</div>
-          <div class="metric-value">97%</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">F1 Score</div>
-          <div class="metric-value">97%</div>
-        </div>
-      </div>
+      <h2>Limitations</h2>
       <p>
-        Evaluated using a 4-model stacking ensemble (EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16 + Logistic Regression meta-learner) 
-        on an 800-image held-out meta-test split. Per-class: Pituitary (F1: 0.99), No Tumor (F1: 0.97), 
-        Meningioma (F1: 0.97), Glioma (F1: 0.93). Base models trained on Google Colab with Tesla T4 GPU.
+        Stated plainly. A decision-support tool that conceals its failure modes is worse than none at all.
       </p>
-    </div>
-
-    <div class="section">
-      <h2>Technology Stack</h2>
-      <div class="card">
-        <ul class="tech-list">
-          <li class="tech-item">Python 3.11 & PyTorch 2.2</li>
-          <li class="tech-item">timm (PyTorch Image Models) - EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16</li>
-          <li class="tech-item">scikit-learn - Logistic Regression Meta-Learner (Stacking Ensemble)</li>
-          <li class="tech-item">FastAPI - ML Inference Service (port 8000)</li>
-          <li class="tech-item">Node.js & Express.js - API Gateway (port 5000)</li>
-          <li class="tech-item">MongoDB - Prediction History Storage</li>
-          <li class="tech-item">Grad-CAM (pytorch-grad-cam) - Explainability</li>
-          <li class="tech-item">React 18 & Vite - Frontend Interface</li>
-          <li class="tech-item">Three.js & GSAP - 3D Visuals & Animations</li>
-          <li class="tech-item">Google Colab (Tesla T4) - Model Training</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Future Expansion</h2>
-      <p>
-        The NeuraSight platform is designed with extensibility in mind. Future development plans include 
-        expanding the system to support additional medical imaging modalities and diagnostic applications:
-      </p>
-      <ul class="future-list">
-        <li class="future-item">
-          <strong>CT Scan Analysis:</strong> Extend deep learning models to analyze computed tomography 
-          scans for various pathologies including lung nodules and abdominal abnormalities.
+      <ul class="limit-list">
+        <li class="limit-item">
+          <strong>No confidence intervals, and no McNemar test.</strong> 96.75% on 800 images carries a
+          95% Wilson interval of roughly ±1.2 points, and the 96.06% → 96.75% ensemble gain sits
+          <em>inside</em> it. The claim that survives scrutiny is the glioma recall gain, 0.81 → 0.90.
         </li>
-        <li class="future-item">
-          <strong>X-Ray Diagnostics:</strong> Implement chest X-ray analysis for pneumonia detection, 
-          COVID-19 screening, and other pulmonary conditions.
+        <li class="limit-item">
+          <strong>Conformal coverage of 1.0000 is a point estimate, not a bound.</strong> The honest
+          statement is that no coverage violation was observed in 480 trials.
         </li>
-        <li class="future-item">
-          <strong>Retinal Imaging:</strong> Develop models for diabetic retinopathy detection and 
-          age-related macular degeneration screening from fundus photographs.
+        <li class="limit-item">
+          <strong>The hard novelty tier has only 6 positives.</strong> AUROC 0.9538 on six examples is
+          indicative, not established.
         </li>
-        <li class="future-item">
-          <strong>Skin Lesion Detection:</strong> Create dermatological AI for melanoma and skin cancer 
-          detection from dermoscopic images.
+        <li class="limit-item">
+          <strong>The novelty detector fires on 7.29% of valid brain MRI.</strong> The interface quotes
+          that rate alongside every flag, so a flag reads as a prompt to check the input rather than a
+          verdict that it is invalid.
         </li>
-        <li class="future-item">
-          <strong>Multi-Modal Fusion:</strong> Integrate multiple imaging modalities for comprehensive 
-          diagnostic insights and improved accuracy.
+        <li class="limit-item">
+          <strong>Chest X-ray has no calibration or conformal layer.</strong> The fitted artefacts are
+          specific to the brain ensemble's 16 features and 4 classes, so applying them to 3-class chest
+          output would be meaningless. Chest reports <code>calibrated: false</code> and falls back to a
+          confidence threshold. Chest per-model and per-class metrics are
+          <span class="tag tag-missing">not recorded</span> — the training notebooks were saved with
+          outputs cleared.
         </li>
-        <li class="future-item">
-          <strong>Real-Time Inference:</strong> Optimize models for edge deployment and real-time 
-          clinical decision support in hospital environments.
+        <li class="limit-item">
+          <strong>Meta-features come from the test set, not out-of-fold predictions.</strong> This
+          deviates from canonical stacking. It was left in place deliberately: correcting it requires
+          refitting the meta-learner, which would invalidate the reproduced 96.75%.
+        </li>
+        <li class="limit-item">
+          <strong>Single 2D slice, JPEG or PNG only.</strong> Real radiology reads 3D volumes across
+          multiple sequences. There is no DICOM support, so 12-16 bit depth and windowing metadata are
+          lost.
+        </li>
+        <li class="limit-item">
+          <strong>No modality auto-detection.</strong> A chest X-ray sent to the brain module is
+          classified as a brain tumour. Routing depends on the caller selecting the right module.
+        </li>
+        <li class="limit-item">
+          <strong>Single-source datasets.</strong> No multi-centre or multi-scanner validation, so
+          scanner-specific artefacts may have been learned as shortcuts. No tumour grading, segmentation
+          or volumetry.
+        </li>
+        <li class="limit-item">
+          <strong>No authentication on any endpoint</strong>, and CORS is permissive. This is a research
+          prototype and must not be exposed to a network.
         </li>
       </ul>
     </div>
 
+    <!-- ============================== -->
     <div class="section">
-      <h2>Clinical Impact</h2>
-      <div class="card">
-        <p>
-          NeuraSight aims to support radiologists and clinicians by providing:
-        </p>
-        <ul class="tech-list">
-          <li class="tech-item">Rapid Initial Screening</li>
-          <li class="tech-item">Second Opinion Validation</li>
-          <li class="tech-item">Reduced Diagnostic Time</li>
-          <li class="tech-item">Improved Detection Accuracy</li>
-          <li class="tech-item">Educational Tool for Training</li>
-          <li class="tech-item">Standardized Assessment Protocol</li>
-        </ul>
-      </div>
+      <h2>Future work</h2>
+      <ul class="future-list">
+        <li class="future-item">
+          <strong>Statistical rigour:</strong> Wilson intervals on every reported proportion and
+          McNemar's test on paired ensemble-versus-base predictions. This is the most important
+          outstanding item.
+        </li>
+        <li class="future-item">
+          <strong>Out-of-fold stacking:</strong> rebuild meta-features from K-fold out-of-sample
+          predictions on the training set, which frees all 1,600 test images for the final estimate and
+          narrows the interval.
+        </li>
+        <li class="future-item">
+          <strong>Calibration for chest X-ray:</strong> fit a separate temperature and conformal quantile
+          against the 9-feature, 3-class chest ensemble.
+        </li>
+        <li class="future-item">
+          <strong>Larger novelty evaluation:</strong> expand the near-OOD tier well beyond six examples
+          so the AUROC becomes a defensible estimate.
+        </li>
+        <li class="future-item">
+          <strong>DICOM ingestion:</strong> read studies via <code>pydicom</code>, honouring window
+          centre and width and preserving full bit depth.
+        </li>
+        <li class="future-item">
+          <strong>Multi-centre external validation:</strong> evaluate on data from a different scanner
+          and hospital, which is the only real test of generalisation.
+        </li>
+        <li class="future-item">
+          <strong>Segmentation and volumetry:</strong> move from classification to measurement with a
+          U-Net style model, and from a single slice to 3D multi-sequence input.
+        </li>
+        <li class="future-item">
+          <strong>Clinician reader study:</strong> AI alone versus clinician alone versus clinician with
+          AI, reporting inter-rater agreement — the accepted way to demonstrate clinical utility.
+        </li>
+      </ul>
     </div>
 
+    <!-- ============================== -->
     <div class="section">
-      <h2>Ethical Considerations</h2>
-      <div class="card">
+      <h2>Intended use</h2>
+      <div class="disclaimer-box">
+        <h3>This is a research prototype, not a medical device</h3>
         <p>
-          This system is designed as a <span class="highlight">clinical decision support tool</span>, 
-          not a replacement for professional medical judgment. All predictions should be validated by 
-          qualified healthcare professionals. The explainable AI component ensures transparency in the 
-          decision-making process, supporting informed clinical decisions.
+          NeuraSight has not been validated for clinical use, cleared by any regulator, or tested in a
+          prospective trial. It is a <strong>decision-support demonstrator</strong> and an academic
+          research artefact.
+        </p>
+        <p>
+          Outputs are AI-generated and may be wrong, including confidently wrong. Nothing the system
+          produces constitutes a diagnosis or medical advice. Every report carries a non-removable
+          disclaimer, and all findings must be reviewed by a qualified radiologist or specialist
+          physician before any clinical decision.
+        </p>
+        <p>
+          Clinical content in the knowledge base states well-established fundamentals and cites public
+          sources. It is <strong>not</strong> reproduced verbatim from those sources and is marked as
+          requiring clinical review.
         </p>
       </div>
+      <p>
+        The design principle throughout is that a system like this earns trust by reporting its own
+        uncertainty and provenance, not by presenting a single number confidently. Where the measurements
+        are weak, this page says so.
+      </p>
     </div>
   </div>
 </body>

@@ -1,335 +1,226 @@
-# References - NeuraSight
+# References
 
-## Datasets
+Every entry below is something this project **actually uses**, with a note saying where. Nothing is
+listed aspirationally.
 
-### Primary Dataset
-1. **Brain Tumor MRI Dataset**
-   - **Source:** Kaggle
-   - **URL:** https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset
-   - **Classes:** Glioma, Meningioma, Pituitary, No Tumor
-   - **Total Images:** 7,000+
-   - **Format:** JPG/PNG
-   - **License:** [Check Kaggle]
-
-### Validation Datasets
-2. **Brain Tumor Classification MRI Dataset**
-   - **Source:** Kaggle
-   - **URL:** https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri
-   - **Purpose:** Cross-validation and robustness testing
-
-3. **BraTS 2020 Training Data**
-   - **Source:** Kaggle
-   - **URL:** https://www.kaggle.com/datasets/awsaf49/brats2020-training-data
-   - **Purpose:** Advanced segmentation research
+> **Why this file was rewritten.** The previous version described a TensorFlow/Keras project — this
+> one is PyTorch — and contained incorrect citations, including an arXiv ID that points to an
+> unrelated paper. A references file with wrong identifiers is worse than none, because it looks
+> authoritative. Every arXiv ID below was verified against arxiv.org before being written here.
 
 ---
 
-## Research Papers
+## 1. Datasets
 
-### Deep Learning & Medical Imaging
+### Used to train and evaluate the deployed models
 
-1. **EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks**
-   - **Authors:** Mingxing Tan, Quoc V. Le
-   - **Year:** 2019
-   - **URL:** https://arxiv.org/abs/1905.11946
-   - **Key Contribution:** Compound scaling method for CNNs
+| Dataset | Used for | Notes |
+|---------|----------|-------|
+| [Brain Tumor MRI Dataset](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset) — Masoud Nickparvar, Kaggle | The `brain_mri` module | 7,023 images. 5,600 train / 1,600 test, **balanced at 400 per class**. Classes: glioma, meningioma, no tumor, pituitary. |
+| [Chest X-ray Dataset](https://www.kaggle.com/datasets/muhammadrehan00/chest-xray-dataset) — muhammadrehan00, Kaggle | The deployed `chest_xray` module | Classes: Normal, Pneumonia, Tuberculosis. |
+| [Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia) — Kermany et al., Kaggle | An **archived** chest programme, not deployed | Different label space (bacteria / normal / virus), so its 85.68% is not comparable to the deployed 82.00%. |
 
-2. **Brain Tumor Classification Using Deep Learning**
-   - **Authors:** Various
-   - **Year:** 2020
-   - **URL:** https://arxiv.org/abs/2010.14701
-   - **Key Contribution:** Transfer learning for medical imaging
+Dataset URLs are also kept in [`data/dataset_links.md`](../data/dataset_links.md).
 
-3. **Grad-CAM: Visual Explanations from Deep Networks**
-   - **Authors:** Ramprasaath R. Selvaraju et al.
-   - **Year:** 2017
-   - **URL:** https://arxiv.org/abs/1610.02391
-   - **Key Contribution:** Explainable AI for CNNs
+### Referenced only — did not contribute to any reported number
 
-4. **Deep Learning in Medical Image Analysis**
-   - **Authors:** Geert Litjens et al.
-   - **Year:** 2017
-   - **URL:** https://arxiv.org/abs/1702.05747
-   - **Key Contribution:** Survey of deep learning in medical imaging
+| Dataset | Why it is listed |
+|---------|------------------|
+| [Brain Tumor Classification MRI](https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri) — Sartaj Bhuvaji | Candidate for the external validation described as future work. **Not** used for cross-validation, despite an earlier claim in this file to the contrary. |
+| [BraTS 2020 Training Data](https://www.kaggle.com/datasets/awsaf49/brats2020-training-data) | A **segmentation** benchmark. This system performs classification only, so BraTS is relevant to future work, not to current results. |
 
-5. **Transfer Learning for Medical Image Classification**
-   - **Authors:** Hoo-Chang Shin et al.
-   - **Year:** 2016
-   - **URL:** https://arxiv.org/abs/1608.00853
-   - **Key Contribution:** Pre-training strategies for medical images
+Licence terms are those of the original Kaggle datasets. The 14 sample images committed under
+`frontend/samples/` and `data/samples/` are excerpts included for demonstration and regression
+testing only.
 
 ---
 
-## Technical Documentation
+## 2. Methods, and where each one is implemented
 
-### TensorFlow & Keras
-1. **TensorFlow Official Documentation**
-   - **URL:** https://www.tensorflow.org/
-   - **Topics:** Model building, training, deployment
+This is the section that matters: each method below is in the codebase, and the citation is the source
+of the technique.
 
-2. **Keras Applications - EfficientNet**
-   - **URL:** https://keras.io/api/applications/efficientnet/
-   - **Topics:** Pre-trained models, usage examples
+### Ensembling
 
-3. **Transfer Learning Tutorial**
-   - **URL:** https://www.tensorflow.org/tutorials/images/transfer_learning
-   - **Topics:** Fine-tuning, feature extraction
+| Reference | Used in |
+|-----------|---------|
+| Wolpert, D. H. (1992). *Stacked Generalization.* **Neural Networks** 5(2), 241–259. | The core architecture: base-model probabilities become meta-features for a second-level learner. `app/services/ensemble.py` |
+| Lakshminarayanan, B., Pritzel, A., Blundell, C. (2017). *Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles.* NeurIPS. [arXiv:1612.01474](https://arxiv.org/abs/1612.01474) | Rationale for ensemble disagreement carrying uncertainty information — the basis of the novelty detector that won the benchmark. |
 
-### Explainable AI
-4. **Grad-CAM Implementation Guide**
-   - **URL:** https://keras.io/examples/vision/grad_cam/
-   - **Topics:** Visualization, heatmap generation
+### Probability calibration
 
-5. **tf-keras-vis Library**
-   - **URL:** https://github.com/keisen/tf-keras-vis
-   - **Topics:** Visualization tools for Keras
+| Reference | Used in |
+|-----------|---------|
+| Guo, C., Pleiss, G., Sun, Y., Weinberger, K. Q. (2017). *On Calibration of Modern Neural Networks.* ICML, PMLR 70. [arXiv:1706.04599](https://arxiv.org/abs/1706.04599) | Temperature scaling, and the Expected Calibration Error definition. `scripts/fit_calibration.py`, `app/services/uncertainty.py` |
+| Nixon, J., Dusenberry, M., Zhang, L., Jerfel, G., Tran, D. (2019). *Measuring Calibration in Deep Learning.* CVPR Workshops. [arXiv:1904.01685](https://arxiv.org/abs/1904.01685) | Adaptive Calibration Error with equal-mass bins. This is why the project reports **both** conventional and adaptive ECE: with 454 of 480 samples in one equal-width bin, the conventional estimate is dominated by bins holding a handful of samples. |
 
----
+### Conformal prediction
 
-## Medical Background
+| Reference | Used in |
+|-----------|---------|
+| Sadinle, M., Lei, J., Wasserman, L. (2019). *Least Ambiguous Set-Valued Classifiers with Bounded Error Levels.* **JASA** 114(525), 223–234. [arXiv:1609.00451](https://arxiv.org/abs/1609.00451) | The **LAC** conformal score the project uses, `s = 1 − p_true`. It minimises expected set size at a given coverage level. `app/services/uncertainty.py` |
+| Angelopoulos, A. N., Bates, S. (2023). *Conformal Prediction: A Gentle Introduction.* **Foundations and Trends in ML** 16(4). [arXiv:2107.07511](https://arxiv.org/abs/2107.07511) | Split-conformal procedure and the finite-sample quantile level `⌈(n+1)(1−α)⌉ / n`, which is what produces the α floor of 0.0031 at n = 320. |
+| Vovk, V., Gammerman, A., Shafer, G. (2005). *Algorithmic Learning in a Random World.* Springer. | The exchangeability assumption underlying the distribution-free coverage guarantee. |
 
-### Brain Tumors
-1. **Glioma**
-   - **Description:** Most common malignant brain tumor
-   - **Characteristics:** Originates from glial cells
-   - **Prognosis:** Variable, depends on grade
-   - **Reference:** https://www.cancer.gov/types/brain/patient/adult-brain-treatment-pdq
+### Out-of-distribution detection
 
-2. **Meningioma**
-   - **Description:** Usually benign tumor
-   - **Characteristics:** Arises from meninges
-   - **Prognosis:** Generally good with treatment
-   - **Reference:** https://www.mayoclinic.org/diseases-conditions/meningioma/
+| Reference | Used in |
+|-----------|---------|
+| Hendrycks, D., Gimpel, K. (2017). *A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks.* ICLR. [arXiv:1610.02136](https://arxiv.org/abs/1610.02136) | The maximum-softmax-probability baseline, one of the five detectors benchmarked in `scripts/fit_ood.py`. |
+| Liu, W., Wang, X., Owens, J., Li, Y. (2020). *Energy-based Out-of-distribution Detection.* NeurIPS. [arXiv:2010.03759](https://arxiv.org/abs/2010.03759) | The energy score, `E(x) = −T·log Σ exp(z_j / T)`. Second-best detector in the benchmark (AUROC 0.9420). |
 
-3. **Pituitary Tumor**
-   - **Description:** Tumor in pituitary gland
-   - **Characteristics:** Often hormone-secreting
-   - **Prognosis:** Usually treatable
-   - **Reference:** https://www.hopkinsmedicine.org/health/conditions-and-diseases/pituitary-tumors
+The deployed detector — mean pairwise Jensen–Shannon divergence between base-model distributions —
+is a direct application of Jensen–Shannon divergence to the deep-ensemble disagreement idea above. It
+beat both published baselines on the hard tier; see `models/calibration/ood.json` for the numbers.
 
-### MRI Imaging
-4. **MRI Basics**
-   - **URL:** https://www.radiologyinfo.org/en/info/mr-brain
-   - **Topics:** How MRI works, brain imaging protocols
+### Explainability
 
-5. **Medical Image Analysis**
-   - **URL:** https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6616181/
-   - **Topics:** Image preprocessing, analysis techniques
+| Reference | Used in |
+|-----------|---------|
+| Selvaraju, R. R., Cogswell, M., Das, A., Vedantam, R., Parikh, D., Batra, D. (2017). *Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization.* ICCV. [arXiv:1610.02391](https://arxiv.org/abs/1610.02391) | `app/services/gradcam.py`. Implemented directly rather than via a library, so the target class can be forced to the class the ensemble actually reported. |
+
+### Evidence retrieval
+
+| Reference | Used in |
+|-----------|---------|
+| Reimers, N., Gurevych, I. (2019). *Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks.* EMNLP. [arXiv:1908.10084](https://arxiv.org/abs/1908.10084) | `all-MiniLM-L6-v2` embeddings over the knowledge base. `app/services/retrieval.py`, `scripts/build_index.py` |
 
 ---
 
-## Development Tools
+## 3. Model architectures
 
-### Python Libraries
-1. **TensorFlow**
-   - **Version:** 2.x
-   - **URL:** https://www.tensorflow.org/
-   - **Purpose:** Deep learning framework
+All four brain base learners and all three chest base learners come from
+[`timm`](https://github.com/huggingface/pytorch-image-models) (Ross Wightman), pre-trained on
+ImageNet and fine-tuned.
 
-2. **Keras**
-   - **Version:** 2.x (integrated with TensorFlow)
-   - **URL:** https://keras.io/
-   - **Purpose:** High-level neural networks API
+| Architecture | Reference |
+|--------------|-----------|
+| EfficientNet-B0 | Tan, M., Le, Q. V. (2019). *EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks.* ICML. [arXiv:1905.11946](https://arxiv.org/abs/1905.11946) |
+| ResNet-50 | He, K., Zhang, X., Ren, S., Sun, J. (2016). *Deep Residual Learning for Image Recognition.* CVPR. [arXiv:1512.03385](https://arxiv.org/abs/1512.03385) |
+| DenseNet-121 | Huang, G., Liu, Z., van der Maaten, L., Weinberger, K. Q. (2017). *Densely Connected Convolutional Networks.* CVPR. [arXiv:1608.06993](https://arxiv.org/abs/1608.06993) |
+| VGG-16 | Simonyan, K., Zisserman, A. (2015). *Very Deep Convolutional Networks for Large-Scale Image Recognition.* ICLR. [arXiv:1409.1556](https://arxiv.org/abs/1409.1556) |
 
-3. **NumPy**
-   - **Version:** 1.x
-   - **URL:** https://numpy.org/
-   - **Purpose:** Numerical computing
-
-4. **Pandas**
-   - **Version:** 1.x
-   - **URL:** https://pandas.pydata.org/
-   - **Purpose:** Data manipulation and analysis
-
-5. **Matplotlib**
-   - **Version:** 3.x
-   - **URL:** https://matplotlib.org/
-   - **Purpose:** Data visualization
-
-6. **Seaborn**
-   - **Version:** 0.x
-   - **URL:** https://seaborn.pydata.org/
-   - **Purpose:** Statistical data visualization
-
-7. **OpenCV**
-   - **Version:** 4.x
-   - **URL:** https://opencv.org/
-   - **Purpose:** Image processing
-
-8. **Scikit-learn**
-   - **Version:** 1.x
-   - **URL:** https://scikit-learn.org/
-   - **Purpose:** Machine learning utilities
-
-### Backend
-9. **Flask**
-   - **Version:** 2.x
-   - **URL:** https://flask.palletsprojects.com/
-   - **Purpose:** Web framework
-
-10. **FastAPI** (Alternative)
-    - **Version:** 0.x
-    - **URL:** https://fastapi.tiangolo.com/
-    - **Purpose:** Modern API framework
-
-### Frontend
-11. **React.js**
-    - **Version:** 18.x
-    - **URL:** https://react.dev/
-    - **Purpose:** UI library
-
-12. **Three.js**
-    - **Version:** 0.x
-    - **URL:** https://threejs.org/
-    - **Purpose:** 3D visualizations
-
-13. **GSAP**
-    - **Version:** 3.x
-    - **URL:** https://greensock.com/gsap/
-    - **Purpose:** Animations
+Background on transfer learning in this domain: Litjens, G. et al. (2017). *A Survey on Deep Learning
+in Medical Image Analysis.* **Medical Image Analysis** 42, 60–88.
+[arXiv:1702.05747](https://arxiv.org/abs/1702.05747)
 
 ---
 
-## Tutorials & Guides
+## 4. Clinical sources
 
-### Deep Learning
-1. **Deep Learning Specialization (Coursera)**
-   - **Instructor:** Andrew Ng
-   - **URL:** https://www.coursera.org/specializations/deep-learning
+The 12 clinical sources behind the report text are **not** listed here, because they are recorded
+machine-readably with their verification status in
+[`knowledge/sources.json`](../knowledge/sources.json). That file is the single source of truth and is
+what the build-time citation check validates against.
 
-2. **TensorFlow in Practice (Coursera)**
-   - **Instructor:** Laurence Moroney
-   - **URL:** https://www.coursera.org/specializations/tensorflow-in-practice
+Summary: 7 government clinical summaries (NCI, NINDS, NCBI Bookshelf), 3 peer-reviewed reference
+articles and consensus reviews (StatPearls; *Neuro-Oncology* 2024 consensus review on meningioma), 1
+classification standard (WHO Classification of Tumours of the Central Nervous System, 5th edition,
+2021), and 1 self-reference used for statements about this system's own behaviour.
 
-### Medical Image Analysis
-3. **Medical Image Analysis with Deep Learning**
-   - **Platform:** Coursera
-   - **URL:** https://www.coursera.org/learn/medical-image-analysis
-
-4. **AI for Medical Diagnosis**
-   - **Platform:** Coursera
-   - **URL:** https://www.coursera.org/learn/ai-for-medical-diagnosis
+**Verification status, recorded honestly in that file:** all 12 URLs were confirmed to exist and be
+topically correct. Full page text was **not** programmatically extracted — cancer.gov and
+ninds.nih.gov block automated fetching — so the knowledge-base entries state well-established
+clinical fundamentals and cite these sources for verification. They are **not verbatim extracts**, and
+the artefact carries `clinical_review_required: true`.
 
 ---
 
-## GitHub Repositories
+## 5. Software
 
-### Reference Implementations
-1. **Brain Tumor Classification**
-   - **URL:** https://github.com/topics/brain-tumor-classification
-   - **Purpose:** Example implementations
+| Library | Version | Role |
+|---------|---------|------|
+| PyTorch | 2.7.1 | Deep-learning runtime |
+| torchvision | 0.22.1 | Image transforms |
+| timm | 1.0.24 | Pre-trained CNN architectures |
+| scikit-learn | 1.6.1 | Logistic-regression meta-learners |
+| sentence-transformers | 6.1.0 | MiniLM retrieval embeddings |
+| OpenCV | 4.13 | Grad-CAM overlays, Laplacian blur metric |
+| reportlab | 4.0.9 | Paginated PDF reports |
+| matplotlib | 3.9.2 | Reliability diagrams |
+| FastAPI / uvicorn | 0.109 / 0.27 | ML service |
+| Express.js | 4.x | API gateway |
+| MongoDB / mongoose | — | Scan history |
+| React / Vite | 18 / 5 | Interface |
+| Three.js / GSAP | — | Landing-page visuals |
 
-2. **EfficientNet Keras**
-   - **URL:** https://github.com/qubvel/efficientnet
-   - **Purpose:** EfficientNet implementation
-
-3. **Grad-CAM Implementations**
-   - **URL:** https://github.com/topics/grad-cam
-   - **Purpose:** Visualization examples
-
----
-
-## Deployment Resources
-
-### Cloud Platforms
-1. **Google Cloud Platform**
-   - **URL:** https://cloud.google.com/
-   - **Services:** Compute Engine, Cloud Storage, AI Platform
-
-2. **AWS**
-   - **URL:** https://aws.amazon.com/
-   - **Services:** EC2, S3, SageMaker
-
-3. **Heroku**
-   - **URL:** https://www.heroku.com/
-   - **Services:** Easy deployment for web apps
-
-### Frontend Hosting
-4. **Vercel**
-   - **URL:** https://vercel.com/
-   - **Purpose:** React app deployment
-
-5. **Netlify**
-   - **URL:** https://www.netlify.com/
-   - **Purpose:** Static site hosting
+Exact pins: [`backend/fastapi/requirements.txt`](../backend/fastapi/requirements.txt) and the two
+`package.json` files.
 
 ---
 
-## Ethics & Compliance
+## 6. Reporting and governance standards
 
-### Medical AI Ethics
-1. **FDA Guidelines for AI/ML in Medical Devices**
-   - **URL:** https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-and-machine-learning-aiml-enabled-medical-devices
-
-2. **WHO Ethics and Governance of AI for Health**
-   - **URL:** https://www.who.int/publications/i/item/9789240029200
-
-3. **HIPAA Compliance**
-   - **URL:** https://www.hhs.gov/hipaa/index.html
-   - **Note:** Important for handling patient data
+| Standard | Relevance |
+|----------|-----------|
+| **CLAIM** — Checklist for Artificial Intelligence in Medical Imaging | The primary reporting checklist for a study of this kind. |
+| **STARD 2015** — Standards for Reporting Diagnostic Accuracy | Requires sensitivity and specificity **with confidence intervals**. This project does not yet report intervals, which is its main outstanding methodological gap. |
+| **TRIPOD+AI** | Reporting of prediction-model studies including AI. |
+| [FDA — AI/ML-enabled medical devices](https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-and-machine-learning-aiml-enabled-medical-devices) | Positions this work correctly: a research prototype, **not** a cleared device. |
+| [WHO — Ethics and Governance of AI for Health](https://www.who.int/publications/i/item/9789240029200) | Ethical framing for clinical decision support. |
 
 ---
 
-## Community & Forums
+## 7. Citing this project
 
-1. **Kaggle Discussions**
-   - **URL:** https://www.kaggle.com/discussions
-   - **Purpose:** Dataset and competition discussions
-
-2. **Stack Overflow**
-   - **URL:** https://stackoverflow.com/
-   - **Tags:** tensorflow, keras, medical-imaging
-
-3. **Reddit - r/MachineLearning**
-   - **URL:** https://www.reddit.com/r/MachineLearning/
-   - **Purpose:** ML community discussions
-
-4. **Papers with Code**
-   - **URL:** https://paperswithcode.com/
-   - **Purpose:** Research papers with implementations
-
----
-
-## Citation Format
-
-### For Project Report
-
-```
+```bibtex
 @misc{neurasight2026,
-  title={NeuraSight: AI-Powered Brain MRI Tumor Detection},
-  author={[Your Name]},
-  year={2026},
-  institution={[Your University]},
-  note={Final Year Project}
+  title  = {NeuraSight: Calibrated, Evidence-Grounded Medical Image Decision Support},
+  year   = {2026},
+  note   = {Research prototype. Brain MRI and chest X-ray classification with
+            stacking ensembles, temperature calibration, split conformal
+            prediction, out-of-distribution screening and cited evidence
+            retrieval.},
+  howpublished = {\url{https://github.com/Utsav-Singh-35/NeuroSight}}
 }
 ```
 
-### For Dataset
+Primary dataset:
 
-```
-@misc{braintumormri2021,
-  title={Brain Tumor MRI Dataset},
-  author={Masoud Nickparvar},
-  year={2021},
-  publisher={Kaggle},
-  url={https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset}
+```bibtex
+@misc{braintumormri,
+  title     = {Brain Tumor MRI Dataset},
+  author    = {Nickparvar, Masoud},
+  publisher = {Kaggle},
+  howpublished = {\url{https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset}}
 }
 ```
 
-### For EfficientNet
+The two methods most worth citing alongside this work, because they are what make the system more
+than a classifier:
 
-```
-@inproceedings{tan2019efficientnet,
-  title={Efficientnet: Rethinking model scaling for convolutional neural networks},
-  author={Tan, Mingxing and Le, Quoc},
-  booktitle={International conference on machine learning},
-  pages={6105--6114},
-  year={2019},
-  organization={PMLR}
+```bibtex
+@inproceedings{guo2017calibration,
+  title     = {On Calibration of Modern Neural Networks},
+  author    = {Guo, Chuan and Pleiss, Geoff and Sun, Yu and Weinberger, Kilian Q.},
+  booktitle = {International Conference on Machine Learning},
+  volume    = {70},
+  pages     = {1321--1330},
+  year      = {2017},
+  publisher = {PMLR}
+}
+
+@article{sadinle2019least,
+  title   = {Least Ambiguous Set-Valued Classifiers with Bounded Error Levels},
+  author  = {Sadinle, Mauricio and Lei, Jing and Wasserman, Larry},
+  journal = {Journal of the American Statistical Association},
+  volume  = {114},
+  number  = {525},
+  pages   = {223--234},
+  year    = {2019}
 }
 ```
 
 ---
 
-**Last Updated:** [Date]  
-**Maintained By:** [Your Name]
+## Where the measured numbers live
+
+This file cites *methods*. For *results*, and for the provenance of every figure:
+
+| Document | Contents |
+|----------|----------|
+| [`presentation.md`](../presentation.md) | Full technical write-up: formulas, protocols, measured results, failure register |
+| [`IMPLEMENTATION_PLAN.md`](../IMPLEMENTATION_PLAN.md) | Build log, architecture decisions, known issues, runbook |
+| [`brain_mri_model_results.md`](brain_mri_model_results.md) | Original per-class brain metrics |
+| `models/calibration/*.json` | Every fitted number, with the inputs that produced it |
+| `knowledge/retrieval_results.json` | Retrieval evaluation, embeddings vs TF-IDF |

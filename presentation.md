@@ -1841,13 +1841,14 @@ Get-ChildItem -Recurse -File -Filter "*- Copy*" |
 Note `models/BRAIN_MRI_VGG.pth` alone is **512.2 MB** — 79% of the brain model footprint, for the
 weakest base learner. Section 13.2 discusses dropping it.
 
-### 16.3 Duplicate content
+### 16.3 Duplicate content — **resolved**
 
-| Item | Detail |
-|------|--------|
-| `frontend/samples/*.jpg` | All 4 brain samples are **byte-identical** to `data/samples/brainMRI/*.jpg`. Frontend copies exist to be web-servable; consolidate via a static route or build-time copy. |
-| `docs/system_architecture_and_ml_pipeline.md` **and** `.txt` | Two formats of the same document, **not identical** in content — they have diverged. Pick one as canonical. |
-| `docs/system_architecture.md` | A third architecture document (0.1 MB) overlapping the above two. |
+| Item | Detail | Status |
+|------|--------|--------|
+| `frontend/samples/*.jpg` | All 4 brain samples are **byte-identical** to `data/samples/brainMRI/*.jpg`. | **Both kept deliberately.** The frontend copies are fetched by the dashboard's sample buttons at runtime; `data/samples/` is what the documented regression check runs against. 14 files, 318 KB total — cheap enough that a build-time copy step would be the more complex option. |
+| Three overlapping architecture documents (`docs/system_architecture.md`, `docs/system_architecture_and_ml_pipeline.md` and `.txt`) | Three formats of the same material, **diverged** in content. | **Removed from the repository.** §4 of this document is now the single canonical architecture description. The untracked local copies were left on disk but are excluded by `.gitignore`. |
+| `model_architecture.md` | Described EfficientNet-B0 as if it were the model, predating the 4-model ensemble entirely. | **Removed.** Superseded by §3 and §6. |
+| `backend/README.md`, `models/README.md`, `data/samples/README.md` | Per-directory READMEs overlapping the root `README.md`; `models/README.md` pointed at a *private* Google Drive folder, which is useless to anyone cloning the repository. | **Removed.** The root `README.md` now documents the weight layout, the architecture and the API in one place. |
 
 ### 16.4 Scratch, scaffolding, and sensitive files
 

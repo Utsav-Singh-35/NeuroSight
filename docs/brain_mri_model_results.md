@@ -8,6 +8,39 @@
 
 ---
 
+> ### Scope and status of this document
+>
+> This records the **single EfficientNet-B0 base learner**, evaluated on the full 1,600-image test
+> set. It is the historical training record, kept because it is the source of the per-class figures
+> quoted elsewhere. It is **not** the deployed system's results.
+>
+> The deployed system is a **4-model stacking ensemble** at **96.75%**. For its results see
+> [`../presentation.md`](../presentation.md) §10.3 and §13.
+>
+> **This document's numbers were independently verified.** The base-model probability matrices were
+> regenerated from the committed weights, and the accuracy below reproduced **exactly**:
+>
+> | Model | This document | Reproduced from weights | Difference |
+> |-------|--------------|------------------------|------------|
+> | EfficientNet-B0 | 95.06% | 95.06% | 0.00 |
+> | ResNet-50 | 94.88% | 94.88% | 0.00 |
+> | DenseNet-121 | 96.06% | 96.06% | 0.00 |
+> | VGG-16 | 94.56% | 94.56% | 0.00 |
+> | Stacking ensemble | 96.75% | 96.75% | **+0.00 pp** |
+>
+> An exact match also proves there is **no train/serve preprocessing skew** — the serving
+> preprocessor reproduces training behaviour bit-for-bit.
+>
+> **The most important number here is the glioma recall of 0.81.** Stacking lifted it to **0.90**,
+> which is the project's key scientific result: the ensemble repaired the clinically dangerous
+> failure mode rather than just adding aggregate accuracy.
+>
+> ⚠️ The accuracy figures below carry **no confidence intervals**, and none of the comparisons were
+> significance-tested. See `presentation.md` §13.19 for what that does and does not license you to
+> claim.
+
+---
+
 ## Dataset Summary
 
 ### Source

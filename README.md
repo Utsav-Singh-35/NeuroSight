@@ -237,11 +237,26 @@ application never calls an LLM at request time.
 ### 4. Run
 
 ```powershell
-python run.py          # starts all three services
+python run.py
 ```
 
-Or individually — note that **uvicorn must start from `backend/fastapi`**, because the model paths
-are relative and resolve against the working directory:
+That is all. The launcher runs a preflight first and tells you exactly what is missing rather than
+failing cryptically — Python version, packages, Node, `node_modules`, weights per module, the
+calibration/OOD/retrieval/narrative artefacts, MongoDB reachability, and whether the ports are free.
+It then waits for each service to actually answer its health endpoint instead of guessing at a delay.
+
+| Command | What it does |
+|---------|--------------|
+| `python run.py` | Start all three services |
+| `python run.py --check` | Run the preflight only, start nothing |
+| `python run.py --install` | Install any missing Python/Node dependencies, then start |
+| `python run.py --kill` | Free ports 8000/5000/3000 and exit — use this when a previous run left something behind |
+| `python run.py --no-frontend` | API services only, no Vite |
+
+Missing `.env` files are created from the `.env.example` templates automatically.
+
+Or start them individually — note that **uvicorn must run from `backend/fastapi`**, because the model
+paths are relative and resolve against the working directory:
 
 ```powershell
 cd backend\fastapi ; python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
@@ -435,9 +450,13 @@ Stated plainly, because a decision-support tool that hides its failure modes is 
 |----------|----------|
 | [`presentation.md`](presentation.md) | Full technical write-up: formulas, protocols, measured results, failure register, talk track |
 | [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) | Build log, architecture decisions, known issues, runbook |
-| [`docs/brain_mri_model_results.md`](docs/brain_mri_model_results.md) | Original per-class brain metrics |
+| [`docs/brain_mri_model_results.md`](docs/brain_mri_model_results.md) | Original per-class brain metrics for the single EfficientNet baseline |
+| [`docs/references.md`](docs/references.md) | Every method citation, tied to where it is implemented |
 | [`knowledge/sources.json`](knowledge/sources.json) | The 12 cited clinical sources and their verification status |
+| [`data/dataset_links.md`](data/dataset_links.md) | Dataset sources |
 | `models/calibration/*.json` | Every fitted number, with the inputs that produced it |
+
+The research page at `/research.html` presents the same material for a non-code audience.
 
 ---
 
