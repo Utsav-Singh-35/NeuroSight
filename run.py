@@ -46,14 +46,11 @@ FASTAPI_PORT = 8000
 EXPRESS_PORT = 5000
 FRONTEND_PORT = 3000
 
-# The console on Windows often defaults to cp1252, which cannot encode the tick
-# and warning glyphs. Falling back to ASCII is better than a UnicodeEncodeError
-# in the middle of a startup report.
-try:
-    "✓ ✗ ⚠".encode(sys.stdout.encoding or "utf-8")
-    OK, BAD, WARN, DOT = "✓", "✗", "⚠", "•"
-except (UnicodeEncodeError, LookupError):
-    OK, BAD, WARN, DOT = "[ok]", "[!!]", "[warn]", "-"
+# Plain ASCII markers. Previously these were tick/cross/warning glyphs, which a
+# cp1252 console cannot encode - that needed a runtime fallback, and it still
+# rendered as mojibake whenever the encoding was forced to UTF-8 but the console
+# codepage was not. Fixed-width labels also keep the report columns aligned.
+OK, BAD, WARN, DOT = "[ ok ]", "[fail]", "[warn]", "  -  "
 
 
 def say(msg: str = "") -> None:

@@ -6,7 +6,7 @@ Two independent diagnostic modules — brain MRI tumour classification and chest
 each built on a stacking ensemble of CNNs, wrapped in a layer that reports **how much to trust the
 answer** and **what the answer is based on**.
 
-> ⚠️ **Research prototype. Not a medical device.** Not validated for clinical use, not certified by
+> **Research prototype. Not a medical device.** Not validated for clinical use, not certified by
 > any regulator, and not a substitute for a qualified radiologist. Every report the system emits
 > carries a non-removable disclaimer. See [Limitations](#limitations).
 

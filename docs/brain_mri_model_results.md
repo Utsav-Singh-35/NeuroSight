@@ -35,7 +35,7 @@
 > which is the project's key scientific result: the ensemble repaired the clinically dangerous
 > failure mode rather than just adding aggregate accuracy.
 >
-> ⚠️ The accuracy figures below carry **no confidence intervals**, and none of the comparisons were
+> **Caution:** the accuracy figures below carry **no confidence intervals**, and none of the comparisons were
 > significance-tested. See `presentation.md` §13.19 for what that does and does not license you to
 > claim.
 
@@ -87,16 +87,16 @@ data/brainMRI/
 
 | Epoch | Train Loss | Train Acc | Val Loss | Val Acc | Best Model? |
 |-------|-----------|-----------|----------|---------|-------------|
-| 1 | 0.5928 | 83.82% | 0.5894 | 88.56% | ✅ |
-| 2 | 0.1572 | 94.36% | 0.5160 | 91.88% | ✅ |
-| 3 | 0.0700 | 97.41% | 0.6055 | 92.56% | ✅ |
-| 4 | 0.0585 | 97.93% | 0.5613 | 93.81% | ✅ |
-| 5 | 0.0414 | 98.59% | 0.5871 | 93.75% | ❌ |
-| 6 | 0.0343 | 98.82% | 0.6172 | 94.31% | ✅ |
-| 7 | 0.0267 | 99.16% | 0.6516 | 94.25% | ❌ |
-| 8 | 0.0224 | 99.29% | 0.5664 | 94.44% | ✅ |
-| 9 | 0.0212 | 99.38% | 0.5768 | 95.00% | ✅ |
-| 10 | 0.0183 | 99.41% | 0.6194 | 94.62% | ❌ |
+| 1 | 0.5928 | 83.82% | 0.5894 | 88.56% | Yes |
+| 2 | 0.1572 | 94.36% | 0.5160 | 91.88% | Yes |
+| 3 | 0.0700 | 97.41% | 0.6055 | 92.56% | Yes |
+| 4 | 0.0585 | 97.93% | 0.5613 | 93.81% | Yes |
+| 5 | 0.0414 | 98.59% | 0.5871 | 93.75% | No |
+| 6 | 0.0343 | 98.82% | 0.6172 | 94.31% | Yes |
+| 7 | 0.0267 | 99.16% | 0.6516 | 94.25% | No |
+| 8 | 0.0224 | 99.29% | 0.5664 | 94.44% | Yes |
+| 9 | 0.0212 | 99.38% | 0.5768 | 95.00% | Yes |
+| 10 | 0.0183 | 99.41% | 0.6194 | 94.62% | No |
 
 ### Training Summary
 - **Best Validation Accuracy:** 95.00% (Epoch 9)
@@ -200,10 +200,10 @@ Output (4, Softmax)
 
 | Metric | Target | Achieved | Status |
 |--------|--------|----------|--------|
-| Accuracy | > 95% | 95% | ✅ Met |
-| Precision | > 94% | 95% (macro) | ✅ Met |
-| Recall | > 94% | 95% (macro) | ✅ Met |
-| F1-Score | > 94% | 95% (macro) | ✅ Met |
+| Accuracy | > 95% | 95% | Met |
+| Precision | > 94% | 95% (macro) | Met |
+| Recall | > 94% | 95% (macro) | Met |
+| F1-Score | > 94% | 95% (macro) | Met |
 
 ---
 
@@ -224,10 +224,10 @@ Output (4, Softmax)
 
 ## Phase Completion Status
 
-- [x] ✅ Phase 1: Foundation (Project Setup)
-- [x] ✅ Phase 2: Preprocessing (Data Pipeline)
-- [x] ✅ Phase 3: Model Training (EfficientNet-B0)
-- [x] ✅ Phase 4: Evaluation (95% Accuracy)
+- [x] Phase 1: Foundation (Project Setup)
+- [x] Phase 2: Preprocessing (Data Pipeline)
+- [x] Phase 3: Model Training (EfficientNet-B0)
+- [x] Phase 4: Evaluation (95% Accuracy)
 - [ ] ⏳ Phase 5: Explainable AI (Grad-CAM)
 - [ ] ⏳ Phase 6: Backend API
 - [ ] ⏳ Phase 7: Frontend Interface

@@ -45,18 +45,18 @@ Sixteen scattered features do not make a thesis. They collapse into three examin
 
 | # | Task | Status |
 |---|------|--------|
-| 1 | Audit local runnability (data, deps, Groq key) | ✅ Done |
-| 2 | Load models once + device selection | ✅ Done, verified |
-| 3 | Grad-CAM target-class correctness | ✅ Done |
-| 4 | Generate brain test-set probability matrices | ✅ Done — reproduces docs exactly |
-| 5 | Probability calibration with measured ECE | ✅ Done, see §4.1 |
-| 6 | Conformal prediction for uncertainty/referral | ✅ Done, see §4.2 |
-| 7 | MRI domain/quality validation (OOD) | ✅ Done, see §4.3 |
-| 8 | Cited brain tumour knowledge base | ✅ Done, see §4.4 |
-| 9 | Local RAG retrieval | ✅ Done, see §4.5 |
-| 10 | Groq offline narrative authoring | ✅ Done, see §4.6 |
-| 11 | Professional PDF report | ✅ Done, see §4.7 |
-| 12 | Wire into FastAPI / Express / dashboard | ✅ Done, see §4.8 |
+| 1 | Audit local runnability (data, deps, Groq key) | Done |
+| 2 | Load models once + device selection | Done, verified |
+| 3 | Grad-CAM target-class correctness | Done |
+| 4 | Generate brain test-set probability matrices | Done — reproduces docs exactly |
+| 5 | Probability calibration with measured ECE | Done, see §4.1 |
+| 6 | Conformal prediction for uncertainty/referral | Done, see §4.2 |
+| 7 | MRI domain/quality validation (OOD) | Done, see §4.3 |
+| 8 | Cited brain tumour knowledge base | Done, see §4.4 |
+| 9 | Local RAG retrieval | Done, see §4.5 |
+| 10 | Groq offline narrative authoring | Done, see §4.6 |
+| 11 | Professional PDF report | Done, see §4.7 |
+| 12 | Wire into FastAPI / Express / dashboard | Done, see §4.8 |
 
 **Headline results so far:**
 
@@ -974,7 +974,7 @@ Evidence / references (actual retrieved source IDs)
 Must print the `explanation_faithful=False` caveat when no base model agreed, and the
 `models_skipped` note when the ensemble ran degraded.
 
-### 7.9 Task 12 — integration ✅ **done — results in §4.8**
+### 7.9 Task 12 — integration - **done — results in §4.8**
 
 Original spec, kept for the record:
 
@@ -1179,18 +1179,18 @@ that is how projects end up with impressive output and no defensible results.
 
 | Step | Gate |
 |------|------|
-| 1. Load-once + device | ✅ brain predict < 1 s (achieved: 650 ms) |
-| 2. Grad-CAM target class | ✅ heatmap class always matches reported class |
-| 3. Pin sklearn 1.6.1 | ⬜ no `InconsistentVersionWarning` |
-| 4. Probability matrices | 🔄 4 `.npy` files + manifest committed |
-| 5. Three-way split + calibration | ⬜ ECE before/after + reliability diagrams |
-| 6. Conformal | ⬜ empirical coverage ≈ 1−α, mean set size reported |
-| 7. OOD / validation | ⬜ AUROC + FPR@95TPR on a real OOD set |
-| 8. Grad-CAM faithfulness | ⬜ deletion/insertion curves + randomisation sanity check |
-| 9. Knowledge base | ⬜ every statement carries a source ID |
-| 10. RAG | ⬜ precision@5 on the hand-labelled set |
-| 11. Narratives | ⬜ 12/12 human-reviewed, zero unsourced clinical claims |
-| 12. PDF + integration | ⬜ end-to-end scan produces a cited PDF |
+| 1. Load-once + device | Passed - brain predict < 1 s (achieved: 650 ms) |
+| 2. Grad-CAM target class | Passed - heatmap class always matches reported class |
+| 3. Pin sklearn 1.6.1 | no `InconsistentVersionWarning` |
+| 4. Probability matrices | 4 `.npy` files + manifest committed |
+| 5. Three-way split + calibration | ECE before/after + reliability diagrams |
+| 6. Conformal | empirical coverage ≈ 1−α, mean set size reported |
+| 7. OOD / validation | AUROC + FPR@95TPR on a real OOD set |
+| 8. Grad-CAM faithfulness | deletion/insertion curves + randomisation sanity check |
+| 9. Knowledge base | every statement carries a source ID |
+| 10. RAG | precision@5 on the hand-labelled set |
+| 11. Narratives | 12/12 human-reviewed, zero unsourced clinical claims |
+| 12. PDF + integration | end-to-end scan produces a cited PDF |
 
 ### Out of scope (say "future work")
 

@@ -47,20 +47,22 @@ def print_header(msg):
     print(f"{'='*60}")
 
 
+# Plain ASCII markers, matching run.py. Tick/cross/warning glyphs cannot be
+# encoded by a cp1252 console, which is the Windows default.
 def print_step(msg):
-    print(f"\n  → {msg}")
+    print(f"\n  >> {msg}")
 
 
 def print_ok(msg):
-    print(f"  ✓ {msg}")
+    print(f"  [ ok ] {msg}")
 
 
 def print_warn(msg):
-    print(f"  ⚠ {msg}")
+    print(f"  [warn] {msg}")
 
 
 def print_err(msg):
-    print(f"  ✗ {msg}")
+    print(f"  [fail] {msg}")
 
 
 def run_cmd(cmd, cwd=None, shell=True):

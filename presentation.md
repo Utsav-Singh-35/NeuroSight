@@ -891,10 +891,10 @@ Run against the deployed stack, all four brain samples:
 
 | Sample | Predicted | Confidence | Correct |
 |--------|-----------|-----------|---------|
-| `glioma_sample.jpg` | Glioma | 99.08% | ✅ |
-| `meningioma_sample.jpg` | Meningioma | 94.86% | ✅ |
-| `notumor_sample.jpg` | No Tumor | 97.98% | ✅ |
-| `pituitary_sample.jpg` | Pituitary | 99.35% | ✅ |
+| `glioma_sample.jpg` | Glioma | 99.08% | Yes |
+| `meningioma_sample.jpg` | Meningioma | 94.86% | Yes |
+| `notumor_sample.jpg` | No Tumor | 97.98% | Yes |
+| `pituitary_sample.jpg` | Pituitary | 99.35% | Yes |
 
 **Brain: 4/4.**
 
@@ -902,12 +902,12 @@ All six chest samples (all ground-truth tuberculosis):
 
 | Sample | Predicted | Conf. | TB prob | Normal prob | Pneu prob | Correct |
 |--------|-----------|-------|---------|-------------|-----------|---------|
-| `tuberculosis-1117.jpg` | Tuberculosis | 97.68% | 97.68 | 2.26 | 0.05 | ✅ |
-| `tuberculosis-1122.jpg` | **Normal** | **56.51%** | **42.99** | **56.51** | 0.50 | ❌ |
-| `tuberculosis-1123.jpg` | Tuberculosis | 98.06% | 98.06 | 1.89 | 0.05 | ✅ |
-| `tuberculosis-1125.jpg` | Tuberculosis | 98.06% | 98.06 | 1.89 | 0.05 | ✅ |
-| `tuberculosis-1127.jpg` | Tuberculosis | 97.26% | 97.26 | 2.67 | 0.07 | ✅ |
-| `tuberculosis-1129.jpg` | Tuberculosis | 98.05% | 98.05 | 1.90 | 0.05 | ✅ |
+| `tuberculosis-1117.jpg` | Tuberculosis | 97.68% | 97.68 | 2.26 | 0.05 | Yes |
+| `tuberculosis-1122.jpg` | **Normal** | **56.51%** | **42.99** | **56.51** | 0.50 | No |
+| `tuberculosis-1123.jpg` | Tuberculosis | 98.06% | 98.06 | 1.89 | 0.05 | Yes |
+| `tuberculosis-1125.jpg` | Tuberculosis | 98.06% | 98.06 | 1.89 | 0.05 | Yes |
+| `tuberculosis-1127.jpg` | Tuberculosis | 97.26% | 97.26 | 2.67 | 0.07 | Yes |
+| `tuberculosis-1129.jpg` | Tuberculosis | 98.05% | 98.05 | 1.90 | 0.05 | Yes |
 
 **Chest: 5/6 = 83.3%, against a reported ensemble accuracy of 82.00%.** The sample is far too
 small for a real estimate, but the agreement is notable.
@@ -968,10 +968,10 @@ that model **a second time** to attach hooks.
 
 | Target (from original plan) | Measured | Verdict |
 |------------------------------|----------|---------|
-| Single-model inference < 2 s | ~1.2 s [DOC] | ✅ met |
-| Ensemble inference < 4 s | **9.9–14.9 s brain**, 3.8–4.7 s chest | ❌ **brain misses by 2.5–3.7×**; chest meets it |
-| Grad-CAM < 1 s | 13.7 s end-to-end | ❌ missed |
-| Total API response < 5 s | 6.5 s via gateway | ❌ missed |
+| Single-model inference < 2 s | ~1.2 s [DOC] | Met |
+| Ensemble inference < 4 s | **9.9–14.9 s brain**, 3.8–4.7 s chest | **Brain misses by 2.5–3.7×**; chest meets it |
+| Grad-CAM < 1 s | 13.7 s end-to-end | Missed |
+| Total API response < 5 s | 6.5 s via gateway | Missed |
 
 The brain ensemble **does not meet its latency target**, and the cause is architectural (load-per-request
 + CPU-only + VGG-16's 512 MB), not incidental. §13.2 gives the fix and the expected gain.
@@ -1000,10 +1000,10 @@ request, not from changing the maths.
 
 | Target | Measured after fix | Verdict |
 |--------|--------------------|---------|
-| Single-model inference < 2 s | ~1.2 s [DOC] | ✅ met |
-| Ensemble inference < 4 s | **0.65 s brain**, 0.49 s chest | ✅ **now met** |
-| Grad-CAM < 1 s | 3.2 s | ❌ still missed (runs the full ensemble to pick the agreeing model first) |
-| Total API response < 5 s | 3.5–4.0 s end-to-end including persistence | ✅ **now met** |
+| Single-model inference < 2 s | ~1.2 s [DOC] | Met |
+| Ensemble inference < 4 s | **0.65 s brain**, 0.49 s chest | **Now met** |
+| Grad-CAM < 1 s | 3.2 s | Still missed (runs the full ensemble to pick the agreeing model first) |
+| Total API response < 5 s | 3.5–4.0 s end-to-end including persistence | **Now met** |
 
 The one honest caveat: the **first** request after a restart still costs ~15 s while the four models
 load. That is a warm-up cost, not per-request cost, and it is visible in `/health`.
@@ -1103,21 +1103,21 @@ decision-support pipeline.
 
 | § | Recommendation | Status |
 |---|----------------|--------|
-| 13.1 | Confidence-gated abstention | ✅ **Superseded and improved** — replaced with conformal prediction, which carries a coverage guarantee instead of a hand-picked threshold (§13.13) |
-| 13.2 | Eliminate per-request model loading | ✅ **Done** — 15–21× faster, §11.2 |
-| 13.3 | Regenerate and commit the chest metrics | ⬜ **Outstanding** — still [NOT RECORDED] |
-| 13.4 | Close the chest-module integration gap | ✅ **Done** — `module` threaded end to end, §13.19 |
-| 13.5 | Correct stacking methodology (out-of-fold) | ⬜ **Outstanding by decision** — refitting invalidates the 96.75% headline; documented upgrade path, §13.12 |
-| 13.6 | Uncertainty intervals + McNemar | ⬜ **Outstanding** — the statistical rigour gap, §13.19 |
-| 13.7 | Probability calibration | ✅ **Done with measured ECE**, §13.12 |
-| 13.8 | Out-of-distribution rejection | ✅ **Done, two layers, AUROC 0.9538**, §13.14 |
-| 13.9 | Attack the glioma recall deficit | ⬜ **Outstanding** — needs retraining |
-| 13.10 | Robustness / reproducibility hardening | ◐ **Partial** — degradation is now surfaced in the API; sklearn pin and auth still open |
-| 13.11 | Clinical and regulatory maturation | ⬜ **Future work**, correctly out of scope |
+| 13.1 | Confidence-gated abstention | **Superseded and improved** — replaced with conformal prediction, which carries a coverage guarantee instead of a hand-picked threshold (§13.13) |
+| 13.2 | Eliminate per-request model loading | **Done** — 15–21× faster, §11.2 |
+| 13.3 | Regenerate and commit the chest metrics | **Outstanding** — still [NOT RECORDED] |
+| 13.4 | Close the chest-module integration gap | **Done** — `module` threaded end to end, §13.19 |
+| 13.5 | Correct stacking methodology (out-of-fold) | **Outstanding by decision** — refitting invalidates the 96.75% headline; documented upgrade path, §13.12 |
+| 13.6 | Uncertainty intervals + McNemar | **Outstanding** — the statistical rigour gap, §13.19 |
+| 13.7 | Probability calibration | **Done with measured ECE**, §13.12 |
+| 13.8 | Out-of-distribution rejection | **Done, two layers, AUROC 0.9538**, §13.14 |
+| 13.9 | Attack the glioma recall deficit | **Outstanding** — needs retraining |
+| 13.10 | Robustness / reproducibility hardening | **Partial** — degradation is now surfaced in the API; sklearn pin and auth still open |
+| 13.11 | Clinical and regulatory maturation | **Future work**, correctly out of scope |
 
 ### 13.1 Confidence-gated abstention — highest value, lowest cost
 
-> ✅ **Superseded by §13.13.** A fixed $\tau$ is a heuristic with no guarantee. Conformal prediction
+> **Superseded by §13.13.** A fixed $\tau$ is a heuristic with no guarantee. Conformal prediction
 > delivers the same abstention behaviour with a distribution-free coverage guarantee, so the
 > three-band policy below was implemented with a **calibrated quantile** rather than a chosen
 > number. The original reasoning is kept because it is why the band exists at all.
@@ -1149,7 +1149,7 @@ impossible.
 
 ### 13.2 Eliminate per-request model loading — fixes the latency miss
 
-> ✅ **Done.** Implemented as a process-wide cache in
+> **Done.** Implemented as a process-wide cache in
 > `backend/fastapi/app/services/model_cache.py`, with LRU eviction because the machine has 7.7 GB
 > total RAM. Genuine device selection was added. Measured result: **§11.2** — 650 ms brain predict,
 > predictions bit-identical. `/gradcam` now reuses the already-loaded agreeing model instead of
@@ -1176,7 +1176,7 @@ notebooks *with* outputs, or export an HTML report per run.
 
 ### 13.4 Close the chest-module integration gap
 
-> ✅ **Done.** `module` is threaded frontend selector → Express route → `fastapiClient` query string
+> **Done.** `module` is threaded frontend selector → Express route → `fastapiClient` query string
 > → FastAPI, and the `Prediction` schema's brain-only label enum was widened so chest results can
 > actually persist. Regression test, run through the Vite proxy on :3000:
 > `POST /api/scan?module=chest_xray` returns `module: "chest_xray"` and all six TB samples save.
@@ -1219,7 +1219,7 @@ ask about a 96.06% → 96.75% improvement.** Have the answer ready.
 
 ### 13.7 Probability calibration
 
-> ✅ **Done, with a result that contradicted the expectation.** Measured ECE, fitted temperature
+> **Done, with a result that contradicted the expectation.** Measured ECE, fitted temperature
 > scaling, reliability diagrams before and after — **§13.12**. The finding: the *base* models are
 > badly over-confident ($T$ up to 3.35) but the logistic-regression meta-learner is already
 > well-calibrated, so the achievable gain at the output is small. That is worth more than a large
@@ -1243,7 +1243,7 @@ temperature scaling completes it.
 
 ### 13.8 Out-of-distribution rejection
 
-> ✅ **Done — and the "free signal" won.** All four options below were implemented and benchmarked
+> **Done — and the "free signal" won.** All four options below were implemented and benchmarked
 > on a three-tier OOD set. **Mean pairwise Jensen–Shannon divergence between base models — the
 > signal that was already being computed and thrown away — beat energy score, max-softmax and
 > entropy** on the hard tier. Measured results in **§13.14**.
@@ -1757,7 +1757,7 @@ A repository audit found **three** credentials that had been committed to a publ
 published history has been replaced so the artefacts no longer appear in the repository, and the
 patterns that let them in are now blocked.
 
-🔴 **Rotation of all three is still outstanding and is the remaining action.** Replacing history
+**Rotation of all three is still outstanding and is the remaining action.** Replacing history
 reduces further exposure; it does not undo the exposure that already happened.
 
 | # | Credential class | How it got in | Status |
@@ -2097,7 +2097,7 @@ Say this before you are asked. It is the difference between a defensible project
 | **Top safety gap (closed)** | Confidence gating replaced by conformal bands with a coverage guarantee; the 56.5% "Normal" TB scan now reports **Indeterminate** |
 | **Top integration gap (closed)** | Chest module reachable end to end; escalated scans persist |
 | **Top remaining gap** | **No confidence intervals and no McNemar's test** — the 96.06% → 96.75% gain is inside the ±1.2 pt interval (§13.19) |
-| **Outstanding your-action items** | 🔴 Rotate 3 credentials (§15) — history replaced but rotation still pending; clinician sign-off on 12 narratives |
+| **Outstanding your-action items** | Rotate 3 credentials (§15) — history replaced but rotation still pending; clinician sign-off on 12 narratives |
 | **Reclaimable disk** | ~735 MB |
 
 ---

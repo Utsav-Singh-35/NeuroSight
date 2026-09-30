@@ -176,8 +176,31 @@
 
     .provenance { font-size:0.62rem; color:rgba(255,255,255,0.3); margin-top:0.5rem; font-style:italic; }
 
+    /* Visible to assistive tech, not on screen. Used for the table caption and
+       the unlabelled open-row column, which would otherwise be announced as an
+       empty header. */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+
+    /* ========== ICONS ========== */
+    /* The sprite itself must never occupy layout space. */
+    .sprite { display: none; }
+    /* Stroke-only so one definition works on any background and inherits the
+       surrounding text colour. `em` sizing keeps icons locked to their label. */
+    .ico {
+      width: 1em; height: 1em; flex: 0 0 auto; vertical-align: -0.125em;
+      fill: none; stroke: currentColor; stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .ico-lg { width: 1.35em; height: 1.35em; stroke-width: 1.6; }
+    .ico-xl { width: 2.6rem; height: 2.6rem; stroke-width: 1.3; }
+    /* Inline icon followed by text, on one baseline. */
+    .with-ico { display: inline-flex; align-items: center; gap: 0.45em; }
+
     /* ========== HISTORY ========== */
-    .history-container { max-width: 1000px; width: 100%; margin: 0 auto; }
+    .history-container { max-width: 1080px; width: 100%; margin: 0 auto; }
     .history-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
     .history-head h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; }
     .history-head p { color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 0.3rem; }
@@ -204,25 +227,85 @@
     }
     .chip.on { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); color: #ef4444; }
 
-    .scan-list { display: flex; flex-direction: column; gap: 8px; }
-    .scan-row {
-      display: grid; grid-template-columns: auto 1fr auto auto auto; gap: 1rem; align-items: center;
-      padding: 0.9rem 1.1rem; background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;
-      cursor: pointer; transition: all 0.2s;
+    /* ---------- history table ----------
+       A real <table> rather than a grid of divs: the history is tabular data,
+       so a header row, aligned numeric columns and column-wise scanning are
+       what the content actually wants. */
+    .hist-wrap {
+      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; overflow: hidden;
     }
-    .scan-row:hover { background: rgba(255,255,255,0.04); border-color: rgba(34,211,238,0.25); }
-    .scan-row .mod-icon { font-size: 1.3rem; }
-    .scan-row .meta { min-width: 0; }
-    .scan-row .fname { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .scan-row .when { font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 0.2rem; }
-    .scan-row .pred { font-size: 0.85rem; font-weight: 700; color: #f472b6; text-align: right; white-space: nowrap; }
-    .scan-row .conf { font-size: 0.85rem; font-weight: 700; text-align: right; min-width: 62px; }
-    .scan-row .conf.low { color: #ef4444; } .scan-row .conf.ok { color: #10b981; }
-    .scan-row .flag { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.2rem 0.5rem; border-radius: 12px; background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); white-space: nowrap; }
+    .hist-scroll { overflow-x: auto; }
+    .hist-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+
+    .hist-table thead th {
+      position: sticky; top: 0; z-index: 2;
+      background: #0b0b0b;
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); text-align: left; white-space: nowrap;
+      padding: 0.8rem 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .hist-table thead th.right { text-align: right; }
+    .hist-table thead th.center { text-align: center; }
+
+    .hist-table tbody tr {
+      cursor: pointer; transition: background 0.15s;
+      border-bottom: 1px solid rgba(255,255,255,0.045);
+    }
+    .hist-table tbody tr:last-child { border-bottom: none; }
+    .hist-table tbody tr:hover { background: rgba(34,211,238,0.055); }
+    /* Keyboard parity with the pointer affordance. */
+    .hist-table tbody tr:focus-visible {
+      outline: none; background: rgba(34,211,238,0.08);
+      box-shadow: inset 3px 0 0 #22d3ee;
+    }
+    .hist-table td { padding: 0.78rem 0.9rem; vertical-align: middle; }
+
+    .h-mod { color: rgba(255,255,255,0.75); white-space: nowrap; }
+    .h-mod .ico { color: #22d3ee; }
+    .h-mod .lbl { font-size: 0.74rem; }
+    .h-file {
+      font-weight: 600; color: rgba(255,255,255,0.92);
+      max-width: 230px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .h-when { color: rgba(255,255,255,0.38); font-size: 0.72rem; white-space: nowrap; }
+    .h-pred { font-weight: 700; color: #f472b6; white-space: nowrap; }
+    .h-pred.normal { color: #10b981; }
+    /* tabular-nums stops the confidence column jittering between rows. */
+    .h-conf {
+      text-align: right; font-weight: 700; font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .h-conf.low { color: #f59e0b; } .h-conf.ok { color: rgba(255,255,255,0.9); }
+    .h-band { white-space: nowrap; }
+    .h-flags { white-space: nowrap; }
+    .h-go { text-align: right; color: rgba(255,255,255,0.22); width: 1%; }
+    .hist-table tbody tr:hover .h-go { color: #22d3ee; }
+
+    /* Set-size counter next to a band pill, e.g. "Borderline 2". */
+    .set-count {
+      display: inline-block; margin-left: 0.3rem; padding: 0 0.3rem;
+      border-radius: 3px; background: rgba(255,255,255,0.1);
+      font-size: 0.85em; font-weight: 700;
+    }
+
+    .flag {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.2rem 0.45rem; border-radius: 4px;
+      background: rgba(239,68,68,0.12); color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.25); white-space: nowrap;
+    }
+    .flag.amber { background: rgba(245,158,11,0.12); color: #f59e0b; border-color: rgba(245,158,11,0.3); }
+
+    .hist-foot {
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      padding: 0.7rem 0.9rem; border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 0.7rem; color: rgba(255,255,255,0.35); flex-wrap: wrap;
+    }
 
     .empty { text-align: center; padding: 4rem 2rem; }
-    .empty .big { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.3; }
+    .empty .ico-xl { color: rgba(255,255,255,0.22); margin-bottom: 1rem; }
     .empty p { color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-bottom: 1.5rem; }
 
     .pager { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem; }
@@ -232,16 +315,78 @@
 
     .err-box { padding: 1rem; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; color: #ef4444; font-size: 0.8rem; text-align: center; }
 
+    @media (max-width: 860px) {
+      /* Drop the lowest-value columns first: the module label (the icon still
+         conveys it) and the absolute timestamp. */
+      .hist-table th.col-when, .hist-table td.h-when { display: none; }
+      .h-mod .lbl { display: none; }
+    }
     @media (max-width: 640px) {
       .result-header .prediction { font-size: 2rem; }
       .upload-box { padding: 2rem 1.5rem; }
-      .scan-row { grid-template-columns: auto 1fr auto; }
-      .scan-row .conf, .scan-row .flag { display: none; }
+      .hist-table th.col-flags, .hist-table td.h-flags,
+      .hist-table th.col-go, .hist-table td.h-go { display: none; }
+      .hist-table td, .hist-table thead th { padding: 0.65rem 0.55rem; }
+      .h-file { max-width: 130px; }
       .btn-row { flex-direction: column; }
     }
   </style>
 </head>
 <body>
+  <!--
+    Icon sprite. Defined once and referenced with <use>, so the same stroke
+    geometry serves the static markup and the JS-built templates. Every path is
+    stroke-based and inherits currentColor, which is why a single definition
+    works on a cyan button, an amber warning and a muted table cell alike.
+  -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-brain" viewBox="0 0 24 24">
+        <path d="M12 5.5A2.5 2.5 0 0 0 9.5 3 2.5 2.5 0 0 0 7 5.5c-1.4.3-2.5 1.5-2.5 3 0 .6.2 1.2.5 1.7-.6.5-1 1.3-1 2.1 0 1 .5 1.8 1.3 2.3-.2.4-.3.8-.3 1.3A2.6 2.6 0 0 0 7.6 18.6c.3 1.4 1.5 2.4 3 2.4 1.4 0 2.6-1 2.9-2.3"/>
+        <path d="M12 5.5A2.5 2.5 0 0 1 14.5 3 2.5 2.5 0 0 1 17 5.5c1.4.3 2.5 1.5 2.5 3 0 .6-.2 1.2-.5 1.7.6.5 1 1.3 1 2.1 0 1-.5 1.8-1.3 2.3.2.4.3.8.3 1.3a2.6 2.6 0 0 1-2.6 2.4"/>
+        <path d="M12 5.5V21"/>
+      </symbol>
+      <symbol id="i-lungs" viewBox="0 0 24 24">
+        <path d="M12 3v9"/>
+        <path d="M9 9.5C9 8 8 7 6.8 7 5.5 7 4.7 8 4.4 9.3l-1.2 5.4C2.9 16.3 4 18 5.7 18h1.6A1.7 1.7 0 0 0 9 16.3z"/>
+        <path d="M15 9.5C15 8 16 7 17.2 7c1.3 0 2.1 1 2.4 2.3l1.2 5.4c.3 1.6-.8 3.3-2.5 3.3h-1.6A1.7 1.7 0 0 1 15 16.3z"/>
+        <path d="M9 12h6"/>
+      </symbol>
+      <symbol id="i-scan" viewBox="0 0 24 24">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+        <path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+        <circle cx="12" cy="12" r="3.5"/>
+      </symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24">
+        <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>
+        <path d="M12 9v4"/><path d="M12 17h.01"/>
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+      <symbol id="i-inbox" viewBox="0 0 24 24">
+        <path d="M22 12h-6l-2 3h-4l-2-3H2"/>
+        <path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z"/>
+      </symbol>
+      <symbol id="i-file" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <path d="M14 2v6h6"/>
+      </symbol>
+      <symbol id="i-download" viewBox="0 0 24 24">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+      </symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+      <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    </defs>
+  </svg>
+
   <nav class="navbar">
     <div class="logo">NeuraSight</div>
     <ul class="nav-links">
@@ -261,8 +406,8 @@
     <h1>Medical Image Analysis</h1>
     <p class="sub">Upload a medical scan for AI-powered classification</p>
     <div class="scan-selector" style="width:100%;max-width:500px;display:flex;gap:0.8rem;margin-bottom:0.5rem;">
-      <button class="scan-btn active" data-module="brain_mri" style="flex:1;padding:0.8rem;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.4);border-radius:8px;color:#22d3ee;font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.3s;">🧠 Brain MRI</button>
-      <button class="scan-btn" data-module="chest_xray" style="flex:1;padding:0.8rem;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.4);font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.3s;">🫁 Chest X-ray</button>
+      <button class="scan-btn active" data-module="brain_mri" style="flex:1;padding:0.8rem;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.4);border-radius:8px;color:#22d3ee;font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.3s;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;"><svg class="ico ico-lg"><use href="#i-brain"/></svg>Brain MRI</button>
+      <button class="scan-btn" data-module="chest_xray" style="flex:1;padding:0.8rem;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.4);font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.3s;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;"><svg class="ico ico-lg"><use href="#i-lungs"/></svg>Chest X-ray</button>
     </div>
     <div class="formats"><span>PNG</span><span>JPG</span><span>JPEG</span></div>
     <div class="upload-box" id="upload-box">
@@ -274,7 +419,7 @@
       <img class="preview" id="preview" style="display:none;">
     </div>
     <button class="analyze-btn" id="analyze-btn" disabled>Analyze Scan</button>
-    <p class="note">⚠️ Use actual medical images matching your selected scan type for best results.</p>
+    <p class="note with-ico"><svg class="ico"><use href="#i-alert"/></svg>Use actual medical images matching your selected scan type for best results.</p>
     <div class="samples">
       <p class="samples-label">Or try a sample:</p>
       <div class="samples-row">
@@ -307,7 +452,7 @@
           <h1>Scan History</h1>
           <p id="history-sub">Past analyses and their results</p>
         </div>
-        <button class="ghost-btn" style="flex:0 0 auto;padding:0.7rem 1.4rem;" id="btn-new-from-history">+ New Scan</button>
+        <button class="ghost-btn with-ico" style="flex:0 0 auto;padding:0.7rem 1.4rem;justify-content:center;" id="btn-new-from-history"><svg class="ico"><use href="#i-plus"/></svg>New Scan</button>
       </div>
       <div class="stats-row" id="stats-row"></div>
       <div class="filters">
@@ -327,9 +472,9 @@
       </div>
       <div id="history-body"></div>
       <div class="pager" id="pager" style="display:none;">
-        <button id="pg-prev">← Prev</button>
+        <button id="pg-prev" class="with-ico"><svg class="ico"><use href="#i-chevron-left"/></svg>Prev</button>
         <span class="info" id="pg-info"></span>
-        <button id="pg-next">Next →</button>
+        <button id="pg-next" class="with-ico">Next<svg class="ico"><use href="#i-chevron-right"/></svg></button>
       </div>
     </div>
   </div>
@@ -362,15 +507,32 @@
     let uploadedImageDataUrl = null;
 
     const MODULE_META = {
-      brain_mri:  { icon: '🧠', label: 'Brain MRI' },
-      chest_xray: { icon: '🫁', label: 'Chest X-ray' },
+      brain_mri:  { icon: 'i-brain', label: 'Brain MRI' },
+      chest_xray: { icon: 'i-lungs', label: 'Chest X-ray' },
     };
+    const FALLBACK_META = { icon: 'i-scan', label: 'Unknown' };
+
+    /** Resolve module metadata, always returning a usable icon and label. */
+    function moduleMeta(id) {
+      return MODULE_META[id] || { ...FALLBACK_META, label: id || 'Unknown' };
+    }
 
     // ---------- helpers ----------
     function escapeHtml(s) {
       return String(s ?? '').replace(/[&<>"']/g, (c) => (
         { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
       ));
+    }
+
+    /**
+     * Render a sprite icon. Purely decorative here - every icon sits beside a
+     * text label, so it is hidden from assistive tech rather than given a
+     * redundant accessible name.
+     * @param {string} id - symbol id, e.g. 'i-brain'
+     * @param {string} [cls] - extra classes, e.g. 'ico-lg'
+     */
+    function ico(id, cls = '') {
+      return `<svg class="ico${cls ? ' ' + cls : ''}" aria-hidden="true"><use href="#${id}"/></svg>`;
     }
 
     function fmtDate(iso) {
@@ -559,7 +721,7 @@
      */
     function renderResults(r, originalDataUrl, opts = {}) {
       const target = opts.target || resultsContainer;
-      const mod = MODULE_META[r.module] || { icon: '🔬', label: r.module || 'Unknown' };
+      const mod = moduleMeta(r.module);
       const isNormal = r.prediction === 'No Tumor' || r.prediction === 'Normal';
       const probs = r.probabilities || {};
 
@@ -577,7 +739,7 @@
       if (band === 'indeterminate') {
         warn = `
           <div class="warn-banner">
-            <div class="t">⚠ Indeterminate — do not act on this result</div>
+            <div class="t with-ico">${ico('i-alert')}Indeterminate — do not act on this result</div>
             <div class="m">
               The model could not discriminate between classes. The label above is
               <strong>not</strong> a finding. Refer this scan to a qualified
@@ -587,7 +749,7 @@
       } else if (band === 'borderline') {
         warn = `
           <div class="warn-banner">
-            <div class="t">⚠ Borderline — professional review recommended</div>
+            <div class="t with-ico">${ico('i-alert')}Borderline — professional review recommended</div>
             <div class="m">
               Two classes remain plausible at the stated coverage level, so the
               model has not separated them. Treat the label above as one
@@ -598,7 +760,7 @@
         const thr = r.lowConfidenceThreshold || 90;
         warn = `
           <div class="warn-banner">
-            <div class="t">⚠ Low confidence — human review advised</div>
+            <div class="t with-ico">${ico('i-alert')}Low confidence — human review advised</div>
             <div class="m">
               The model reported ${r.confidence.toFixed(1)}% confidence, below the
               ${thr}% review threshold. No conformal prediction set is available
@@ -745,8 +907,8 @@
       let savedPill = '';
       if (opts.showSaved) {
         savedPill = r.saved
-          ? `<div class="saved-pill">✓ Saved to history</div>`
-          : `<div class="saved-pill fail">⚠ Not saved to history (database unavailable)</div>`;
+          ? `<div class="saved-pill">${ico('i-check')}Saved to history</div>`
+          : `<div class="saved-pill fail">${ico('i-alert')}Not saved to history (database unavailable)</div>`;
       }
 
       const bandPill = band
@@ -756,13 +918,13 @@
       // The PDF is rendered from the image, which is never stored, so the
       // download is only offered while the uploaded file is still in memory.
       const pdfBtn = (!opts.detailMode && selectedFile)
-        ? `<button class="ghost-btn" id="pdf-btn" onclick="downloadPdf()">Download PDF Report</button>`
+        ? `<button class="ghost-btn with-ico" style="justify-content:center;" id="pdf-btn" onclick="downloadPdf()">${ico('i-download')}<span>Download PDF Report</span></button>`
         : '';
 
       const buttons = opts.detailMode
         ? `<div class="btn-row">
-             <button class="ghost-btn" onclick="openHistory()">← Back to History</button>
-             <button class="ghost-btn danger" onclick="deleteScan('${r.id}')">Delete Record</button>
+             <button class="ghost-btn with-ico" style="justify-content:center;" onclick="openHistory()">${ico('i-back')}Back to History</button>
+             <button class="ghost-btn danger with-ico" style="justify-content:center;" onclick="deleteScan('${r.id}')">${ico('i-trash')}Delete Record</button>
            </div>`
         : `<div class="btn-row">
              ${pdfBtn}
@@ -774,7 +936,7 @@
         <div class="result-header">
           <div class="eyebrow">NeuraSight AI Report</div>
           <div class="prediction">${escapeHtml(r.prediction)}</div>
-          <div><span class="modtag">${mod.icon} ${escapeHtml(mod.label)}</span></div>
+          <div><span class="modtag with-ico">${ico(mod.icon)}${escapeHtml(mod.label)}</span></div>
           ${bandPill}
           ${savedPill}
         </div>
@@ -812,8 +974,9 @@
     async function downloadPdf() {
       if (!selectedFile) return;
       const btn = el('pdf-btn');
-      const original = btn ? btn.textContent : '';
-      if (btn) { btn.disabled = true; btn.textContent = 'Rendering PDF...'; }
+      // innerHTML, not textContent: the label contains an inline SVG icon.
+      const original = btn ? btn.innerHTML : '';
+      if (btn) { btn.disabled = true; btn.innerHTML = '<span>Rendering PDF...</span>'; }
 
       try {
         const form = new FormData();
@@ -836,14 +999,14 @@
         a.remove();
         // Revoke on a delay: Firefox cancels an in-flight download otherwise.
         setTimeout(() => URL.revokeObjectURL(url), 10000);
-        if (btn) btn.textContent = '✓ PDF downloaded';
+        if (btn) btn.innerHTML = `${ico('i-check')}<span>PDF downloaded</span>`;
       } catch (e) {
-        if (btn) btn.textContent = '⚠ PDF failed';
+        if (btn) btn.innerHTML = `${ico('i-alert')}<span>PDF failed</span>`;
         alert(e.message);
       } finally {
         if (btn) {
           btn.disabled = false;
-          setTimeout(() => { btn.textContent = original; }, 3000);
+          setTimeout(() => { btn.innerHTML = original; }, 3000);
         }
       }
     }
@@ -931,18 +1094,53 @@
 
         if (!data.items.length) {
           el('pager').style.display = 'none';
+          const filtered = q || mod || bandFilter || escalatedOnly;
           body.innerHTML = `
             <div class="empty">
-              <div class="big">📁</div>
-              <p>${q || mod || bandFilter || escalatedOnly ? 'No scans match these filters.' : 'No scans yet. Run your first analysis to build history.'}</p>
+              <svg class="ico-xl" aria-hidden="true"><use href="#i-inbox"/></svg>
+              <p>${filtered ? 'No scans match these filters.' : 'No scans yet. Run your first analysis to build history.'}</p>
               <button class="ghost-btn" style="max-width:240px;margin:0 auto;" onclick="resetToUpload()">Start a New Scan</button>
             </div>`;
           return;
         }
 
-        body.innerHTML = `<div class="scan-list">${data.items.map(rowHtml).join('')}</div>`;
-        body.querySelectorAll('.scan-row').forEach((r) => {
-          r.addEventListener('click', () => openDetail(r.dataset.id));
+        const first = (data.page - 1) * data.limit + 1;
+        const last = first + data.items.length - 1;
+
+        body.innerHTML = `
+          <div class="hist-wrap">
+            <div class="hist-scroll">
+              <table class="hist-table">
+                <caption class="sr-only">Past scan analyses, newest first. Select a row to open the full report.</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">File</th>
+                    <th scope="col" class="col-when">Analysed</th>
+                    <th scope="col">Finding</th>
+                    <th scope="col" class="right">Confidence</th>
+                    <th scope="col">Certainty</th>
+                    <th scope="col" class="col-flags">Flags</th>
+                    <th scope="col" class="col-go"><span class="sr-only">Open</span></th>
+                  </tr>
+                </thead>
+                <tbody>${data.items.map(rowHtml).join('')}</tbody>
+              </table>
+            </div>
+            <div class="hist-foot">
+              <span>Showing ${first}\u2013${last} of ${data.total}</span>
+              <span>Page ${data.page} of ${data.totalPages}</span>
+            </div>
+          </div>`;
+
+        body.querySelectorAll('tr[data-id]').forEach((row) => {
+          const open = () => openDetail(row.dataset.id);
+          row.addEventListener('click', open);
+          // Rows are interactive, so they must be reachable and activatable
+          // from the keyboard too, not just the mouse.
+          row.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); open(); }
+          });
         });
 
         el('pager').style.display = 'flex';
@@ -956,39 +1154,48 @@
       }
     }
 
+    /** One history table row. */
     function rowHtml(s) {
-      const mod = MODULE_META[s.module] || { icon: '🔬', label: s.module };
-      const confCls = s.lowConfidence ? 'low' : 'ok';
+      const mod = moduleMeta(s.module);
+      const isNormal = s.prediction === 'No Tumor' || s.prediction === 'Normal';
 
-      // The band is the primary status. Fall back to the confidence flag only
-      // for records that carry no band (pre-calibration, or a module without
-      // conformal artefacts).
-      let status = '';
+      // The conformal band is the primary certainty signal. Fall back to the
+      // confidence flag only for records carrying no band, i.e. a module
+      // without conformal artefacts or a record predating calibration.
+      let certainty = '<span style="color:rgba(255,255,255,0.25);">—</span>';
       if (s.uncertaintyBand) {
-        const setSize = (s.predictionSet || []).length;
-        const title = setSize > 1
-          ? `Prediction set: ${(s.predictionSet || []).join(', ')}`
-          : BAND_LABEL[s.uncertaintyBand] || s.uncertaintyBand;
-        status = `<span class="band-pill band-${escapeHtml(s.uncertaintyBand)}" style="margin:0;" title="${escapeHtml(title)}">${escapeHtml(BAND_LABEL[s.uncertaintyBand] || s.uncertaintyBand)}${setSize > 1 ? ` · ${setSize}` : ''}</span>`;
+        const set = s.predictionSet || [];
+        const label = BAND_LABEL[s.uncertaintyBand] || s.uncertaintyBand;
+        const title = set.length > 1
+          ? `Prediction set: ${set.join(', ')}`
+          : `${label} — single-class prediction set`;
+        certainty =
+          `<span class="band-pill band-${escapeHtml(s.uncertaintyBand)}" style="margin:0;" title="${escapeHtml(title)}">` +
+          `${escapeHtml(label)}` +
+          `${set.length > 1 ? `<span class="set-count">${set.length}</span>` : ''}</span>`;
       } else if (s.lowConfidence) {
-        status = '<span class="flag">Review</span>';
+        certainty = `<span class="flag amber" title="No conformal prediction set for this module; confidence-threshold judgement only">${ico('i-alert')}Review</span>`;
       }
 
-      const escFlag = s.riskEscalated
-        ? '<span class="flag" style="margin-left:0.3rem;" title="Risk level escalated because uncertainty exceeded the reporting threshold">Escalated</span>'
-        : '';
+      const flags = [];
+      if (s.riskEscalated) {
+        flags.push(`<span class="flag" title="Risk level escalated because model uncertainty exceeded the reporting threshold">Escalated</span>`);
+      }
+      if (s.isOod) {
+        flags.push(`<span class="flag amber" title="Novelty detector flagged this input. It also fires on ~7% of valid scans, so this is a prompt to check the image, not a verdict.">Novel</span>`);
+      }
 
       return `
-        <div class="scan-row" data-id="${s.id}">
-          <div class="mod-icon" title="${escapeHtml(mod.label)}">${mod.icon}</div>
-          <div class="meta">
-            <div class="fname">${escapeHtml(s.filename)}</div>
-            <div class="when">${escapeHtml(mod.label)} · ${fmtDate(s.createdAt)}</div>
-          </div>
-          <div class="pred">${escapeHtml(s.prediction)}</div>
-          <div class="conf ${confCls}">${Number(s.confidence).toFixed(1)}%</div>
-          <div style="white-space:nowrap;">${status}${escFlag}</div>
-        </div>`;
+        <tr data-id="${s.id}" tabindex="0" role="button" aria-label="Open report for ${escapeHtml(s.filename)}">
+          <td class="h-mod"><span class="with-ico">${ico(mod.icon)}<span class="lbl">${escapeHtml(mod.label)}</span></span></td>
+          <td class="h-file" title="${escapeHtml(s.filename)}">${escapeHtml(s.filename)}</td>
+          <td class="h-when">${fmtDate(s.createdAt)}</td>
+          <td class="h-pred${isNormal ? ' normal' : ''}">${escapeHtml(s.prediction)}</td>
+          <td class="h-conf ${s.lowConfidence ? 'low' : 'ok'}">${Number(s.confidence).toFixed(1)}%</td>
+          <td class="h-band">${certainty}</td>
+          <td class="h-flags">${flags.join(' ') || '<span style="color:rgba(255,255,255,0.2);">—</span>'}</td>
+          <td class="h-go">${ico('i-chevron-right')}</td>
+        </tr>`;
     }
 
     async function openDetail(id) {
