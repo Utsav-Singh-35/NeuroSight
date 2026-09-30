@@ -1,0 +1,52 @@
+{
+  "class": "No Tumor",
+  "module": "brain_mri",
+  "band": "confident",
+  "text": "The model has classified the brain MRI as \"No Tumour\", meaning it did not detect imaging features that match the three tumour types it was trained on - glioma, meningioma or pituitary tumour [neurasight-system]. This is a classification output, not a diagnostic conclusion, and it does not equate to a normal scan or a clean bill of health. The system only recognises four categories; other abnormalities such as infarction, haemorrhage, infection or developmental lesions lie outside its experience and may be assigned to the \"No Tumour\" class by default [nci-cns-pdq-patient]. Likewise, the absence of a detected tumour does not guarantee the absence of disease, a single slice does not represent the whole study, and clinical correlation remains essential [nci-cns-pdq-patient]. If the patient has any concerning symptoms - for example sudden severe headache, new seizures, loss of consciousness, focal weakness, visual change, confusion or persistent vomiting - these should prompt prompt medical assessment regardless of the classification [ninds-brain-tumors]. In such circumstances it would be appropriate to discuss with a qualified clinician a thorough neurological examination, a formal radiological report of the complete imaging set, possible repeat or additional imaging with full coverage, evaluation for non-tumour causes of the symptoms and referral to a specialist if needed [nci-cns-pdq-patient] [ninds-brain-tumors].",
+  "grounding": {
+    "citations_used": [
+      "nci-cns-pdq-patient",
+      "neurasight-system",
+      "ninds-brain-tumors"
+    ],
+    "citations_allowed": [
+      "nci-cns-pdq-patient",
+      "neurasight-system",
+      "ninds-brain-tumors"
+    ],
+    "hallucinated_citations": [],
+    "grounded": true,
+    "uncited": false,
+    "contains_percentages": [],
+    "non_ascii_characters": [],
+    "ascii_clean": true,
+    "word_count": 207
+  },
+  "grounding_attempts_used": 1,
+  "grounded_on_first_attempt": true,
+  "evidence_chunks": [
+    "brain_mri/No_Tumor/overview",
+    "brain_mri/No_Tumor/treatment_information",
+    "brain_mri/No_Tumor/interpretation",
+    "brain_mri/No_Tumor/warning_signs",
+    "brain_mri/No_Tumor/investigations"
+  ],
+  "llm": {
+    "model": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "ok": true,
+    "error": null,
+    "usage": {
+      "prompt_tokens": 1284,
+      "completion_tokens": 665,
+      "total_tokens": 1949
+    },
+    "attempts": 1,
+    "elapsed_seconds": 12.818
+  },
+  "generated": "2026-09-29T18:26:22.723025+00:00",
+  "reviewed": false,
+  "reviewed_by": null,
+  "reviewed_at": null,
+  "review_instructions": "Check every sentence against the cited sources. Confirm no medicine, dose or diagnosis is stated and that the uncertainty framing matches the band. Then set reviewed=true and fill reviewed_by/reviewed_at."
+}

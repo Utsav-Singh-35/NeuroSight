@@ -1,0 +1,201 @@
+{
+  "design": "B",
+  "temperature": 0.996425,
+  "per_model_temperature": {
+    "efficientnet": 3.354222,
+    "resnet": 1.774328,
+    "densenet": 1.952343,
+    "vgg": 3.032907
+  },
+  "n_bins": 15,
+  "class_names": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "model_order": [
+    "efficientnet",
+    "resnet",
+    "densenet",
+    "vgg"
+  ],
+  "uncalibrated_metrics": {
+    "accuracy": 97.7083,
+    "ece": 0.026201,
+    "adaptive_ece": 0.013439,
+    "brier": 0.032756,
+    "nll": 0.072168,
+    "mean_confidence": 96.5451,
+    "aurc": 0.001845,
+    "selective_risk_at_80_coverage": 0.5208
+  },
+  "metrics": {
+    "accuracy": 97.7083,
+    "ece": 0.025949,
+    "adaptive_ece": 0.013298,
+    "brier": 0.032739,
+    "nll": 0.071985,
+    "mean_confidence": 96.573,
+    "aurc": 0.001845,
+    "selective_risk_at_80_coverage": 0.5208
+  },
+  "design_comparison": {
+    "B": {
+      "accuracy": 97.7083,
+      "ece": 0.025949,
+      "adaptive_ece": 0.013298,
+      "brier": 0.032739,
+      "nll": 0.071985,
+      "mean_confidence": 96.573,
+      "aurc": 0.001845,
+      "selective_risk_at_80_coverage": 0.5208
+    },
+    "A": {
+      "accuracy": 97.5,
+      "ece": 0.020344,
+      "adaptive_ece": 0.011783,
+      "brier": 0.03271,
+      "nll": 0.069706,
+      "mean_confidence": 96.5256,
+      "aurc": 0.001459,
+      "selective_risk_at_80_coverage": 0.2604
+    }
+  },
+  "best_overall_design": "A",
+  "deployed_design": "B",
+  "upgrade_note": "Design A reaches ECE 0.020344 vs 0.025949 for the deployed design, and improves AURC 0.001845 -> 0.001459 and selective risk @80% coverage 0.5208% -> 0.2604%. Cost: accuracy 97.71% -> 97.50%. Adopting it requires refitting and re-exporting meta_model.pkl on temperature-scaled base features, then re-verifying all baselines.",
+  "deployability_note": "Design B scales the shipped meta-learner's output and is deployable as-is. Design A scales the base models and requires a refitted meta-learner, so it is reported but not deployed.",
+  "reproduction_check": {
+    "published_accuracy": 96.75,
+    "reproduced_accuracy": 96.75,
+    "difference_pp": 0.0,
+    "meta_test_size": 800,
+    "meta_test_indices_file": "verify_meta_test_indices.npy"
+  },
+  "split": {
+    "total_rows": 1600,
+    "meta_train_half": 800,
+    "calibration": 320,
+    "final_test": 480,
+    "calibration_fraction_of_half_b": 0.4,
+    "seed": 42,
+    "documented_split": "train_test_split(test_size=0.5, stratify=y, random_state=42)"
+  },
+  "reliability_before": {
+    "bin_lower": [
+      0.4,
+      0.4667,
+      0.5333,
+      0.6,
+      0.6667,
+      0.7333,
+      0.8,
+      0.8667,
+      0.9333
+    ],
+    "bin_upper": [
+      0.4667,
+      0.5333,
+      0.6,
+      0.6667,
+      0.7333,
+      0.8,
+      0.8667,
+      0.9333,
+      1.0
+    ],
+    "bin_confidence": [
+      0.446023,
+      0.505588,
+      0.548729,
+      0.617416,
+      0.723592,
+      0.760987,
+      0.840924,
+      0.912901,
+      0.979507
+    ],
+    "bin_accuracy": [
+      0.333333,
+      0.0,
+      0.333333,
+      1.0,
+      0.0,
+      0.333333,
+      1.0,
+      1.0,
+      0.993392
+    ],
+    "bin_count": [
+      3,
+      1,
+      3,
+      4,
+      1,
+      3,
+      4,
+      7,
+      454
+    ]
+  },
+  "reliability_after": {
+    "bin_lower": [
+      0.4,
+      0.4667,
+      0.5333,
+      0.6,
+      0.6667,
+      0.7333,
+      0.8,
+      0.8667,
+      0.9333
+    ],
+    "bin_upper": [
+      0.4667,
+      0.5333,
+      0.6,
+      0.6667,
+      0.7333,
+      0.8,
+      0.8667,
+      0.9333,
+      1.0
+    ],
+    "bin_confidence": [
+      0.446416,
+      0.505931,
+      0.549007,
+      0.618228,
+      0.724363,
+      0.76213,
+      0.841781,
+      0.913595,
+      0.979762
+    ],
+    "bin_accuracy": [
+      0.333333,
+      0.0,
+      0.333333,
+      1.0,
+      0.0,
+      0.333333,
+      1.0,
+      1.0,
+      0.993392
+    ],
+    "bin_count": [
+      3,
+      1,
+      3,
+      4,
+      1,
+      3,
+      4,
+      7,
+      454
+    ]
+  },
+  "generated": "2026-09-29T13:11:35.768247+00:00",
+  "sklearn_warning": "Meta-learner pickle was written with scikit-learn 1.6.1; this run used a different version if InconsistentVersionWarning appeared. Pin 1.6.1 for publication-grade numbers."
+}

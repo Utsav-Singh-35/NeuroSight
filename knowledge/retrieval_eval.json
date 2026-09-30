@@ -1,0 +1,193 @@
+{
+  "version": "1.0",
+  "created": "2026-09-29",
+  "purpose": "Hand-labelled query set for evaluating evidence retrieval over the brain MRI knowledge base. Each query lists the chunk IDs that genuinely answer it. Built by hand against the 28 chunks produced by KnowledgeBase.chunks('brain_mri').",
+  "labelling_notes": [
+    "Relevance is judged as 'would a reader asking this question be satisfied by this chunk'.",
+    "Several queries are intentionally paraphrased away from the corpus wording, so a purely lexical retriever should struggle on them. Those are marked paraphrase: true.",
+    "Queries with more than one relevant chunk reflect genuinely distributed answers, not hedging.",
+    "Because relevant sets are small (1-4), precision@5 is capped well below 1.0 by construction. Recall@5, MRR and Hit@1 are the informative metrics here; precision@5 is reported only for completeness."
+  ],
+  "queries": [
+    {
+      "id": "q01",
+      "query": "What additional tests should be discussed if the scan suggests a glioma?",
+      "relevant": ["brain_mri/Glioma/investigations"],
+      "paraphrase": false
+    },
+    {
+      "id": "q02",
+      "query": "Can this system tell me the grade of the tumour?",
+      "relevant": ["brain_mri/Glioma/ai_limitations", "brain_mri/Glioma/clinical_considerations", "brain_mri/Meningioma/ai_limitations"],
+      "paraphrase": true
+    },
+    {
+      "id": "q03",
+      "query": "When should someone go to hospital immediately?",
+      "relevant": ["brain_mri/Glioma/warning_signs", "brain_mri/Meningioma/warning_signs", "brain_mri/Pituitary/warning_signs", "brain_mri/No_Tumor/warning_signs"],
+      "paraphrase": true
+    },
+    {
+      "id": "q04",
+      "query": "Does a clear scan mean I definitely do not have a disease?",
+      "relevant": ["brain_mri/No_Tumor/interpretation", "brain_mri/No_Tumor/overview"],
+      "paraphrase": true
+    },
+    {
+      "id": "q05",
+      "query": "Do pituitary tumours affect eyesight?",
+      "relevant": ["brain_mri/Pituitary/overview", "brain_mri/Pituitary/investigations", "brain_mri/Pituitary/clinical_considerations"],
+      "paraphrase": true
+    },
+    {
+      "id": "q06",
+      "query": "What is a meningioma?",
+      "relevant": ["brain_mri/Meningioma/overview"],
+      "paraphrase": false
+    },
+    {
+      "id": "q07",
+      "query": "Are hormone blood tests relevant for a pituitary finding?",
+      "relevant": ["brain_mri/Pituitary/investigations", "brain_mri/Pituitary/overview"],
+      "paraphrase": true
+    },
+    {
+      "id": "q08",
+      "query": "What treatment options exist for meningioma?",
+      "relevant": ["brain_mri/Meningioma/treatment_information"],
+      "paraphrase": false
+    },
+    {
+      "id": "q09",
+      "query": "Is watching and waiting ever an option instead of surgery?",
+      "relevant": ["brain_mri/Meningioma/treatment_information", "brain_mri/Meningioma/follow_up", "brain_mri/Glioma/treatment_information"],
+      "paraphrase": true
+    },
+    {
+      "id": "q10",
+      "query": "Why is glioma the least reliable class for this model?",
+      "relevant": ["brain_mri/Glioma/ai_limitations"],
+      "paraphrase": false
+    },
+    {
+      "id": "q11",
+      "query": "Does the heatmap show the exact tumour boundary?",
+      "relevant": ["brain_mri/Meningioma/ai_limitations"],
+      "paraphrase": true
+    },
+    {
+      "id": "q12",
+      "query": "How often should follow-up imaging be repeated for a meningioma?",
+      "relevant": ["brain_mri/Meningioma/follow_up"],
+      "paraphrase": false
+    },
+    {
+      "id": "q13",
+      "query": "What if my symptoms continue even though the scan looked normal?",
+      "relevant": ["brain_mri/No_Tumor/investigations", "brain_mri/No_Tumor/interpretation", "brain_mri/No_Tumor/clinical_considerations"],
+      "paraphrase": true
+    },
+    {
+      "id": "q14",
+      "query": "Which classification standard is used for typing and grading brain tumours?",
+      "relevant": ["brain_mri/Glioma/overview", "brain_mri/Meningioma/overview"],
+      "paraphrase": false
+    },
+    {
+      "id": "q15",
+      "query": "Sudden severe headache and a new seizure - is that urgent?",
+      "relevant": ["brain_mri/Glioma/warning_signs", "brain_mri/Meningioma/warning_signs", "brain_mri/No_Tumor/warning_signs", "brain_mri/Pituitary/warning_signs"],
+      "paraphrase": true
+    },
+    {
+      "id": "q16",
+      "query": "Where in the brain do pituitary tumours occur?",
+      "relevant": ["brain_mri/Pituitary/overview", "brain_mri/Pituitary/ai_limitations"],
+      "paraphrase": true
+    },
+    {
+      "id": "q17",
+      "query": "Can the model detect a stroke or bleeding?",
+      "relevant": ["brain_mri/No_Tumor/interpretation"],
+      "paraphrase": true
+    },
+    {
+      "id": "q18",
+      "query": "What does glioma mean and where does it come from?",
+      "relevant": ["brain_mri/Glioma/overview"],
+      "paraphrase": false
+    },
+    {
+      "id": "q19",
+      "query": "Does tumour size matter more than whether it secretes hormones?",
+      "relevant": ["brain_mri/Pituitary/clinical_considerations"],
+      "paraphrase": true
+    },
+    {
+      "id": "q20",
+      "query": "Should I be prescribed medication based on this report?",
+      "relevant": ["brain_mri/Pituitary/treatment_information", "brain_mri/Glioma/treatment_information", "brain_mri/Meningioma/treatment_information"],
+      "paraphrase": true
+    },
+    {
+      "id": "q21",
+      "query": "Why does the model confuse glioma and meningioma?",
+      "relevant": ["brain_mri/Meningioma/ai_limitations", "brain_mri/Glioma/ai_limitations"],
+      "paraphrase": false
+    },
+    {
+      "id": "q22",
+      "query": "Is comparison with an earlier scan useful?",
+      "relevant": ["brain_mri/Meningioma/follow_up", "brain_mri/Glioma/follow_up", "brain_mri/Pituitary/follow_up", "brain_mri/No_Tumor/follow_up"],
+      "paraphrase": true
+    },
+    {
+      "id": "q23",
+      "query": "What visual field testing involves",
+      "relevant": ["brain_mri/Pituitary/investigations"],
+      "paraphrase": false
+    },
+    {
+      "id": "q24",
+      "query": "Are meningiomas usually cancerous?",
+      "relevant": ["brain_mri/Meningioma/overview", "brain_mri/Meningioma/clinical_considerations"],
+      "paraphrase": true
+    },
+    {
+      "id": "q25",
+      "query": "Can a tumour be missed because only one slice was analysed?",
+      "relevant": ["brain_mri/No_Tumor/interpretation"],
+      "paraphrase": true
+    },
+    {
+      "id": "q26",
+      "query": "Which specialists should review a suspected glioma?",
+      "relevant": ["brain_mri/Glioma/investigations", "brain_mri/Glioma/clinical_considerations"],
+      "paraphrase": true
+    },
+    {
+      "id": "q27",
+      "query": "Signs of adrenal problems after a pituitary finding",
+      "relevant": ["brain_mri/Pituitary/warning_signs"],
+      "paraphrase": false
+    },
+    {
+      "id": "q28",
+      "query": "Is an incidental finding common?",
+      "relevant": ["brain_mri/Meningioma/clinical_considerations", "brain_mri/Glioma/clinical_considerations", "brain_mri/Pituitary/clinical_considerations"],
+      "paraphrase": true
+    },
+    {
+      "id": "q29",
+      "query": "What should happen if the input validation layer flagged my image?",
+      "relevant": ["brain_mri/No_Tumor/clinical_considerations"],
+      "paraphrase": false
+    },
+    {
+      "id": "q30",
+      "query": "Does molecular testing matter for diagnosis?",
+      "relevant": ["brain_mri/Glioma/investigations", "brain_mri/Glioma/overview"],
+      "paraphrase": true
+    }
+  ]
+}

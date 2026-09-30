@@ -1,0 +1,52 @@
+{
+  "class": "Glioma",
+  "module": "brain_mri",
+  "band": "confident",
+  "text": "The AI system has identified imaging features that it associates with glioma. Glioma is a broad term for tumours that arise from glial cells, the supporting cells of the central nervous system, and includes lesions that range from slow-growing to highly aggressive forms [nci-cns-pdq-hp] [who-cns5]. This output is a classification based solely on the image and does not constitute a confirmed diagnosis; it does not provide information on tumour grade, molecular subtype, margins or volume [nci-cns-pdq-hp]. Clinical symptoms are influenced more by the tumour's location, size and growth rate than by the label alone, and urgent neurological signs such as sudden severe headache, new seizures or rapid weakness should prompt prompt medical assessment [ninds-brain-tumors]. Further evaluation that would normally be discussed with a qualified clinician includes a detailed neurological examination, a dedicated contrast-enhanced brain-tumour MRI protocol, specialist review by neurology, neurosurgery or neuro-oncology, and, where tissue is obtained, histopathological and molecular characterisation in line with the current WHO classification [nci-cns-pdq-hp] [who-cns5].",
+  "grounding": {
+    "citations_used": [
+      "nci-cns-pdq-hp",
+      "ninds-brain-tumors",
+      "who-cns5"
+    ],
+    "citations_allowed": [
+      "nci-cns-pdq-hp",
+      "ninds-brain-tumors",
+      "who-cns5"
+    ],
+    "hallucinated_citations": [],
+    "grounded": true,
+    "uncited": false,
+    "contains_percentages": [],
+    "non_ascii_characters": [],
+    "ascii_clean": true,
+    "word_count": 161
+  },
+  "grounding_attempts_used": 1,
+  "grounded_on_first_attempt": true,
+  "evidence_chunks": [
+    "brain_mri/Glioma/overview",
+    "brain_mri/Glioma/clinical_considerations",
+    "brain_mri/Glioma/warning_signs",
+    "brain_mri/Glioma/ai_limitations",
+    "brain_mri/Glioma/investigations"
+  ],
+  "llm": {
+    "model": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "ok": true,
+    "error": null,
+    "usage": {
+      "prompt_tokens": 1308,
+      "completion_tokens": 1154,
+      "total_tokens": 2462
+    },
+    "attempts": 1,
+    "elapsed_seconds": 5.616
+  },
+  "generated": "2026-09-29T18:25:26.305226+00:00",
+  "reviewed": false,
+  "reviewed_by": null,
+  "reviewed_at": null,
+  "review_instructions": "Check every sentence against the cited sources. Confirm no medicine, dose or diagnosis is stated and that the uncertainty framing matches the band. Then set reviewed=true and fill reviewed_by/reviewed_at."
+}

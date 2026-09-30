@@ -1,0 +1,39 @@
+{
+  "seed": 42,
+  "tiers": {
+    "far_ood": {
+      "description": "Synthetic patterns. Trivially separable; sanity floor only.",
+      "count": 60,
+      "by_kind": {
+        "uniform_noise": 6,
+        "gaussian_noise": 6,
+        "linear_gradient": 6,
+        "radial_gradient": 6,
+        "checkerboard": 6,
+        "stripes": 6,
+        "solid": 6,
+        "shapes": 6,
+        "text_like": 6,
+        "sinusoid": 6
+      },
+      "caveat": "A high AUROC on this tier proves little. Report near_ood as the headline result."
+    },
+    "near_ood": {
+      "description": "Real chest X-rays: correct modality family, wrong anatomy.",
+      "count": 6,
+      "source": "data/samples/ChestXray",
+      "note": "Hardest and most clinically realistic tier -- this is what happens when a user picks the wrong scan type."
+    },
+    "corrupted": {
+      "description": "Real brain MRIs degraded; tests the quality gate, not novelty.",
+      "count": 40,
+      "by_kind": {
+        "heavy_blur": 8,
+        "extreme_blur": 8,
+        "heavy_noise": 8,
+        "downsampled": 8,
+        "near_blank": 8
+      }
+    }
+  }
+}

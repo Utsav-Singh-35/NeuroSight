@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research & Documentation - NeuraSight</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #000000;
+      color: #ffffff;
+      line-height: 1.6;
+    }
+
+    /* Navigation - Exact match from main site */
+    .navbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 1200px;
+      padding: 1.2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: rgba(20, 20, 20, 0.4);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .logo {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #aaaaaa;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10rem 5% 6rem;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 800;
+      margin-bottom: 2rem;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      margin: 4rem 0 2rem;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .card {
+      background: #060606;
+      border: 2px solid rgba(255, 255, 255, 0.14);
+      border-radius: 2px;
+      padding: 3rem 2.5rem;
+      margin-bottom: 2rem;
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      background: #0d0d0d;
+    }
+
+    .dataset-link {
+      display: block;
+      color: #22d3ee;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 1rem 0;
+      padding: 1rem 1.5rem;
+      background: rgba(34, 211, 238, 0.05);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+      border-radius: 2px;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .dataset-link:hover {
+      background: rgba(34, 211, 238, 0.1);
+      border-color: rgba(34, 211, 238, 0.4);
+      transform: translateX(5px);
+    }
+
+    .dataset-link::before {
+      content: '→ ';
+      margin-right: 0.5rem;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2.5rem 0;
+    }
+
+    .metric-card {
+      background: rgba(34, 211, 238, 0.05);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+      border-radius: 2px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .metric-card:hover {
+      background: rgba(34, 211, 238, 0.08);
+      border-color: rgba(34, 211, 238, 0.3);
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.8rem;
+    }
+
+    .metric-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #22d3ee;
+      letter-spacing: -0.02em;
+    }
+
+    .tech-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .tech-item {
+      background: rgba(192, 132, 252, 0.05);
+      border: 1px solid rgba(192, 132, 252, 0.2);
+      border-radius: 2px;
+      padding: 1.2rem 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .tech-item:hover {
+      background: rgba(192, 132, 252, 0.08);
+      border-color: rgba(192, 132, 252, 0.3);
+    }
+
+    .tech-item::before {
+      content: '✓ ';
+      color: #c084fc;
+      font-weight: 700;
+      margin-right: 0.8rem;
+    }
+
+    .future-list {
+      list-style: none;
+      margin: 2rem 0;
+    }
+
+    .future-item {
+      background: rgba(244, 114, 182, 0.05);
+      border-left: 3px solid #f472b6;
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.2rem;
+      border-radius: 2px;
+      color: rgba(255, 255, 255, 0.9);
+      transition: all 0.3s;
+    }
+
+    .future-item:hover {
+      background: rgba(244, 114, 182, 0.08);
+    }
+
+    .future-item strong {
+      color: #f472b6;
+      font-weight: 600;
+    }
+
+    .highlight {
+      background: rgba(34, 211, 238, 0.1);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      color: #22d3ee;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        gap: 1.5rem;
+      }
+
+      .nav-links a {
+        font-size: 0.85rem;
+      }
+
+      .container {
+        padding: 7rem 4% 4rem;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 2rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="logo">NeuraSight</div>
+    <ul class="nav-links">
+      <li><a href="index.html">HOME</a></li>
+      <li><a href="research.html">RESEARCH</a></li>
+      <li><a href="dashboard.html">DASHBOARD</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1>AI-Powered Brain MRI Tumor Detection & Classification</h1>
+
+    <div class="section">
+      <h2>Project Overview</h2>
+      <p>
+        NeuraSight is a medical imaging platform that classifies brain tumors from MRI scans using deep learning. 
+        Built with a microservices architecture — React frontend, Express.js API gateway, and FastAPI ML service — 
+        it provides real-time classification across 4 tumor types with Grad-CAM explainability heatmaps.
+      </p>
+      <p>
+        The model uses a <span class="highlight">stacking ensemble</span> of four CNNs (EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16) 
+        from the <span class="highlight">timm</span> library, combined with a Logistic Regression meta-learner via 
+        <span class="highlight">scikit-learn</span>. All base models are pre-trained on ImageNet and fine-tuned on 5,600 brain MRI images. 
+        Trained on Google Colab (Tesla T4 GPU), achieving <span class="highlight">96.75% ensemble accuracy</span> on 
+        an 800-image held-out meta-test split.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Dataset References</h2>
+      <div class="card">
+        <h3>Primary Training Dataset</h3>
+        <p>
+          5,600 training images + 1,600 testing images across four classes: Glioma, Meningioma, 
+          Pituitary tumors, and No Tumor. Images vary from 150×168 to 1375×1446 pixels, all resized to 224×224 for training.
+        </p>
+        <a href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="dataset-link">
+          Brain Tumor MRI Dataset — Masoud Nickparvar (Kaggle)
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>Validation Dataset</h3>
+        <p>
+          Additional dataset used for cross-validation and model robustness testing.
+        </p>
+        <a href="https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="dataset-link">
+          Brain Tumor Classification MRI Dataset
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>BraTS Challenge Dataset</h3>
+        <p>
+          Brain Tumor Segmentation (BraTS) 2020 dataset for advanced segmentation research and benchmarking.
+        </p>
+        <a href="https://www.kaggle.com/datasets/awsaf49/brats2020-training-data" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="dataset-link">
+          BraTS 2020 Training Data
+        </a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Model Architecture</h2>
+      <div class="card">
+        <h3>Stacking Ensemble (4 Base CNNs + LR Meta-Learner)</h3>
+        <p>
+          The system uses a <span class="highlight">stacking ensemble</span> combining four base CNN models — 
+          EfficientNet-B0, ResNet-50, DenseNet-121, and VGG-16 — all from the <span class="highlight">timm</span> library, 
+          pre-trained on ImageNet and fine-tuned on 5,600 brain MRI images. Each base model outputs a 4-class softmax 
+          probability vector; the four vectors are concatenated into a 16-dimensional feature vector and fed to a 
+          <span class="highlight">Logistic Regression meta-learner</span> (scikit-learn) for the final prediction.
+        </p>
+        <p><strong>Base Models:</strong> EfficientNet-B0 (95.06%) · ResNet-50 (94.88%) · DenseNet-121 (96.06%) · VGG-16 (94.56%)</p>
+        <p><strong>Ensemble:</strong> 96.75% accuracy on held-out 800-image meta-test split</p>
+        <p><strong>Training Config:</strong> AdamW optimizer, CrossEntropyLoss, CosineAnnealingLR scheduler, batch size 32, ImageNet normalization (mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])</p>
+        <p><strong>Key Features:</strong></p>
+        <ul class="tech-list">
+          <li class="tech-item">Transfer Learning from ImageNet (1.2M images)</li>
+          <li class="tech-item">4 Diverse Architectures for Error Diversity</li>
+          <li class="tech-item">Logistic Regression Meta-Learner (Leakage-Safe)</li>
+          <li class="tech-item">Squeeze-and-Excitation Attention (EfficientNet)</li>
+          <li class="tech-item">Dense Connectivity & Feature Reuse (DenseNet)</li>
+          <li class="tech-item">Data Augmentation (flip, rotation, color jitter)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Explainable AI</h2>
+      <div class="card">
+        <h3>Grad-CAM Visualization</h3>
+        <p>
+          <span class="highlight">Gradient-weighted Class Activation Mapping (Grad-CAM)</span> targets the 
+          last convolutional block (<code>model.blocks[-1]</code>) of the timm EfficientNet-B0. Gradients are 
+          backpropagated for the predicted class, globally average-pooled to get channel importance weights, 
+          then used to weight the feature maps. After ReLU and normalization, the heatmap is overlaid on the 
+          original MRI with JET colormap at 40% opacity.
+        </p>
+        <p><strong>Benefits:</strong></p>
+        <ul class="tech-list">
+          <li class="tech-item">Highlights Tumor Region the Model Focused On</li>
+          <li class="tech-item">No Architecture Modification Required</li>
+          <li class="tech-item">Builds Clinician Trust in AI Decisions</li>
+          <li class="tech-item">Generated in &lt;0.5 Seconds Per Image</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Performance Metrics</h2>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Accuracy</div>
+          <div class="metric-value">96.75%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Precision</div>
+          <div class="metric-value">97%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Recall</div>
+          <div class="metric-value">97%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">F1 Score</div>
+          <div class="metric-value">97%</div>
+        </div>
+      </div>
+      <p>
+        Evaluated using a 4-model stacking ensemble (EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16 + Logistic Regression meta-learner) 
+        on an 800-image held-out meta-test split. Per-class: Pituitary (F1: 0.99), No Tumor (F1: 0.97), 
+        Meningioma (F1: 0.97), Glioma (F1: 0.93). Base models trained on Google Colab with Tesla T4 GPU.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Technology Stack</h2>
+      <div class="card">
+        <ul class="tech-list">
+          <li class="tech-item">Python 3.11 & PyTorch 2.2</li>
+          <li class="tech-item">timm (PyTorch Image Models) - EfficientNet-B0, ResNet-50, DenseNet-121, VGG-16</li>
+          <li class="tech-item">scikit-learn - Logistic Regression Meta-Learner (Stacking Ensemble)</li>
+          <li class="tech-item">FastAPI - ML Inference Service (port 8000)</li>
+          <li class="tech-item">Node.js & Express.js - API Gateway (port 5000)</li>
+          <li class="tech-item">MongoDB - Prediction History Storage</li>
+          <li class="tech-item">Grad-CAM (pytorch-grad-cam) - Explainability</li>
+          <li class="tech-item">React 18 & Vite - Frontend Interface</li>
+          <li class="tech-item">Three.js & GSAP - 3D Visuals & Animations</li>
+          <li class="tech-item">Google Colab (Tesla T4) - Model Training</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Future Expansion</h2>
+      <p>
+        The NeuraSight platform is designed with extensibility in mind. Future development plans include 
+        expanding the system to support additional medical imaging modalities and diagnostic applications:
+      </p>
+      <ul class="future-list">
+        <li class="future-item">
+          <strong>CT Scan Analysis:</strong> Extend deep learning models to analyze computed tomography 
+          scans for various pathologies including lung nodules and abdominal abnormalities.
+        </li>
+        <li class="future-item">
+          <strong>X-Ray Diagnostics:</strong> Implement chest X-ray analysis for pneumonia detection, 
+          COVID-19 screening, and other pulmonary conditions.
+        </li>
+        <li class="future-item">
+          <strong>Retinal Imaging:</strong> Develop models for diabetic retinopathy detection and 
+          age-related macular degeneration screening from fundus photographs.
+        </li>
+        <li class="future-item">
+          <strong>Skin Lesion Detection:</strong> Create dermatological AI for melanoma and skin cancer 
+          detection from dermoscopic images.
+        </li>
+        <li class="future-item">
+          <strong>Multi-Modal Fusion:</strong> Integrate multiple imaging modalities for comprehensive 
+          diagnostic insights and improved accuracy.
+        </li>
+        <li class="future-item">
+          <strong>Real-Time Inference:</strong> Optimize models for edge deployment and real-time 
+          clinical decision support in hospital environments.
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Clinical Impact</h2>
+      <div class="card">
+        <p>
+          NeuraSight aims to support radiologists and clinicians by providing:
+        </p>
+        <ul class="tech-list">
+          <li class="tech-item">Rapid Initial Screening</li>
+          <li class="tech-item">Second Opinion Validation</li>
+          <li class="tech-item">Reduced Diagnostic Time</li>
+          <li class="tech-item">Improved Detection Accuracy</li>
+          <li class="tech-item">Educational Tool for Training</li>
+          <li class="tech-item">Standardized Assessment Protocol</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Ethical Considerations</h2>
+      <div class="card">
+        <p>
+          This system is designed as a <span class="highlight">clinical decision support tool</span>, 
+          not a replacement for professional medical judgment. All predictions should be validated by 
+          qualified healthcare professionals. The explainable AI component ensures transparency in the 
+          decision-making process, supporting informed clinical decisions.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

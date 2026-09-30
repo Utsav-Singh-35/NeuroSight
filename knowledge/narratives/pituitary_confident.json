@@ -1,0 +1,54 @@
+{
+  "class": "Pituitary",
+  "module": "brain_mri",
+  "band": "confident",
+  "text": "The model has identified a pituitary region abnormality on the brain MRI. This classification reflects that the appearance of a lesion is consistent with a tumour arising in the sellar region, most commonly an adenoma, and it does not constitute a definitive diagnosis [ncbi-pituitary-adenoma-statpearls] [nci-pituitary-pdq]. The algorithm evaluates only the imaging appearance and cannot assess hormonal activity or compression of the optic chiasm, both of which are central to clinical management [nci-pituitary-pdq] [ncbi-pituitary-adenoma-statpearls]. Consequently, the finding should be discussed with a qualified clinician as the first step in an endocrine and ophthalmological work-up. Relevant matters to consider include a clinical examination for endocrine symptoms, comprehensive pituitary hormone testing, formal visual-field assessment, and a dedicated pituitary-protocol MRI, together with specialist review by endocrinology, neurosurgery and, where appropriate, ophthalmology or neuro-ophthalmology [ncbi-pituitary-adenoma-statpearls] [nci-pituitary-diagnosis]. Prompt medical assessment is advised if the patient experiences sudden severe headache, rapid visual change, double vision, altered consciousness or signs of acute adrenal insufficiency [nci-pituitary-pdq] [ninds-brain-tumors].",
+  "grounding": {
+    "citations_used": [
+      "ncbi-pituitary-adenoma-statpearls",
+      "nci-pituitary-diagnosis",
+      "nci-pituitary-pdq",
+      "ninds-brain-tumors"
+    ],
+    "citations_allowed": [
+      "ncbi-pituitary-adenoma-statpearls",
+      "nci-pituitary-diagnosis",
+      "nci-pituitary-pdq",
+      "ninds-brain-tumors"
+    ],
+    "hallucinated_citations": [],
+    "grounded": true,
+    "uncited": false,
+    "contains_percentages": [],
+    "non_ascii_characters": [],
+    "ascii_clean": true,
+    "word_count": 158
+  },
+  "grounding_attempts_used": 1,
+  "grounded_on_first_attempt": true,
+  "evidence_chunks": [
+    "brain_mri/Pituitary/ai_limitations",
+    "brain_mri/Pituitary/overview",
+    "brain_mri/Pituitary/investigations",
+    "brain_mri/Pituitary/treatment_information",
+    "brain_mri/Pituitary/warning_signs"
+  ],
+  "llm": {
+    "model": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "ok": true,
+    "error": null,
+    "usage": {
+      "prompt_tokens": 1362,
+      "completion_tokens": 759,
+      "total_tokens": 2121
+    },
+    "attempts": 1,
+    "elapsed_seconds": 18.609
+  },
+  "generated": "2026-09-29T18:27:12.186896+00:00",
+  "reviewed": false,
+  "reviewed_by": null,
+  "reviewed_at": null,
+  "review_instructions": "Check every sentence against the cited sources. Confirm no medicine, dose or diagnosis is stated and that the uncertainty framing matches the band. Then set reviewed=true and fill reviewed_by/reviewed_at."
+}

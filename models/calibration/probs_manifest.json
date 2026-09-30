@@ -1,0 +1,34 @@
+{
+  "split": "Testing",
+  "num_images": 1600,
+  "num_classes": 4,
+  "class_names": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "model_order": [
+    "efficientnet",
+    "resnet",
+    "densenet",
+    "vgg"
+  ],
+  "batch_size": 16,
+  "device": "cpu",
+  "limit_per_class": null,
+  "preprocessing": "app.services.preprocessor.preprocess_image (serving path)",
+  "files": {
+    "efficientnet": "BRAIN_MRI_EFFICIENTNET_test_probs.npy",
+    "resnet": "BRAIN_MRI_RESNET_test_probs.npy",
+    "densenet": "BRAIN_MRI_DENSENET_test_probs.npy",
+    "vgg": "BRAIN_MRI_VGG_test_probs.npy"
+  },
+  "base_accuracy": {
+    "efficientnet": 95.06,
+    "resnet": 94.88,
+    "densenet": 96.06,
+    "vgg": 94.56
+  },
+  "generation_seconds": 1253.0
+}

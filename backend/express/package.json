@@ -1,0 +1,31 @@
+{
+  "name": "neurasight-backend",
+  "version": "1.0.0",
+  "description": "NeuraSight Express backend - middleware server for brain tumor classification",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "axios": "^1.6.7",
+    "mongoose": "^8.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "form-data": "^4.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "mongodb-memory-server": "^9.1.6",
+    "nock": "^13.5.1",
+    "fast-check": "^3.15.0",
+    "nodemon": "^3.0.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

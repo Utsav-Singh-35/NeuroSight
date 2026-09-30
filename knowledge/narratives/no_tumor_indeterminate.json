@@ -1,0 +1,52 @@
+{
+  "class": "No Tumor",
+  "module": "brain_mri",
+  "band": "indeterminate",
+  "text": "The AI output of 'No Tumour' indicates that the model did not identify features matching the three tumour types it was trained on [neurasight-system], but this does not equate to a normal scan and should not be taken as a definitive assessment. The system only distinguishes four categories and any other pathology may be mis-classified, while a single slice does not represent the whole study; therefore absence of a detected tumour is not the same as absence of disease [nci-cns-pdq-patient]. Consequently the result is inconclusive and must not be used to guide management without further review. Any concerning symptoms such as sudden severe headache, new seizures, loss of consciousness, weakness, visual change, confusion or persistent vomiting should still prompt urgent medical assessment [ninds-brain-tumors]. It is essential that a qualified radiologist or specialist physician review the full imaging study and discuss, as appropriate, clinical examination, formal radiological reporting, repeat or additional imaging and investigation of non-tumour causes [nci-cns-pdq-patient] [ninds-brain-tumors]",
+  "grounding": {
+    "citations_used": [
+      "nci-cns-pdq-patient",
+      "neurasight-system",
+      "ninds-brain-tumors"
+    ],
+    "citations_allowed": [
+      "nci-cns-pdq-patient",
+      "neurasight-system",
+      "ninds-brain-tumors"
+    ],
+    "hallucinated_citations": [],
+    "grounded": true,
+    "uncited": false,
+    "contains_percentages": [],
+    "non_ascii_characters": [],
+    "ascii_clean": true,
+    "word_count": 158
+  },
+  "grounding_attempts_used": 1,
+  "grounded_on_first_attempt": true,
+  "evidence_chunks": [
+    "brain_mri/No_Tumor/overview",
+    "brain_mri/No_Tumor/treatment_information",
+    "brain_mri/No_Tumor/interpretation",
+    "brain_mri/No_Tumor/warning_signs",
+    "brain_mri/No_Tumor/investigations"
+  ],
+  "llm": {
+    "model": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "ok": true,
+    "error": null,
+    "usage": {
+      "prompt_tokens": 1285,
+      "completion_tokens": 1939,
+      "total_tokens": 3224
+    },
+    "attempts": 1,
+    "elapsed_seconds": 16.571
+  },
+  "generated": "2026-09-29T18:26:53.548313+00:00",
+  "reviewed": false,
+  "reviewed_by": null,
+  "reviewed_at": null,
+  "review_instructions": "Check every sentence against the cited sources. Confirm no medicine, dose or diagnosis is stated and that the uncertainty framing matches the band. Then set reviewed=true and fill reviewed_by/reviewed_at."
+}

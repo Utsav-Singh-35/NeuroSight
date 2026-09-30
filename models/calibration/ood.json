@@ -1,0 +1,214 @@
+{
+  "primary_detector": "js_divergence",
+  "primary_threshold": 0.026446,
+  "selection_tier": "near_ood",
+  "target_tpr": 0.95,
+  "detectors": {
+    "near_ood": {
+      "msp": {
+        "auroc": 0.875347,
+        "fpr_at_95_tpr": 0.283333,
+        "threshold": 0.039896,
+        "achieved_tpr": 0.833333,
+        "id_mean": 0.034549,
+        "ood_mean": 0.141233,
+        "n_id": 480,
+        "n_ood": 6
+      },
+      "entropy": {
+        "auroc": 0.877778,
+        "fpr_at_95_tpr": 0.283333,
+        "threshold": 0.178331,
+        "achieved_tpr": 0.833333,
+        "id_mean": 0.123839,
+        "ood_mean": 0.349151,
+        "n_id": 480,
+        "n_ood": 6
+      },
+      "energy": {
+        "auroc": 0.942014,
+        "fpr_at_95_tpr": 0.09375,
+        "threshold": -4.823562,
+        "achieved_tpr": 0.833333,
+        "id_mean": -5.172021,
+        "ood_mean": -4.153372,
+        "n_id": 480,
+        "n_ood": 6
+      },
+      "disagreement": {
+        "auroc": 0.640278,
+        "fpr_at_95_tpr": 1.0,
+        "threshold": 0.0,
+        "achieved_tpr": 1.0,
+        "id_mean": 0.029167,
+        "ood_mean": 0.166667,
+        "n_id": 480,
+        "n_ood": 6
+      },
+      "js_divergence": {
+        "auroc": 0.953819,
+        "fpr_at_95_tpr": 0.072917,
+        "threshold": 0.026446,
+        "achieved_tpr": 0.833333,
+        "id_mean": 0.012043,
+        "ood_mean": 0.11022,
+        "n_id": 480,
+        "n_ood": 6
+      }
+    },
+    "corrupted": {
+      "msp": {
+        "auroc": 0.957344,
+        "fpr_at_95_tpr": 0.079167,
+        "threshold": 0.056379,
+        "achieved_tpr": 0.95,
+        "id_mean": 0.034549,
+        "ood_mean": 0.241534,
+        "n_id": 480,
+        "n_ood": 40
+      },
+      "entropy": {
+        "auroc": 0.958802,
+        "fpr_at_95_tpr": 0.079167,
+        "threshold": 0.222516,
+        "achieved_tpr": 0.95,
+        "id_mean": 0.123839,
+        "ood_mean": 0.57556,
+        "n_id": 480,
+        "n_ood": 40
+      },
+      "energy": {
+        "auroc": 0.951771,
+        "fpr_at_95_tpr": 0.09375,
+        "threshold": -4.827244,
+        "achieved_tpr": 0.95,
+        "id_mean": -5.172021,
+        "ood_mean": -3.304564,
+        "n_id": 480,
+        "n_ood": 40
+      },
+      "disagreement": {
+        "auroc": 0.850677,
+        "fpr_at_95_tpr": 1.0,
+        "threshold": 0.0,
+        "achieved_tpr": 1.0,
+        "id_mean": 0.029167,
+        "ood_mean": 0.46875,
+        "n_id": 480,
+        "n_ood": 40
+      },
+      "js_divergence": {
+        "auroc": 0.958281,
+        "fpr_at_95_tpr": 0.085417,
+        "threshold": 0.016342,
+        "achieved_tpr": 0.95,
+        "id_mean": 0.012043,
+        "ood_mean": 0.145304,
+        "n_id": 480,
+        "n_ood": 40
+      }
+    },
+    "far_ood": {
+      "msp": {
+        "auroc": 0.977778,
+        "fpr_at_95_tpr": 0.039583,
+        "threshold": 0.114193,
+        "achieved_tpr": 0.95,
+        "id_mean": 0.034549,
+        "ood_mean": 0.327115,
+        "n_id": 480,
+        "n_ood": 60
+      },
+      "entropy": {
+        "auroc": 0.977257,
+        "fpr_at_95_tpr": 0.039583,
+        "threshold": 0.376944,
+        "achieved_tpr": 0.95,
+        "id_mean": 0.123839,
+        "ood_mean": 0.684231,
+        "n_id": 480,
+        "n_ood": 60
+      },
+      "energy": {
+        "auroc": 0.974028,
+        "fpr_at_95_tpr": 0.041667,
+        "threshold": -4.23153,
+        "achieved_tpr": 0.95,
+        "id_mean": -5.172021,
+        "ood_mean": -3.176601,
+        "n_id": 480,
+        "n_ood": 60
+      },
+      "disagreement": {
+        "auroc": 0.762778,
+        "fpr_at_95_tpr": 1.0,
+        "threshold": 0.0,
+        "achieved_tpr": 1.0,
+        "id_mean": 0.029167,
+        "ood_mean": 0.454167,
+        "n_id": 480,
+        "n_ood": 60
+      },
+      "js_divergence": {
+        "auroc": 0.952326,
+        "fpr_at_95_tpr": 0.0625,
+        "threshold": 0.033515,
+        "achieved_tpr": 0.95,
+        "id_mean": 0.012043,
+        "ood_mean": 0.113128,
+        "n_id": 480,
+        "n_ood": 60
+      }
+    }
+  },
+  "detector_orientation": "higher score = more out-of-distribution",
+  "quality_thresholds": {
+    "min_dimension": 64,
+    "max_aspect_ratio": 3.0,
+    "min_laplacian_variance": 22.266812,
+    "min_pixel_std": 30.218693,
+    "fitted_percentile": 1.0,
+    "fitted_on_n_id_images": 480
+  },
+  "quality_gate_rejection": {
+    "near_ood": {
+      "rejected": 0,
+      "total": 6,
+      "rejection_rate": 0.0
+    },
+    "corrupted": {
+      "rejected": 25,
+      "total": 40,
+      "rejection_rate": 0.625
+    },
+    "far_ood": {
+      "rejected": 23,
+      "total": 60,
+      "rejection_rate": 0.3833
+    }
+  },
+  "quality_gate_id_rejection": {
+    "rejected": 10,
+    "total": 480,
+    "rate": 0.0208
+  },
+  "conformal_mean_set_size": {
+    "in_distribution": 1.3313,
+    "near_ood": 2.1667,
+    "corrupted": 2.45,
+    "far_ood": 2.4333
+  },
+  "tier_sizes": {
+    "near_ood": 6,
+    "corrupted": 40,
+    "far_ood": 60
+  },
+  "tier_notes": {
+    "near_ood": "Real chest X-rays. Hardest and most realistic; headline tier.",
+    "corrupted": "Degraded real MRIs. Tests the quality gate, not novelty.",
+    "far_ood": "Synthetic patterns. Sanity floor only; inflates AUROC."
+  },
+  "id_source": "final test split (never used for calibration or conformal)",
+  "n_id": 480,
+  "generated": "2026-09-29T13:27:02.603826+00:00"
+}

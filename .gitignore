@@ -1,0 +1,296 @@
+# ==========================================================
+#  NeuraSight — .gitignore
+# ==========================================================
+
+# ----------------------------------------------------------
+# SECRETS & CREDENTIALS  (never commit these)
+# ----------------------------------------------------------
+# Environment files
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Private keys / certificates
+*.pem
+*.key
+*.ppk
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+id_rsa*
+id_ed25519*
+*.asc
+*.gpg
+
+# Cloud / service credentials
+.aws/
+.ssh/
+credentials
+credentials.json
+*credentials*.json
+service-account*.json
+kaggle.json
+.kaggle/
+*token*.json
+secrets.json
+*.secrets
+
+# ----------------------------------------------------------
+# JUPYTER NOTEBOOKS  (all notebooks excluded from the repo)
+# ----------------------------------------------------------
+# The training notebooks are excluded because one of them (Chest_Xray_Model_
+# Training_V2.ipynb) has a hardcoded Kaggle API token in its source. Do not
+# un-ignore this directory until that literal is replaced by an env lookup.
+*.ipynb
+notebooks/
+# Stray duplicate of the same directory - dodges the rule above because of the
+# space, and holds a second copy of the leaked token.
+notebooks copy/
+notebooks - Copy/
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# ----------------------------------------------------------
+# ACCIDENTAL DUPLICATE FILES  ("- Copy" artefacts)
+# ----------------------------------------------------------
+* - Copy*
+*- Copy.*
+* - Copy (*)*
+*copy.bak
+*.orig
+*.rej
+
+# ----------------------------------------------------------
+# MODEL WEIGHTS & ML ARTEFACTS  (too large for git)
+# ----------------------------------------------------------
+*.pth
+*.pt
+*.ckpt
+*.h5
+*.hdf5
+*.pb
+*.onnx
+*.safetensors
+*.tflite
+*.weights
+*.joblib
+*.npy
+*.npz
+
+# ...but the retrieval index is tiny (~39 KB) and committing it means a fresh
+# clone can retrieve evidence without downloading the embedding model.
+!knowledge/index.npz
+
+# Pickles are ignored by default, but the tiny stacking meta-learners are
+# required at runtime, so keep them. Both are needed: without the chest one
+# (958 bytes) a fresh clone silently falls back to a single EfficientNet
+# instead of the chest stacking ensemble.
+*.pkl
+!models/meta_model.pkl
+!chest/meta_model_Chest_Xray.pkl
+
+# Ensemble/module configs MUST stay tracked (small JSON)
+!models/ensemble_config.json
+!**/chest_xray_ensemble_config.json
+!**/metadata.json
+
+# Archived / superseded weight directories
+chest V1/
+chest_v1/
+*_old/
+*_backup/
+*_archive/
+
+# ----------------------------------------------------------
+# DATASETS & MEDIA  (too large for git)
+# ----------------------------------------------------------
+data/raw/
+data/processed/
+data/brainMRI/
+data/chest_xray/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tif
+*.tiff
+*.dcm
+*.nii
+*.nii.gz
+*.mha
+*.nrrd
+
+# Allow frontend static assets (overrides the rules above)
+!frontend/src/assets/*.png
+!frontend/src/assets/*.jpg
+!frontend/src/assets/*.jpeg
+!frontend/src/assets/*.svg
+!frontend/src/assets/*.mp4
+!frontend/public/**
+
+# Demo/regression samples: 14 images, 318 KB total. The dashboard's "try a
+# sample" buttons fetch frontend/samples/ at runtime, and the documented
+# regression check runs against data/samples/, so excluding these leaves a
+# fresh clone with a broken UI and an unrunnable check.
+# Provenance: excerpts from the public Kaggle datasets listed in
+# data/dataset_links.md, included for demonstration only.
+!frontend/samples/*.jpg
+!data/samples/brainMRI/*.jpg
+!data/samples/ChestXray/*.jpg
+
+# Evaluation figures are results, not data - keep them.
+!models/calibration/*.png
+!docs/figures/*.png
+
+# ----------------------------------------------------------
+# ARCHIVES
+# ----------------------------------------------------------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.gz
+*.bz2
+
+# ----------------------------------------------------------
+# PYTHON
+# ----------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.virtualenv/
+
+# ----------------------------------------------------------
+# TESTING & COVERAGE
+# ----------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+nosetests.xml
+
+# ----------------------------------------------------------
+# NODE / FRONTEND
+# ----------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnp/
+.pnp.js
+.npm
+.eslintcache
+
+# Build output
+frontend/dist/
+frontend/build/
+dist/
+build/
+.vite/
+.cache/
+
+# ----------------------------------------------------------
+# LOGS & TEMP
+# ----------------------------------------------------------
+logs/
+*.log
+tensorboard/
+runs/
+wandb/
+mlruns/
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+.cache
+
+# ----------------------------------------------------------
+# REPORTS  (generated output)
+# ----------------------------------------------------------
+reports/*.pdf
+reports/*.docx
+reports/*.html
+
+# ----------------------------------------------------------
+# PERSONAL / ACADEMIC SUBMISSION DOCUMENTS
+# ----------------------------------------------------------
+# Coursework and certificate paperwork, not source. Kept out of the public
+# repository because they carry personal details and are not needed to build,
+# run or understand the system. The technical write-up lives in
+# presentation.md and IMPLEMENTATION_PLAN.md, which ARE published.
+*.docx
+*.doc
+Final Report.pdf
+Utsav Industry Certificate Report.pdf
+
+# ...but sample PDF reports are evidence that the report generator works.
+!models/calibration/sample_reports/*.pdf
+
+# ----------------------------------------------------------
+# IDE / EDITOR
+# ----------------------------------------------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ----------------------------------------------------------
+# OS
+# ----------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ----------------------------------------------------------
+# PROJECT-SPECIFIC / SELF-REFERENCE DOCS
+# ----------------------------------------------------------
+PROJECT_SETUP_COMPLETE.md
+QUICKSTART.md
+docs/*.md
+data/*.md
+
+# ...but keep the documentation that records real results
+!docs/brain_mri_model_results.md
+!docs/references.md
+!data/dataset_links.md
+
+# Kiro workspace config
+.kiro/

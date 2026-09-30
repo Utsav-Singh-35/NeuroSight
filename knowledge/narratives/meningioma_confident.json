@@ -1,0 +1,53 @@
+{
+  "class": "Meningioma",
+  "module": "brain_mri",
+  "band": "confident",
+  "text": "The AI model has classified the brain MRI as consistent with a meningioma. This classification reflects that the imaging appearance is typical of a tumour arising from the meninges, the membranes covering the brain and spinal cord, which is the most common primary brain tumour [nci-meningioma]. Most meningiomas grow slowly and are often discovered incidentally; however, clinical effects vary according to the lesion's location, size, growth rate and histological grade, so two lesions that look similar may require different management [ncbi-meningioma-statpearls]. It is important to note that this output is a classification, not a definitive diagnosis. A clinician would normally discuss further evaluation, including a detailed clinical and neurological examination and a dedicated contrast-enhanced MRI performed with a brain-tumour protocol, as well as review by a neurosurgical or neurological specialist and, where tissue is obtained, histological grading to inform management [nci-meningioma] [ncbi-meningioma-statpearls]. Management options that may be considered after diagnostic confirmation include observation with serial imaging, surgical resection, radiation-based techniques or supportive care, all decided in specialist consultation [nci-meningioma] [icom-meningioma-consensus]. Ongoing follow-up typically involves specialist review, interval imaging to monitor growth and reassessment if new neurological symptoms arise [nci-meningioma] [icom-meningioma-consensus].",
+  "grounding": {
+    "citations_used": [
+      "icom-meningioma-consensus",
+      "ncbi-meningioma-statpearls",
+      "nci-meningioma"
+    ],
+    "citations_allowed": [
+      "icom-meningioma-consensus",
+      "ncbi-meningioma-statpearls",
+      "nci-meningioma",
+      "who-cns5"
+    ],
+    "hallucinated_citations": [],
+    "grounded": true,
+    "uncited": false,
+    "contains_percentages": [],
+    "non_ascii_characters": [],
+    "ascii_clean": true,
+    "word_count": 190
+  },
+  "grounding_attempts_used": 1,
+  "grounded_on_first_attempt": true,
+  "evidence_chunks": [
+    "brain_mri/Meningioma/clinical_considerations",
+    "brain_mri/Meningioma/investigations",
+    "brain_mri/Meningioma/treatment_information",
+    "brain_mri/Meningioma/follow_up",
+    "brain_mri/Meningioma/overview"
+  ],
+  "llm": {
+    "model": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "ok": true,
+    "error": null,
+    "usage": {
+      "prompt_tokens": 1171,
+      "completion_tokens": 1501,
+      "total_tokens": 2672
+    },
+    "attempts": 1,
+    "elapsed_seconds": 4.664
+  },
+  "generated": "2026-09-29T18:25:36.950480+00:00",
+  "reviewed": false,
+  "reviewed_by": null,
+  "reviewed_at": null,
+  "review_instructions": "Check every sentence against the cited sources. Confirm no medicine, dose or diagnosis is stated and that the uncertainty framing matches the band. Then set reviewed=true and fill reviewed_by/reviewed_at."
+}

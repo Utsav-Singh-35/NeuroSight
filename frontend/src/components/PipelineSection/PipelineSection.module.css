@@ -1,0 +1,245 @@
+.pipelineSection {
+  width: 100%;
+  background-color: #040404;
+  padding: 8rem calc(5% + 6px) 7rem calc(5% + 6px);
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header {
+  max-width: 800px;
+  margin: 0 auto 4rem;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+}
+
+.title {
+  font-size: clamp(2.5rem, 6vw, 4.2rem);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #999;
+  line-height: 1.6;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* 3D Model Viewport wrapper */
+.modelContainer {
+  width: 100%;
+  max-width: 1100px;
+  height: 380px;
+  margin: 0 auto 4rem;
+  position: relative;
+  background: radial-gradient(circle at center, rgba(30,30,30,0.4) 0%, rgba(10,10,10,0.1) 70%);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.threeCanvas {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.threeCanvas:active {
+  cursor: grabbing;
+}
+
+.modelOverlay {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.dragIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #888;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.05em;
+}
+
+.pipelineGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.pipelineCard {
+  background: rgba(12, 12, 12, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  box-sizing: border-box;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+  cursor: pointer;
+}
+
+.pipelineCard:hover, .cardActive {
+  transform: translateY(-6px);
+  background: rgba(18, 18, 18, 0.9);
+}
+
+.glowCyan:hover, .glowCyan.cardActive {
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow: 0 12px 32px rgba(34, 211, 238, 0.12);
+}
+
+.glowPurple:hover, .glowPurple.cardActive {
+  border-color: rgba(192, 132, 252, 0.5);
+  box-shadow: 0 12px 32px rgba(192, 132, 252, 0.12);
+}
+
+.glowPink:hover, .glowPink.cardActive {
+  border-color: rgba(244, 114, 182, 0.5);
+  box-shadow: 0 12px 32px rgba(244, 114, 182, 0.12);
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.stageIndicator {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px dashed #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s, border-color 0.4s;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: transform 0.4s, box-shadow 0.4s;
+}
+
+.pipelineCard:hover .stageIndicator, .cardActive .stageIndicator {
+  transform: scale(1.15);
+}
+
+.pipelineCard:hover .dot, .cardActive .dot {
+  transform: scale(1.3);
+  box-shadow: 0 0 10px currentColor;
+}
+
+.phaseBadge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #777;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.pipelineCard:hover .phaseBadge, .cardActive .phaseBadge {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.cardTitle {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  min-height: 3.5rem;
+  display: flex;
+  align-items: flex-start;
+}
+
+.cardDesc {
+  font-size: 0.95rem;
+  color: #999;
+  line-height: 1.6;
+  flex-grow: 1;
+  margin-bottom: 2rem;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+
+.arrowIcon {
+  font-size: 1.1rem;
+  transition: transform 0.3s;
+}
+
+.pipelineCard:hover .cardFooter, .cardActive .cardFooter {
+  color: #aaa;
+}
+
+.pipelineCard:hover .arrowIcon, .cardActive .arrowIcon {
+  transform: translateX(4px);
+  color: #fff;
+}
+
+@media (max-width: 1024px) {
+  .pipelineGrid { gap: 16px; }
+  .pipelineCard { padding: 2rem 1.5rem; }
+  .modelContainer { height: 320px; margin-bottom: 3rem; }
+}
+
+@media (max-width: 768px) {
+  .pipelineSection { padding: 5rem 4% 5rem; }
+  .header { margin-bottom: 3rem; }
+  .title { font-size: 2.2rem; margin-bottom: 1rem; }
+  .subtitle { font-size: 1rem; }
+  .modelContainer { height: 260px; border-radius: 16px; margin-bottom: 2.5rem; }
+  .pipelineGrid { grid-template-columns: 1fr; gap: 16px; max-width: 400px; }
+}

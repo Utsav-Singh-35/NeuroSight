@@ -1,0 +1,118 @@
+{
+  "registry_version": "1.0",
+  "generated": "2026-09-29",
+  "purpose": "Source registry for the NeuraSight evidence layer. Every clinical statement in knowledge/**/*.md carries one or more of these source IDs so the generated report can cite its evidence.",
+  "verification_status": {
+    "urls_verified": true,
+    "urls_verified_note": "All URLs below were confirmed to exist and to be topically correct via web search on 2026-09-29.",
+    "content_extracted": false,
+    "content_extracted_note": "Full page text was NOT programmatically extracted (cancer.gov/ninds.nih.gov blocked automated fetching; NCBI Bookshelf pages did not yield text to the fetcher). The knowledge-base entries therefore state well-established, general clinical fundamentals and point to these sources for verification. They are NOT verbatim extracts and MUST be reviewed against the primary source by a qualified reviewer before any clinical framing is relied upon.",
+    "clinical_review_required": true
+  },
+  "sources": {
+    "neurasight-system": {
+      "title": "NeuraSight system behaviour and measured evaluation results",
+      "publisher": "This project (self-reference)",
+      "url": "IMPLEMENTATION_PLAN.md",
+      "type": "self-reference",
+      "licence": "Internal.",
+      "accessed": "2026-09-29",
+      "relevant_note": "Used to mark statements that describe THIS SYSTEM's own scope, behaviour or measured metrics rather than making an external clinical claim. Distinguishing these from medical citations keeps the evidence audit meaningful: a sentence about what the model can and cannot do should not be dressed up with a medical reference."
+    },
+    "nci-cns-pdq-patient": {
+      "title": "Adult Central Nervous System Tumors Treatment (PDQ) - Patient Version",
+      "publisher": "National Cancer Institute (NCI), U.S. National Institutes of Health",
+      "url": "https://www.cancer.gov/types/brain/patient/adult-brain-treatment-pdq",
+      "type": "government clinical summary",
+      "audience": "patient",
+      "licence": "Public domain (U.S. Government work). Reuse permitted with attribution.",
+      "accessed": "2026-09-29"
+    },
+    "nci-cns-pdq-hp": {
+      "title": "Central Nervous System Tumors Treatment (PDQ) - Health Professional Version",
+      "publisher": "National Cancer Institute (NCI)",
+      "url": "https://www.cancer.gov/types/brain/hp/adult-brain-treatment-pdq",
+      "type": "government clinical summary",
+      "audience": "clinician",
+      "licence": "Public domain (U.S. Government work).",
+      "accessed": "2026-09-29"
+    },
+    "nci-cns-pdq-bookshelf": {
+      "title": "Adult Central Nervous System Tumors Treatment (PDQ)",
+      "publisher": "NCI, via NCBI Bookshelf (NBK66023)",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK66023/",
+      "type": "government clinical summary",
+      "licence": "Public domain (U.S. Government work).",
+      "accessed": "2026-09-29"
+    },
+    "nci-meningioma": {
+      "title": "Meningioma: Diagnosis and Treatment",
+      "publisher": "National Cancer Institute (NCI) - Rare Brain and Spine Tumor Program",
+      "url": "https://www.cancer.gov/rare-brain-spine-tumor/tumors/meningioma",
+      "type": "government clinical summary",
+      "licence": "Public domain (U.S. Government work).",
+      "accessed": "2026-09-29"
+    },
+    "ncbi-meningioma-statpearls": {
+      "title": "Meningioma (StatPearls)",
+      "publisher": "StatPearls Publishing, via NCBI Bookshelf (NBK560538)",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK560538/",
+      "type": "peer-reviewed reference article",
+      "licence": "CC BY-NC-ND 4.0 - check terms before redistribution.",
+      "accessed": "2026-09-29"
+    },
+    "icom-meningioma-consensus": {
+      "title": "Meningioma: International Consortium on Meningiomas consensus review on scientific advances and treatment paradigms",
+      "publisher": "Neuro-Oncology, 2024;26(10):1742-1780",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11449035/",
+      "type": "peer-reviewed consensus review",
+      "licence": "Check PMC article for the specific licence.",
+      "accessed": "2026-09-29"
+    },
+    "nci-pituitary-pdq": {
+      "title": "Pituitary Tumors Treatment (PDQ)",
+      "publisher": "NCI, via NCBI Bookshelf (NBK66024.6)",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK66024.6/",
+      "type": "government clinical summary",
+      "licence": "Public domain (U.S. Government work).",
+      "accessed": "2026-09-29",
+      "relevant_note": "Identifies inappropriate pituitary hormone secretion and visual field deficits as the most characteristic presenting features of pituitary adenomas."
+    },
+    "nci-pituitary-diagnosis": {
+      "title": "Pituitary Tumors - Diagnosis and Prognosis",
+      "publisher": "National Cancer Institute (NCI)",
+      "url": "https://www.cancer.gov/types/pituitary/diagnosis-prognosis",
+      "type": "government clinical summary",
+      "licence": "Public domain (U.S. Government work).",
+      "accessed": "2026-09-29",
+      "relevant_note": "Describes visual field testing covering central and peripheral vision, each eye tested separately."
+    },
+    "ncbi-pituitary-adenoma-statpearls": {
+      "title": "Pituitary Adenoma (StatPearls)",
+      "publisher": "StatPearls Publishing, via NCBI Bookshelf (NBK554451)",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK554451/",
+      "type": "peer-reviewed reference article",
+      "licence": "CC BY-NC-ND 4.0 - check terms before redistribution.",
+      "accessed": "2026-09-29",
+      "relevant_note": "States that diagnosis relies on pituitary-protocol MRI plus comprehensive endocrine testing, with management individualised across medical therapy, transsphenoidal surgery or radiotherapy depending on tumour type and functional status."
+    },
+    "ninds-brain-tumors": {
+      "title": "Brain and Spinal Cord Tumors",
+      "publisher": "National Institute of Neurological Disorders and Stroke (NINDS), NIH",
+      "url": "https://www.ninds.nih.gov/health-information/disorders/brain-and-spinal-cord-tumors",
+      "type": "government health information",
+      "licence": "Public domain (U.S. Government work).",
+      "accessed": "2026-09-29",
+      "fetch_note": "Returned HTTP 403 to automated fetching; URL confirmed via search result metadata."
+    },
+    "who-cns5": {
+      "title": "WHO Classification of Tumours of the Central Nervous System, 5th edition",
+      "publisher": "World Health Organization / IARC, 2021",
+      "url": "https://www.iarc.who.int/",
+      "type": "classification standard",
+      "licence": "Copyrighted publication - cite, do not reproduce.",
+      "accessed": "2026-09-29",
+      "relevant_note": "The current authority for CNS tumour typing and grading. Integrates histology with molecular markers; grading terminology changed from the 4th edition, which matters when comparing older literature."
+    }
+  }
+}

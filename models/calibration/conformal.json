@@ -1,0 +1,143 @@
+{
+  "method": "split conformal, LAC score s = 1 - p_true",
+  "alpha": 0.01,
+  "target_coverage": 0.99,
+  "q_hat": 0.981281,
+  "threshold": 0.018719,
+  "quantile_level": "ceil((n+1)(1-alpha))/n",
+  "calibrated_with_design": "B",
+  "temperature": 0.996425,
+  "class_names": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "metrics": {
+    "empirical_coverage": 1.0,
+    "mean_set_size": 1.33125,
+    "set_size_distribution": {
+      "1": 334,
+      "2": 137,
+      "3": 5,
+      "4": 4
+    },
+    "coverage_by_class": {
+      "0": 1.0,
+      "1": 1.0,
+      "2": 1.0,
+      "3": 1.0
+    },
+    "band_distribution": {
+      "confident": 334,
+      "borderline": 137,
+      "indeterminate": 9
+    },
+    "n_evaluated": 480
+  },
+  "alpha_sweep": [
+    {
+      "alpha": 0.2,
+      "q_hat": 0.051055,
+      "target_coverage": 0.8,
+      "empirical_coverage": 0.977083,
+      "mean_set_size": 1.0,
+      "set_size_distribution": {
+        "1": 480
+      },
+      "degenerate": false
+    },
+    {
+      "alpha": 0.1,
+      "q_hat": 0.061518,
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.977083,
+      "mean_set_size": 1.0,
+      "set_size_distribution": {
+        "1": 480
+      },
+      "degenerate": false
+    },
+    {
+      "alpha": 0.05,
+      "q_hat": 0.518764,
+      "target_coverage": 0.95,
+      "empirical_coverage": 0.977083,
+      "mean_set_size": 1.0,
+      "set_size_distribution": {
+        "1": 480
+      },
+      "degenerate": false
+    },
+    {
+      "alpha": 0.025,
+      "q_hat": 0.920531,
+      "target_coverage": 0.975,
+      "empirical_coverage": 0.99375,
+      "mean_set_size": 1.058333,
+      "set_size_distribution": {
+        "1": 457,
+        "2": 18,
+        "3": 5
+      },
+      "degenerate": false
+    },
+    {
+      "alpha": 0.02,
+      "q_hat": 0.932844,
+      "target_coverage": 0.98,
+      "empirical_coverage": 0.99375,
+      "mean_set_size": 1.066667,
+      "set_size_distribution": {
+        "1": 454,
+        "2": 20,
+        "3": 6
+      },
+      "degenerate": false
+    },
+    {
+      "alpha": 0.01,
+      "q_hat": 0.981281,
+      "target_coverage": 0.99,
+      "empirical_coverage": 1.0,
+      "mean_set_size": 1.33125,
+      "set_size_distribution": {
+        "1": 334,
+        "2": 137,
+        "3": 5,
+        "4": 4
+      },
+      "degenerate": false
+    },
+    {
+      "alpha": 0.005,
+      "q_hat": 1.0,
+      "target_coverage": 0.995,
+      "empirical_coverage": 1.0,
+      "mean_set_size": 4.0,
+      "set_size_distribution": {
+        "4": 480
+      },
+      "degenerate": true
+    }
+  ],
+  "vacuous_below_alpha": 0.022917,
+  "vacuous_note": "Conformal sets are all singletons whenever 1-alpha < model accuracy; coverage then just equals accuracy and the layer carries no information. With test accuracy 97.71% that means alpha must be below 0.0229 to be informative.",
+  "finite_sample_alpha_floor": 0.003115,
+  "finite_sample_note": "With n_calibration=320, the quantile level ceil((n+1)(1-alpha))/n reaches 1.0 for alpha below 0.003115, forcing q_hat=1 and admitting every class.",
+  "band_rules": {
+    "confident": "set size 1",
+    "borderline": "set size 2",
+    "indeterminate": "set size >= 3"
+  },
+  "split": {
+    "total_rows": 1600,
+    "meta_train_half": 800,
+    "calibration": 320,
+    "final_test": 480,
+    "calibration_fraction_of_half_b": 0.4,
+    "seed": 42,
+    "documented_split": "train_test_split(test_size=0.5, stratify=y, random_state=42)"
+  },
+  "generated": "2026-09-29T13:11:35.768247+00:00"
+}

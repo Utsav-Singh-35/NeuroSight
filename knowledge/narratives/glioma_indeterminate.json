@@ -1,0 +1,52 @@
+{
+  "class": "Glioma",
+  "module": "brain_mri",
+  "band": "indeterminate",
+  "text": "The AI output indicating features that the model associates with glioma is inconclusive and must not be acted upon; the result requires review by a qualified radiologist or specialist physician. Imaging alone cannot establish tumour type, grade, molecular subtype or margins, and the model's uncertainty is high when several classes are possible [nci-cns-pdq-hp]. Clinical and neurological assessment is essential because symptoms depend on tumour location, size and growth rate rather than on tumour type alone [nci-cns-pdq-hp] [ninds-brain-tumors]. Any sudden severe headache, new seizure activity, loss of consciousness, weakness, visual change, confusion or persistent vomiting with headache should prompt prompt medical assessment [ninds-brain-tumors]. Discuss with a specialist the possibility of a dedicated contrast-enhanced MRI brain-tumour protocol, a thorough clinical examination, specialist review and, where tissue is obtained, histopathological and molecular characterisation, all of which are required for definitive typing and grading under current WHO criteria [who-cns5] [nci-cns-pdq-hp].",
+  "grounding": {
+    "citations_used": [
+      "nci-cns-pdq-hp",
+      "ninds-brain-tumors",
+      "who-cns5"
+    ],
+    "citations_allowed": [
+      "nci-cns-pdq-hp",
+      "ninds-brain-tumors",
+      "who-cns5"
+    ],
+    "hallucinated_citations": [],
+    "grounded": true,
+    "uncited": false,
+    "contains_percentages": [],
+    "non_ascii_characters": [],
+    "ascii_clean": true,
+    "word_count": 146
+  },
+  "grounding_attempts_used": 1,
+  "grounded_on_first_attempt": true,
+  "evidence_chunks": [
+    "brain_mri/Glioma/overview",
+    "brain_mri/Glioma/clinical_considerations",
+    "brain_mri/Glioma/warning_signs",
+    "brain_mri/Glioma/ai_limitations",
+    "brain_mri/Glioma/investigations"
+  ],
+  "llm": {
+    "model": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "ok": true,
+    "error": null,
+    "usage": {
+      "prompt_tokens": 1309,
+      "completion_tokens": 661,
+      "total_tokens": 1970
+    },
+    "attempts": 1,
+    "elapsed_seconds": 2.91
+  },
+  "generated": "2026-09-29T18:25:32.228448+00:00",
+  "reviewed": false,
+  "reviewed_by": null,
+  "reviewed_at": null,
+  "review_instructions": "Check every sentence against the cited sources. Confirm no medicine, dose or diagnosis is stated and that the uncertainty framing matches the band. Then set reviewed=true and fill reviewed_by/reviewed_at."
+}

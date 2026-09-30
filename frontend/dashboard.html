@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Image Analysis - NeuraSight</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #000; color: #fff; min-height: 100vh; overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      width: 90%; max-width: 1200px; padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center; z-index: 100;
+      background: rgba(20,20,20,0.4); backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 50px;
+    }
+    .logo { font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; }
+    .nav-links { list-style: none; display: flex; gap: 2rem; }
+    .nav-links a { color: #aaa; text-decoration: none; font-size: 0.85rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s; }
+    .nav-links a:hover, .nav-links a.current { color: #fff; }
+
+    /* View switcher */
+    .view-switch {
+      position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
+      z-index: 90; display: flex; gap: 0.4rem; padding: 0.35rem;
+      background: rgba(20,20,20,0.6); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 30px;
+    }
+    .view-switch button {
+      padding: 0.5rem 1.4rem; background: transparent; border: none; border-radius: 24px;
+      color: rgba(255,255,255,0.45); font-size: 0.75rem; font-weight: 600; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.25s;
+    }
+    .view-switch button.active { background: #22d3ee; color: #000; }
+    .view-switch button:hover:not(.active) { color: #fff; }
+
+    /* Screen system */
+    .screen { display: none; min-height: 100vh; padding: 10rem 2rem 3rem; flex-direction: column; align-items: center; }
+    .screen.active { display: flex; }
+    .screen.centered { justify-content: center; padding-top: 8rem; }
+
+    /* ========== UPLOAD ========== */
+    .upload-screen { gap: 1.5rem; }
+    .upload-screen h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; text-align: center; }
+    .upload-screen p.sub { color: rgba(255,255,255,0.5); font-size: 0.9rem; text-align: center; }
+
+    .upload-box {
+      width: 100%; max-width: 500px; border: 2px dashed rgba(34,211,238,0.25);
+      border-radius: 12px; padding: 3rem 2rem; text-align: center; cursor: pointer;
+      transition: all 0.3s; position: relative;
+    }
+    .upload-box:hover { border-color: rgba(34,211,238,0.5); background: rgba(34,211,238,0.02); }
+    .upload-box.has-file { border-color: rgba(34,211,238,0.5); background: rgba(34,211,238,0.04); }
+    .upload-box input { display: none; }
+    .upload-box label { cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .upload-box .icon { color: #22d3ee; }
+    .upload-box .text { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+    .upload-box .text.selected { color: #22d3ee; font-weight: 500; }
+    .upload-box .preview { max-width: 180px; max-height: 180px; border-radius: 8px; margin-top: 1rem; border: 1px solid rgba(34,211,238,0.2); }
+
+    .formats { display: flex; gap: 0.4rem; }
+    .formats span { padding: 0.3rem 0.7rem; font-size: 0.6rem; font-weight: 600; background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.15); border-radius: 20px; color: #22d3ee; }
+
+    .analyze-btn {
+      width: 100%; max-width: 500px; padding: 1rem; background: #22d3ee; border: none;
+      border-radius: 8px; color: #000; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+      transition: all 0.3s; text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .analyze-btn:hover:not(:disabled) { background: #06b6d4; transform: translateY(-1px); }
+    .analyze-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .samples { width: 100%; max-width: 500px; }
+    .samples-label { font-size: 0.7rem; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .samples-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.4rem; }
+    .sample-btn { padding: 0.5rem; background: transparent; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: rgba(255,255,255,0.4); font-size: 0.7rem; cursor: pointer; transition: all 0.2s; }
+    .sample-btn:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+
+    .note { font-size: 0.7rem; color: rgba(255,200,50,0.6); max-width: 500px; text-align: center; }
+
+    /* ========== LOADING ========== */
+    .spinner { width: 60px; height: 60px; border: 3px solid rgba(34,211,238,0.1); border-top: 3px solid #22d3ee; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { color: rgba(255,255,255,0.6); font-size: 1rem; }
+    .loading-stage { color: #22d3ee; font-size: 0.85rem; font-weight: 500; min-height: 1.2rem; }
+    .loading-hint { color: rgba(255,255,255,0.3); font-size: 0.7rem; max-width: 420px; text-align: center; line-height: 1.6; }
+
+    /* ========== RESULTS ========== */
+    .results-container { max-width: 700px; width: 100%; margin: 0 auto; }
+    .result-header { text-align: center; margin-bottom: 1.5rem; }
+    .result-header .eyebrow { font-size: 0.65rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.5rem; }
+    .result-header .prediction { font-size: 2.8rem; font-weight: 800; color: #f472b6; letter-spacing: -0.02em; }
+    .result-header .modtag { display: inline-block; margin-top: 0.5rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.12); padding: 0.25rem 0.7rem; border-radius: 20px; }
+
+    .warn-banner {
+      max-width: 700px; width: 100%; margin: 0 auto 1.5rem; padding: 1rem 1.2rem;
+      background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3);
+      border-left: 3px solid #ef4444; border-radius: 8px;
+    }
+    .warn-banner .t { font-size: 0.7rem; font-weight: 700; color: #ef4444; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+    .warn-banner .m { font-size: 0.78rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+    .result-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+    .result-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1.2rem; text-align: center; }
+    .result-card .label { font-size: 0.6rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; font-weight: 600; }
+    .result-card .val { font-size: 1.4rem; font-weight: 700; }
+    .risk-high { color: #ef4444; } .risk-medium { color: #f59e0b; } .risk-low { color: #10b981; }
+
+    .heatmap-section { text-align: center; margin-bottom: 1.5rem; padding: 1.5rem; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; }
+    .heatmap-section .title { font-size: 0.65rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; font-weight: 600; }
+    .heatmap-section .images { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .heatmap-section .img-box { text-align: center; }
+    .heatmap-section .img-box .img-label { font-size: 0.6rem; color: rgba(255,255,255,0.3); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .heatmap-section img { max-width: 180px; border-radius: 8px; border: 1px solid rgba(244,114,182,0.15); }
+    .heatmap-section .caption { font-size: 0.6rem; color: rgba(255,255,255,0.25); margin-top: 0.8rem; }
+
+    .summary-section { margin-bottom: 1.5rem; }
+    .summary-section .title, .prob-section .title { font-size: 0.65rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-weight: 600; }
+    .summary-section .text { font-size: 0.82rem; color: rgba(255,255,255,0.65); line-height: 1.7; }
+    .summary-section .rec { font-size: 0.78rem; color: rgba(255,255,255,0.5); line-height: 1.6; margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.02); border-left: 3px solid rgba(34,211,238,0.3); border-radius: 4px; }
+
+    .prob-section { margin-bottom: 1.5rem; }
+    .prob-row { margin-bottom: 0.7rem; }
+    .prob-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 0.3rem; }
+    .prob-labels .pct { color: #f472b6; font-weight: 700; }
+    .prob-track { width: 100%; height: 6px; background: rgba(255,255,255,0.04); border-radius: 3px; overflow: hidden; }
+    .prob-fill { height: 100%; background: linear-gradient(90deg, #f472b6, #ec4899); border-radius: 3px; transition: width 0.6s; }
+
+    .disclaimer { font-size: 0.6rem; color: rgba(255,255,255,0.2); font-style: italic; line-height: 1.5; margin-bottom: 1.5rem; text-align: center; }
+
+    .btn-row { display: flex; gap: 0.7rem; max-width: 700px; margin: 0 auto; }
+    .ghost-btn {
+      flex: 1; padding: 1rem; background: transparent; border: 1px solid rgba(34,211,238,0.3);
+      border-radius: 8px; color: #22d3ee; font-weight: 600; font-size: 0.8rem; cursor: pointer;
+      transition: all 0.3s; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .ghost-btn:hover { background: rgba(34,211,238,0.08); border-color: rgba(34,211,238,0.5); }
+    .ghost-btn.danger { border-color: rgba(239,68,68,0.3); color: #ef4444; }
+    .ghost-btn.danger:hover { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.5); }
+
+    .saved-pill { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.62rem; color: rgba(16,185,129,0.8); margin-top: 0.6rem; }
+    .saved-pill.fail { color: rgba(245,158,11,0.9); }
+
+    /* Uncertainty / prediction set */
+    .band-pill { display:inline-block; margin-top:0.5rem; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; padding:0.28rem 0.75rem; border-radius:20px; font-weight:700; }
+    .band-confident { background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.35); }
+    .band-borderline { background:rgba(245,158,11,0.12); color:#f59e0b; border:1px solid rgba(245,158,11,0.4); }
+    .band-indeterminate { background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.45); }
+
+    .set-box { margin-bottom:1.5rem; padding:1.1rem 1.2rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-left:3px solid #22d3ee; border-radius:8px; }
+    .set-box .t { font-size:0.62rem; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.1em; font-weight:700; margin-bottom:0.5rem; }
+    .set-box .classes { display:flex; gap:0.45rem; flex-wrap:wrap; margin-bottom:0.6rem; }
+    .set-box .cls { padding:0.35rem 0.8rem; border-radius:6px; font-size:0.78rem; font-weight:600; background:rgba(34,211,238,0.1); border:1px solid rgba(34,211,238,0.3); color:#22d3ee; }
+    .set-box .note { font-size:0.72rem; color:rgba(255,255,255,0.5); line-height:1.6; }
+
+    .caveat-box { margin-bottom:1.5rem; padding:1rem 1.2rem; background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.28); border-left:3px solid #ef4444; border-radius:8px; }
+    .caveat-box .t { font-size:0.66rem; font-weight:700; color:#ef4444; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.45rem; }
+    .caveat-box ul { margin:0; padding-left:1.1rem; }
+    .caveat-box li { font-size:0.75rem; color:rgba(255,255,255,0.62); line-height:1.65; margin-bottom:0.3rem; }
+
+    .clin-section { margin-bottom:1.3rem; }
+    .clin-section .title { font-size:0.62rem; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.45rem; font-weight:700; }
+    .clin-section .text { font-size:0.8rem; color:rgba(255,255,255,0.62); line-height:1.7; white-space:pre-line; }
+    .clin-section.warn { padding:1rem 1.2rem; background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.25); border-radius:8px; }
+    .clin-section.warn .title { color:#f59e0b; }
+
+    .sources-list { list-style:none; padding:0; margin:0; }
+    .sources-list li { font-size:0.68rem; color:rgba(255,255,255,0.45); line-height:1.55; margin-bottom:0.45rem; padding-left:1.3rem; position:relative; }
+    .sources-list li .n { position:absolute; left:0; color:#22d3ee; font-weight:700; }
+    .sources-list a { color:rgba(34,211,238,0.75); text-decoration:none; word-break:break-all; }
+    .sources-list a:hover { text-decoration:underline; }
+
+    .provenance { font-size:0.62rem; color:rgba(255,255,255,0.3); margin-top:0.5rem; font-style:italic; }
+
+    /* ========== HISTORY ========== */
+    .history-container { max-width: 1000px; width: 100%; margin: 0 auto; }
+    .history-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .history-head h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; }
+    .history-head p { color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 0.3rem; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+    .stat { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1rem; }
+    .stat .k { font-size: 0.58rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+    .stat .v { font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem; }
+    .stat .v.cyan { color: #22d3ee; } .stat .v.amber { color: #f59e0b; } .stat .v.pink { color: #f472b6; }
+
+    .filters { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; align-items: center; }
+    .filters select, .filters input {
+      padding: 0.55rem 0.8rem; background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 0.78rem;
+      font-family: inherit;
+    }
+    .filters input { flex: 1; min-width: 160px; }
+    .filters input::placeholder { color: rgba(255,255,255,0.25); }
+    .filters select:focus, .filters input:focus { outline: none; border-color: rgba(34,211,238,0.4); }
+    .chip {
+      padding: 0.5rem 0.9rem; background: transparent; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; color: rgba(255,255,255,0.45); font-size: 0.7rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .chip.on { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); color: #ef4444; }
+
+    .scan-list { display: flex; flex-direction: column; gap: 8px; }
+    .scan-row {
+      display: grid; grid-template-columns: auto 1fr auto auto auto; gap: 1rem; align-items: center;
+      padding: 0.9rem 1.1rem; background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .scan-row:hover { background: rgba(255,255,255,0.04); border-color: rgba(34,211,238,0.25); }
+    .scan-row .mod-icon { font-size: 1.3rem; }
+    .scan-row .meta { min-width: 0; }
+    .scan-row .fname { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .scan-row .when { font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 0.2rem; }
+    .scan-row .pred { font-size: 0.85rem; font-weight: 700; color: #f472b6; text-align: right; white-space: nowrap; }
+    .scan-row .conf { font-size: 0.85rem; font-weight: 700; text-align: right; min-width: 62px; }
+    .scan-row .conf.low { color: #ef4444; } .scan-row .conf.ok { color: #10b981; }
+    .scan-row .flag { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.2rem 0.5rem; border-radius: 12px; background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); white-space: nowrap; }
+
+    .empty { text-align: center; padding: 4rem 2rem; }
+    .empty .big { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.3; }
+    .empty p { color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-bottom: 1.5rem; }
+
+    .pager { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem; }
+    .pager button { padding: 0.5rem 1rem; background: transparent; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: rgba(255,255,255,0.6); font-size: 0.75rem; cursor: pointer; }
+    .pager button:disabled { opacity: 0.25; cursor: not-allowed; }
+    .pager .info { font-size: 0.72rem; color: rgba(255,255,255,0.35); }
+
+    .err-box { padding: 1rem; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; color: #ef4444; font-size: 0.8rem; text-align: center; }
+
+    @media (max-width: 640px) {
+      .result-header .prediction { font-size: 2rem; }
+      .upload-box { padding: 2rem 1.5rem; }
+      .scan-row { grid-template-columns: auto 1fr auto; }
+      .scan-row .conf, .scan-row .flag { display: none; }
+      .btn-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">NeuraSight</div>
+    <ul class="nav-links">
+      <li><a href="index.html">HOME</a></li>
+      <li><a href="research.html">RESEARCH</a></li>
+      <li><a href="dashboard.html" class="current">DASHBOARD</a></li>
+    </ul>
+  </nav>
+
+  <div class="view-switch">
+    <button id="tab-new" class="active">New Scan</button>
+    <button id="tab-history">History</button>
+  </div>
+
+  <!-- SCREEN: Upload -->
+  <div class="screen upload-screen centered active" id="screen-upload">
+    <h1>Medical Image Analysis</h1>
+    <p class="sub">Upload a medical scan for AI-powered classification</p>
+    <div class="scan-selector" style="width:100%;max-width:500px;display:flex;gap:0.8rem;margin-bottom:0.5rem;">
+      <button class="scan-btn active" data-module="brain_mri" style="flex:1;padding:0.8rem;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.4);border-radius:8px;color:#22d3ee;font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.3s;">🧠 Brain MRI</button>
+      <button class="scan-btn" data-module="chest_xray" style="flex:1;padding:0.8rem;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.4);font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.3s;">🫁 Chest X-ray</button>
+    </div>
+    <div class="formats"><span>PNG</span><span>JPG</span><span>JPEG</span></div>
+    <div class="upload-box" id="upload-box">
+      <input type="file" id="file-input" accept=".png,.jpg,.jpeg">
+      <label for="file-input">
+        <div class="icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+        <div class="text" id="upload-text">Drop medical image here or click to browse</div>
+      </label>
+      <img class="preview" id="preview" style="display:none;">
+    </div>
+    <button class="analyze-btn" id="analyze-btn" disabled>Analyze Scan</button>
+    <p class="note">⚠️ Use actual medical images matching your selected scan type for best results.</p>
+    <div class="samples">
+      <p class="samples-label">Or try a sample:</p>
+      <div class="samples-row">
+        <button class="sample-btn" data-s="glioma_sample.jpg" data-l="Glioma">Glioma</button>
+        <button class="sample-btn" data-s="meningioma_sample.jpg" data-l="Mening.">Mening.</button>
+        <button class="sample-btn" data-s="notumor_sample.jpg" data-l="No Tumor">No Tumor</button>
+        <button class="sample-btn" data-s="pituitary_sample.jpg" data-l="Pituitary">Pituitary</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: Loading -->
+  <div class="screen centered" id="screen-loading" style="gap:2rem;">
+    <div class="spinner"></div>
+    <div class="loading-text">Analyzing medical scan...</div>
+    <div class="loading-stage" id="loading-stage"></div>
+    <div class="loading-hint">Running the stacking ensemble on CPU, then calibration, conformal prediction, OOD screening and evidence retrieval. Typically 3-5 seconds once the models are warm; the first scan after a restart is slower while they load.</div>
+  </div>
+
+  <!-- SCREEN: Results -->
+  <div class="screen" id="screen-results">
+    <div class="results-container" id="results-container"></div>
+  </div>
+
+  <!-- SCREEN: History -->
+  <div class="screen" id="screen-history">
+    <div class="history-container">
+      <div class="history-head">
+        <div>
+          <h1>Scan History</h1>
+          <p id="history-sub">Past analyses and their results</p>
+        </div>
+        <button class="ghost-btn" style="flex:0 0 auto;padding:0.7rem 1.4rem;" id="btn-new-from-history">+ New Scan</button>
+      </div>
+      <div class="stats-row" id="stats-row"></div>
+      <div class="filters">
+        <select id="f-module">
+          <option value="">All scan types</option>
+          <option value="brain_mri">Brain MRI</option>
+          <option value="chest_xray">Chest X-ray</option>
+        </select>
+        <select id="f-band">
+          <option value="">All certainty bands</option>
+          <option value="confident">Confident</option>
+          <option value="borderline">Borderline</option>
+          <option value="indeterminate">Indeterminate</option>
+        </select>
+        <input type="text" id="f-search" placeholder="Search filename...">
+        <button class="chip" id="f-escalated">Escalated only</button>
+      </div>
+      <div id="history-body"></div>
+      <div class="pager" id="pager" style="display:none;">
+        <button id="pg-prev">← Prev</button>
+        <span class="info" id="pg-info"></span>
+        <button id="pg-next">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: Detail -->
+  <div class="screen" id="screen-detail">
+    <div class="results-container" id="detail-container"></div>
+  </div>
+
+  <script>
+    // ---------- element refs ----------
+    const el = (id) => document.getElementById(id);
+    const screens = {
+      upload:  el('screen-upload'),
+      loading: el('screen-loading'),
+      results: el('screen-results'),
+      history: el('screen-history'),
+      detail:  el('screen-detail'),
+    };
+    const fileInput = el('file-input');
+    const uploadBox = el('upload-box');
+    const uploadText = el('upload-text');
+    const preview = el('preview');
+    const analyzeBtn = el('analyze-btn');
+    const loadingStage = el('loading-stage');
+    const resultsContainer = el('results-container');
+
+    let selectedFile = null;
+    let selectedModule = 'brain_mri';
+    let uploadedImageDataUrl = null;
+
+    const MODULE_META = {
+      brain_mri:  { icon: '🧠', label: 'Brain MRI' },
+      chest_xray: { icon: '🫁', label: 'Chest X-ray' },
+    };
+
+    // ---------- helpers ----------
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, (c) => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+      ));
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleString(undefined, {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+      });
+    }
+
+    function riskClass(level) {
+      if (level === 'High' || level === 'Indeterminate') return 'risk-high';
+      if (level === 'Medium') return 'risk-medium';
+      return 'risk-low';
+    }
+
+    /**
+     * Read a field that arrives camelCased from the Express gateway but
+     * snake_cased when a FastAPI response is rendered directly.
+     */
+    function pick(r, camel, snake) {
+      const a = r[camel];
+      if (a !== undefined && a !== null && a !== '') return a;
+      const b = r[snake];
+      if (b !== undefined && b !== null && b !== '') return b;
+      return null;
+    }
+
+    const BAND_LABEL = {
+      confident: 'Confident',
+      borderline: 'Borderline',
+      indeterminate: 'Indeterminate',
+    };
+
+    /** Optional prose block. Returns '' when the field is absent. */
+    function clinSection(title, text, variant) {
+      if (!text) return '';
+      return `
+        <div class="clin-section${variant ? ` ${variant}` : ''}">
+          <div class="title">${escapeHtml(title)}</div>
+          <div class="text">${escapeHtml(text)}</div>
+        </div>`;
+    }
+
+    function showScreen(name) {
+      Object.values(screens).forEach((s) => s.classList.remove('active'));
+      screens[name].classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function setTab(which) {
+      el('tab-new').classList.toggle('active', which === 'new');
+      el('tab-history').classList.toggle('active', which === 'history');
+    }
+
+    // ---------- tab wiring ----------
+    el('tab-new').addEventListener('click', () => { setTab('new'); showScreen('upload'); });
+    el('tab-history').addEventListener('click', () => { setTab('history'); openHistory(); });
+    el('btn-new-from-history').addEventListener('click', () => { setTab('new'); resetToUpload(); });
+
+    // ---------- module selector ----------
+    document.querySelectorAll('.scan-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.scan-btn').forEach((b) => {
+          b.style.background = 'transparent';
+          b.style.borderColor = 'rgba(255,255,255,0.1)';
+          b.style.color = 'rgba(255,255,255,0.4)';
+          b.classList.remove('active');
+        });
+        btn.style.background = 'rgba(34,211,238,0.1)';
+        btn.style.borderColor = 'rgba(34,211,238,0.4)';
+        btn.style.color = '#22d3ee';
+        btn.classList.add('active');
+        selectedModule = btn.dataset.module;
+        // Bundled samples are brain MRI only.
+        document.querySelector('.samples').style.display =
+          selectedModule === 'chest_xray' ? 'none' : 'block';
+      });
+    });
+
+    // ---------- file selection ----------
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      selectedFile = file;
+      uploadBox.classList.add('has-file');
+      uploadText.textContent = file.name;
+      uploadText.classList.add('selected');
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        preview.src = ev.target.result;
+        preview.style.display = 'block';
+        uploadedImageDataUrl = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+      analyzeBtn.disabled = false;
+    });
+
+    uploadBox.addEventListener('dragover', (e) => { e.preventDefault(); uploadBox.style.borderColor = 'rgba(34,211,238,0.6)'; });
+    uploadBox.addEventListener('dragleave', () => { uploadBox.style.borderColor = ''; });
+    uploadBox.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadBox.style.borderColor = '';
+      const f = e.dataTransfer.files[0];
+      if (f && f.type.startsWith('image/')) {
+        fileInput.files = e.dataTransfer.files;
+        fileInput.dispatchEvent(new Event('change'));
+      }
+    });
+
+    document.querySelectorAll('.sample-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        try {
+          const res = await fetch(`/samples/${btn.dataset.s}`);
+          const blob = await res.blob();
+          selectedFile = new File([blob], btn.dataset.s, { type: 'image/jpeg' });
+          uploadBox.classList.add('has-file');
+          uploadText.textContent = `${btn.dataset.l} (sample)`;
+          uploadText.classList.add('selected');
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            uploadedImageDataUrl = e.target.result;
+          };
+          reader.readAsDataURL(selectedFile);
+          analyzeBtn.disabled = false;
+        } catch (e) { console.error(e); }
+      });
+    });
+
+    // ---------- run a scan ----------
+    const stages = [
+      'Validating image quality...',
+      'Screening for out-of-distribution input...',
+      'Running stacking ensemble...',
+      'Calibrating probabilities...',
+      'Computing conformal prediction set...',
+      'Generating Grad-CAM heatmap...',
+      'Retrieving cited evidence...',
+      'Building report...',
+    ];
+
+    analyzeBtn.addEventListener('click', async () => {
+      if (!selectedFile) return;
+      showScreen('loading');
+
+      let i = 0;
+      const timer = setInterval(() => {
+        if (i < stages.length) { loadingStage.textContent = stages[i]; i++; }
+      }, 600);
+
+      try {
+        const form = new FormData();
+        form.append('image', selectedFile);
+
+        // Single call to the Express gateway: it runs the report and the
+        // heatmap in parallel and persists the result so it shows in History.
+        const res = await fetch(`/api/scan?module=${selectedModule}`, {
+          method: 'POST',
+          body: form,
+        });
+        clearInterval(timer);
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || `Analysis failed (${res.status})`);
+        }
+
+        const data = await res.json();
+        renderResults(data, uploadedImageDataUrl, { showSaved: true });
+        showScreen('results');
+      } catch (err) {
+        clearInterval(timer);
+        resultsContainer.innerHTML = `
+          <div class="err-box" style="margin-bottom:1.5rem;">${escapeHtml(err.message)}</div>
+          <div class="btn-row"><button class="ghost-btn" onclick="resetToUpload()">Try Again</button></div>`;
+        showScreen('results');
+      }
+    });
+
+    /**
+     * Render a scan result. Works for both a fresh /api/scan response and a
+     * stored history record, which share field names.
+     */
+    function renderResults(r, originalDataUrl, opts = {}) {
+      const target = opts.target || resultsContainer;
+      const mod = MODULE_META[r.module] || { icon: '🔬', label: r.module || 'Unknown' };
+      const isNormal = r.prediction === 'No Tumor' || r.prediction === 'Normal';
+      const probs = r.probabilities || {};
+
+      // Prefer the conformal uncertainty band over a raw confidence cutoff:
+      // it carries a coverage guarantee, whereas a threshold is just a heuristic.
+      const unc = r.uncertainty || {};
+      const band = unc.uncertainty_band || r.uncertaintyBand || null;
+      const pset = unc.prediction_set || r.predictionSet || null;
+      const coverage = unc.coverage_guarantee || r.coverageGuarantee || null;
+      // null (not false) when the module reports nothing, so "uncalibrated"
+      // is never asserted about a module that simply did not say.
+      const isCalibrated = unc.calibrated ?? r.calibrated ?? null;
+
+      let warn = '';
+      if (band === 'indeterminate') {
+        warn = `
+          <div class="warn-banner">
+            <div class="t">⚠ Indeterminate — do not act on this result</div>
+            <div class="m">
+              The model could not discriminate between classes. The label above is
+              <strong>not</strong> a finding. Refer this scan to a qualified
+              radiologist or specialist physician for interpretation.
+            </div>
+          </div>`;
+      } else if (band === 'borderline') {
+        warn = `
+          <div class="warn-banner">
+            <div class="t">⚠ Borderline — professional review recommended</div>
+            <div class="m">
+              Two classes remain plausible at the stated coverage level, so the
+              model has not separated them. Treat the label above as one
+              possibility rather than the answer.
+            </div>
+          </div>`;
+      } else if (!band && r.lowConfidence) {
+        const thr = r.lowConfidenceThreshold || 90;
+        warn = `
+          <div class="warn-banner">
+            <div class="t">⚠ Low confidence — human review advised</div>
+            <div class="m">
+              The model reported ${r.confidence.toFixed(1)}% confidence, below the
+              ${thr}% review threshold. No conformal prediction set is available
+              for this module, so this is a confidence-threshold judgement only.
+            </div>
+          </div>`;
+      }
+
+      // Conformal prediction set: the honest answer when the set is not a singleton.
+      let setHtml = '';
+      if (pset && pset.length) {
+        const plural = pset.length > 1;
+        setHtml = `
+          <div class="set-box">
+            <div class="t">Conformal prediction set${coverage ? ` &middot; ${(coverage * 100).toFixed(0)}% coverage guarantee` : ''}</div>
+            <div class="classes">${pset.map(c => `<span class="cls">${escapeHtml(c)}</span>`).join('')}</div>
+            <div class="note">${plural
+              ? `These ${pset.length} classes cannot be statistically excluded. A set larger than one means the model did not discriminate.`
+              : 'A single-class set: the model excluded every alternative at this coverage level.'}</div>
+          </div>`;
+      }
+
+      // Every condition that weakens the result, gathered in one place.
+      const caveats = [];
+      if (r.riskEscalated || r.risk_escalated) {
+        caveats.push('Risk level was escalated because model uncertainty exceeded the reporting threshold.');
+      }
+      if (r.explanationFaithful === false || r.explanation_faithful === false) {
+        caveats.push('No base model agreed with the ensemble, so the heatmap explains a different class than the one reported.');
+      }
+      const skipped = (r.ensemble && r.ensemble.models_skipped) || r.modelsSkipped || [];
+      if (skipped.length) {
+        caveats.push(`The ensemble ran degraded: ${skipped.join(', ')} did not contribute, so the confidence is less trustworthy.`);
+      }
+      if ((r.ensemble && r.ensemble.ensemble_active === false) || r.ensembleActive === false) {
+        caveats.push('The stacking ensemble was unavailable; a single fallback model produced this result.');
+      }
+      const val = r.validation || {};
+      if (val.passed === false || r.validationPassed === false) {
+        caveats.push(`Image quality checks failed: ${(val.reasons || []).join('; ') || 'see validation details'}`);
+      }
+      if (val.is_ood === true || r.isOod === true) {
+        caveats.push(val.ood_reason || 'This image does not resemble the distribution the model was trained on.');
+      }
+
+      const caveatHtml = caveats.length ? `
+        <div class="caveat-box">
+          <div class="t">Important caveats</div>
+          <ul>${caveats.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul>
+        </div>` : '';
+
+      let heatmapHtml = '';
+      const hasHeat = Boolean(r.heatmap);
+      if (hasHeat && !isNormal) {
+        heatmapHtml = `
+          <div class="heatmap-section">
+            <div class="title">Scan Comparison</div>
+            <div class="images">
+              ${originalDataUrl ? `
+                <div class="img-box">
+                  <div class="img-label">Original</div>
+                  <img src="${originalDataUrl}" alt="Original scan">
+                </div>` : ''}
+              <div class="img-box">
+                <div class="img-label">Grad-CAM Heatmap</div>
+                <img src="data:image/png;base64,${r.heatmap}" alt="Grad-CAM heatmap">
+              </div>
+            </div>
+            <div class="caption">Warm regions = areas the AI weighted most for this prediction</div>
+          </div>`;
+      } else if (isNormal && (originalDataUrl || hasHeat)) {
+        heatmapHtml = `
+          <div class="heatmap-section">
+            <div class="title">Uploaded Scan</div>
+            <div class="images">
+              <div class="img-box">
+                <img src="${originalDataUrl || `data:image/png;base64,${r.heatmap}`}" alt="Scan">
+              </div>
+            </div>
+            <div class="caption">No abnormality detected — heatmap not emphasised for healthy scans</div>
+          </div>`;
+      }
+
+      const probHtml = Object.keys(probs).map((c) => `
+        <div class="prob-row">
+          <div class="prob-labels"><span>${escapeHtml(c)}</span><span class="pct">${Number(probs[c]).toFixed(1)}%</span></div>
+          <div class="prob-track"><div class="prob-fill" style="width:${Number(probs[c])}%"></div></div>
+        </div>`).join('');
+
+      // Clinical guidance. Every block is optional: a stored history record
+      // only keeps the summary and recommendation, so the extended sections
+      // appear on a fresh scan and are simply omitted afterwards.
+      const clinicalHtml = [
+        clinSection('Warning signs requiring urgent attention', pick(r, 'warningSigns', 'warning_signs'), 'warn'),
+        clinSection('Clinical considerations', pick(r, 'clinicalConsiderations', 'clinical_considerations')),
+        clinSection('Suggested investigations', pick(r, 'investigations', 'investigations')),
+        clinSection('Follow-up', pick(r, 'followUp', 'follow_up')),
+        clinSection('Treatment information', pick(r, 'treatmentInformation', 'treatment_information')),
+        clinSection('Known limitations of this AI system', pick(r, 'aiLimitations', 'ai_limitations')),
+      ].join('');
+
+      // Citations. Unresolved ids are shown as such rather than hidden: a
+      // citation that cannot be resolved is a defect worth seeing.
+      const sources = r.sources || [];
+      const sourcesHtml = sources.length ? `
+        <div class="clin-section">
+          <div class="title">Evidence sources</div>
+          <ul class="sources-list">
+            ${sources.map((s, i) => {
+              const title = s.title || s.id;
+              const pub = s.publisher ? ` — ${escapeHtml(s.publisher)}` : '';
+              const link = s.url
+                ? `<br><a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(s.url)}</a>`
+                : '';
+              const unresolved = s.resolved === false
+                ? ' <span style="color:#ef4444;">(unresolved citation)</span>'
+                : '';
+              return `<li><span class="n">${i + 1}.</span>${escapeHtml(title)}${pub}${unresolved}${link}</li>`;
+            }).join('')}
+          </ul>
+        </div>` : '';
+
+      // Where the wording came from, and whether the numbers were calibrated.
+      const narrSource = pick(r, 'narrativeSource', 'narrative_source');
+      const grounded = r.evidenceGrounded ?? r.evidence_grounded;
+      const provParts = [];
+      if (narrSource) {
+        provParts.push(narrSource === 'reviewed_llm_narrative'
+          ? 'Narrative: clinician-reviewed, LLM-authored'
+          : 'Narrative: deterministic template (no LLM text served)');
+      }
+      if (grounded !== undefined && grounded !== null) {
+        provParts.push(grounded ? 'every claim carries a citation' : 'not evidence-grounded');
+      }
+      if (isCalibrated !== null) {
+        provParts.push(isCalibrated
+          ? 'probabilities temperature-calibrated'
+          : 'probabilities uncalibrated for this module');
+      }
+      const provenanceHtml = provParts.length
+        ? `<div class="provenance">${escapeHtml(provParts.join(' · '))}</div>`
+        : '';
+
+      let savedPill = '';
+      if (opts.showSaved) {
+        savedPill = r.saved
+          ? `<div class="saved-pill">✓ Saved to history</div>`
+          : `<div class="saved-pill fail">⚠ Not saved to history (database unavailable)</div>`;
+      }
+
+      const bandPill = band
+        ? `<div class="band-pill band-${escapeHtml(band)}">${escapeHtml(BAND_LABEL[band] || band)}</div>`
+        : '';
+
+      // The PDF is rendered from the image, which is never stored, so the
+      // download is only offered while the uploaded file is still in memory.
+      const pdfBtn = (!opts.detailMode && selectedFile)
+        ? `<button class="ghost-btn" id="pdf-btn" onclick="downloadPdf()">Download PDF Report</button>`
+        : '';
+
+      const buttons = opts.detailMode
+        ? `<div class="btn-row">
+             <button class="ghost-btn" onclick="openHistory()">← Back to History</button>
+             <button class="ghost-btn danger" onclick="deleteScan('${r.id}')">Delete Record</button>
+           </div>`
+        : `<div class="btn-row">
+             ${pdfBtn}
+             <button class="ghost-btn" onclick="resetToUpload()">Upload New Scan</button>
+             <button class="ghost-btn" onclick="openHistory()">View History</button>
+           </div>`;
+
+      target.innerHTML = `
+        <div class="result-header">
+          <div class="eyebrow">NeuraSight AI Report</div>
+          <div class="prediction">${escapeHtml(r.prediction)}</div>
+          <div><span class="modtag">${mod.icon} ${escapeHtml(mod.label)}</span></div>
+          ${bandPill}
+          ${savedPill}
+        </div>
+        ${warn}
+        ${setHtml}
+        <div class="result-cards">
+          <div class="result-card"><div class="label">Confidence</div><div class="val">${Number(r.confidence).toFixed(1)}%</div></div>
+          <div class="result-card"><div class="label">Risk Level</div><div class="val ${riskClass(r.riskLevel)}">${escapeHtml(r.riskLevel || '—')}</div></div>
+        </div>
+        ${caveatHtml}
+        ${heatmapHtml}
+        ${(r.aiSummary || r.recommendation) ? `
+          <div class="summary-section">
+            <div class="title">AI Summary</div>
+            <div class="text">${escapeHtml(r.aiSummary || '')}</div>
+            ${r.recommendation ? `<div class="rec">${escapeHtml(r.recommendation)}</div>` : ''}
+          </div>` : ''}
+        ${clinicalHtml}
+        <div class="prob-section">
+          <div class="title">Probability Distribution${isCalibrated ? ' (calibrated)' : ''}</div>
+          ${probHtml}
+        </div>
+        ${sourcesHtml}
+        ${provenanceHtml}
+        ${r.filename ? `<div class="disclaimer">File: ${escapeHtml(r.filename)} &nbsp;·&nbsp; ${fmtDate(r.createdAt)}</div>` : ''}
+        <div class="disclaimer">${escapeHtml(r.disclaimer || 'This AI-generated report is for clinical decision support only. It must not replace professional medical diagnosis. All findings should be validated by a qualified radiologist or specialist physician.')}</div>
+        ${buttons}
+      `;
+    }
+
+    /**
+     * Request a rendered PDF for the image still held in memory and hand it to
+     * the browser as a download.
+     */
+    async function downloadPdf() {
+      if (!selectedFile) return;
+      const btn = el('pdf-btn');
+      const original = btn ? btn.textContent : '';
+      if (btn) { btn.disabled = true; btn.textContent = 'Rendering PDF...'; }
+
+      try {
+        const form = new FormData();
+        form.append('image', selectedFile);
+        const res = await fetch(`/api/report/pdf?module=${selectedModule}`, {
+          method: 'POST',
+          body: form,
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || `PDF generation failed (${res.status})`);
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `neurasight_report_${selectedFile.name.replace(/\.[^.]+$/, '')}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        // Revoke on a delay: Firefox cancels an in-flight download otherwise.
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        if (btn) btn.textContent = '✓ PDF downloaded';
+      } catch (e) {
+        if (btn) btn.textContent = '⚠ PDF failed';
+        alert(e.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          setTimeout(() => { btn.textContent = original; }, 3000);
+        }
+      }
+    }
+
+    function resetToUpload() {
+      selectedFile = null;
+      uploadedImageDataUrl = null;
+      uploadBox.classList.remove('has-file');
+      uploadText.textContent = 'Drop medical image here or click to browse';
+      uploadText.classList.remove('selected');
+      preview.style.display = 'none';
+      fileInput.value = '';
+      analyzeBtn.disabled = true;
+      setTab('new');
+      showScreen('upload');
+    }
+
+    // ---------- history ----------
+    let page = 1;
+    let escalatedOnly = false;
+    let searchTimer = null;
+
+    el('f-module').addEventListener('change', () => { page = 1; loadHistory(); });
+    el('f-band').addEventListener('change', () => { page = 1; loadHistory(); });
+    el('f-escalated').addEventListener('click', () => {
+      escalatedOnly = !escalatedOnly;
+      el('f-escalated').classList.toggle('on', escalatedOnly);
+      page = 1;
+      loadHistory();
+    });
+    el('f-search').addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => { page = 1; loadHistory(); }, 300);
+    });
+    el('pg-prev').addEventListener('click', () => { if (page > 1) { page--; loadHistory(); } });
+    el('pg-next').addEventListener('click', () => { page++; loadHistory(); });
+
+    function openHistory() {
+      setTab('history');
+      showScreen('history');
+      loadStats();
+      loadHistory();
+    }
+
+    async function loadStats() {
+      const row = el('stats-row');
+      try {
+        const res = await fetch('/api/predictions/stats');
+        if (!res.ok) throw new Error('stats unavailable');
+        const s = await res.json();
+        const b = s.byBand || {};
+        row.innerHTML = `
+          <div class="stat"><div class="k">Total Scans</div><div class="v cyan">${s.total}</div></div>
+          <div class="stat"><div class="k">Brain MRI</div><div class="v">${s.byModule?.brain_mri || 0}</div></div>
+          <div class="stat"><div class="k">Chest X-ray</div><div class="v">${s.byModule?.chest_xray || 0}</div></div>
+          <div class="stat"><div class="k">Confident</div><div class="v" style="color:#10b981;">${b.confident || 0}</div></div>
+          <div class="stat"><div class="k">Borderline</div><div class="v amber">${b.borderline || 0}</div></div>
+          <div class="stat"><div class="k">Indeterminate</div><div class="v" style="color:#ef4444;">${b.indeterminate || 0}</div></div>
+          <div class="stat" title="Risk level raised because model uncertainty exceeded the reporting threshold"><div class="k">Risk Escalated</div><div class="v pink">${s.escalatedCount || 0}</div></div>
+          <div class="stat"><div class="k">Low Confidence (&lt;${s.lowConfidenceThreshold}%)</div><div class="v amber">${s.lowConfidenceCount}</div></div>
+          <div class="stat"><div class="k">Last Scan</div><div class="v" style="font-size:0.82rem;font-weight:600;">${s.lastScanAt ? fmtDate(s.lastScanAt) : '—'}</div></div>
+        `;
+      } catch (e) {
+        row.innerHTML = '';
+      }
+    }
+
+    async function loadHistory() {
+      const body = el('history-body');
+      body.innerHTML = `<div style="text-align:center;padding:3rem;color:rgba(255,255,255,0.3);font-size:0.8rem;">Loading...</div>`;
+
+      const params = new URLSearchParams({ page: String(page), limit: '20' });
+      const mod = el('f-module').value;
+      const bandFilter = el('f-band').value;
+      const q = el('f-search').value.trim();
+      if (mod) params.set('module', mod);
+      if (bandFilter) params.set('band', bandFilter);
+      if (q) params.set('q', q);
+      if (escalatedOnly) params.set('escalated', 'true');
+
+      try {
+        const res = await fetch(`/api/predictions?${params.toString()}`);
+        if (!res.ok) throw new Error(`Could not load history (${res.status})`);
+        const data = await res.json();
+
+        if (!data.items.length) {
+          el('pager').style.display = 'none';
+          body.innerHTML = `
+            <div class="empty">
+              <div class="big">📁</div>
+              <p>${q || mod || bandFilter || escalatedOnly ? 'No scans match these filters.' : 'No scans yet. Run your first analysis to build history.'}</p>
+              <button class="ghost-btn" style="max-width:240px;margin:0 auto;" onclick="resetToUpload()">Start a New Scan</button>
+            </div>`;
+          return;
+        }
+
+        body.innerHTML = `<div class="scan-list">${data.items.map(rowHtml).join('')}</div>`;
+        body.querySelectorAll('.scan-row').forEach((r) => {
+          r.addEventListener('click', () => openDetail(r.dataset.id));
+        });
+
+        el('pager').style.display = 'flex';
+        el('pg-info').textContent = `Page ${data.page} of ${data.totalPages} · ${data.total} scan${data.total === 1 ? '' : 's'}`;
+        el('pg-prev').disabled = data.page <= 1;
+        el('pg-next').disabled = !data.hasMore;
+        el('history-sub').textContent = `${data.total} past analys${data.total === 1 ? 'is' : 'es'}`;
+      } catch (e) {
+        el('pager').style.display = 'none';
+        body.innerHTML = `<div class="err-box">${escapeHtml(e.message)}<br><span style="color:rgba(255,255,255,0.4);font-size:0.72rem;">Check that the Express gateway (:5000) and MongoDB are running.</span></div>`;
+      }
+    }
+
+    function rowHtml(s) {
+      const mod = MODULE_META[s.module] || { icon: '🔬', label: s.module };
+      const confCls = s.lowConfidence ? 'low' : 'ok';
+
+      // The band is the primary status. Fall back to the confidence flag only
+      // for records that carry no band (pre-calibration, or a module without
+      // conformal artefacts).
+      let status = '';
+      if (s.uncertaintyBand) {
+        const setSize = (s.predictionSet || []).length;
+        const title = setSize > 1
+          ? `Prediction set: ${(s.predictionSet || []).join(', ')}`
+          : BAND_LABEL[s.uncertaintyBand] || s.uncertaintyBand;
+        status = `<span class="band-pill band-${escapeHtml(s.uncertaintyBand)}" style="margin:0;" title="${escapeHtml(title)}">${escapeHtml(BAND_LABEL[s.uncertaintyBand] || s.uncertaintyBand)}${setSize > 1 ? ` · ${setSize}` : ''}</span>`;
+      } else if (s.lowConfidence) {
+        status = '<span class="flag">Review</span>';
+      }
+
+      const escFlag = s.riskEscalated
+        ? '<span class="flag" style="margin-left:0.3rem;" title="Risk level escalated because uncertainty exceeded the reporting threshold">Escalated</span>'
+        : '';
+
+      return `
+        <div class="scan-row" data-id="${s.id}">
+          <div class="mod-icon" title="${escapeHtml(mod.label)}">${mod.icon}</div>
+          <div class="meta">
+            <div class="fname">${escapeHtml(s.filename)}</div>
+            <div class="when">${escapeHtml(mod.label)} · ${fmtDate(s.createdAt)}</div>
+          </div>
+          <div class="pred">${escapeHtml(s.prediction)}</div>
+          <div class="conf ${confCls}">${Number(s.confidence).toFixed(1)}%</div>
+          <div style="white-space:nowrap;">${status}${escFlag}</div>
+        </div>`;
+    }
+
+    async function openDetail(id) {
+      const c = el('detail-container');
+      c.innerHTML = `<div style="text-align:center;padding:4rem;color:rgba(255,255,255,0.3);font-size:0.8rem;">Loading scan...</div>`;
+      showScreen('detail');
+      try {
+        const res = await fetch(`/api/predictions/${id}`);
+        if (!res.ok) throw new Error('Scan record not found');
+        const rec = await res.json();
+        // The original upload is not stored, so only the heatmap is shown.
+        renderResults(rec, null, { target: c, detailMode: true });
+      } catch (e) {
+        c.innerHTML = `
+          <div class="err-box" style="margin-bottom:1.5rem;">${escapeHtml(e.message)}</div>
+          <div class="btn-row"><button class="ghost-btn" onclick="openHistory()">← Back to History</button></div>`;
+      }
+    }
+
+    async function deleteScan(id) {
+      if (!confirm('Delete this scan record permanently?')) return;
+      try {
+        const res = await fetch(`/api/predictions/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Delete failed');
+        openHistory();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    // Expose the handlers used by inline onclick attributes.
+    window.resetToUpload = resetToUpload;
+    window.openHistory = openHistory;
+    window.deleteScan = deleteScan;
+    window.downloadPdf = downloadPdf;
+  </script>
+</body>
+</html>

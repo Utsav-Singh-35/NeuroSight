@@ -1,0 +1,552 @@
+NeuraSight — System Architecture & ML Pipeline
+================================================
+
+Project: NeuraSight – AI-Powered Medical Imaging Platform
+Architecture: Microservices (React + Express.js + FastAPI + MongoDB)
+Modules: Brain MRI Tumor Classification | Chest X-ray Disease Detection
+Last Updated: August 2026
+
+--------------------------------------------------------------------------------
+
+1. HIGH-LEVEL SYSTEM ARCHITECTURE
+--------------------------------------------------------------------------------
+
+┌──────────┐   HTTP  ┌─────────────────────┐  HTTP  ┌──────────────────────┐
+│  React   │────────>│  Express.js Gateway │───────>│  FastAPI ML Service   │
+│ Frontend │<────────│  (:5000)            │<───────│  (:8000)              │
+│ (:3000)  │         │  • Image validation │        │  • Preprocessing      │
+└──────────┘         │  • Request routing  │        │  • Stacking Ensemble  │
+                     │  • CORS / Security  │        │    - EfficientNet-B0  │
+                     │  • Error handling   │        │    - ResNet-50        │
+                     │  • Prediction store │        │    - DenseNet-121     │
+                     └─────────┬───────────┘        │    - VGG-16           │
+                               │                    │    - LR Meta-Learner  │
+                               v                    │  • Grad-CAM           │
+                     ┌─────────────────────┐        │  • AI Report Gen      │
+                     │      MongoDB        │        └──────────────────────┘
+                     │  • predictions      │
+                     │  (createdAt index)  │
+                     └─────────────────────┘
+
+KEY DESIGN DECISIONS:
+
+  Decision                    Reasoning
+  ────────────────────────    ──────────────────────────────────────────────────
+  Two-service split           Node.js for I/O routing + MongoDB; Python for ML
+  Express as gateway          Single CORS origin, centralized validation
+  Synchronous forwarding      Express forwards to FastAPI (30s timeout)
+  Model loaded at startup     PyTorch models loaded once; health endpoint reports
+  Memory-efficient inference  Models loaded one at a time (~500MB vs 2.5GB+)
+  Plugin architecture         BaseModule ABC allows adding new modules easily
+
+--------------------------------------------------------------------------------
+
+2. USER FLOW — DASHBOARD (SCAN TYPE SELECTION)
+--------------------------------------------------------------------------------
+
+The dashboard presents two scan-type buttons:
+
+  ┌──────────────────┐  ┌──────────────────┐
+  │  Brain MRI       │  │  Chest X-ray     │   <-- User selects scan type
+  │  (active/cyan)   │  │  (inactive/gray) │
+  └──────────────────┘  └──────────────────┘
+
+  ┌──────────────────────────────────────────┐
+  │    Upload Image Area (JPEG/PNG)          │
+  └──────────────────────────────────────────┘
+
+  ┌──────────────────────────────────────────┐
+  │        [  ANALYZE SCAN  ]                │
+  └──────────────────────────────────────────┘
+
+REQUEST FLOW AFTER "ANALYZE SCAN":
+
+  1. User selects module: "brain_mri" or "chest_xray"
+  2. User uploads image and clicks "Analyze Scan"
+  3. Two parallel API calls fire:
+     - POST /report?module={selectedModule}   (body: image FormData)
+     - POST /gradcam?module={selectedModule}  (body: image FormData)
+  4. Vite dev proxy routes both to FastAPI (localhost:8000)
+  5. FastAPI validates image -> looks up module in registry
+  6. Module runs: preprocess -> ensemble inference -> Grad-CAM -> report
+  7. Results returned to dashboard:
+     - Prediction label (e.g., "Glioma" or "Pneumonia")
+     - Confidence percentage
+     - Risk Level (High / Medium / Low)
+     - Grad-CAM heatmap (hidden for "No Tumor" / "Normal")
+     - AI Summary + Clinical Recommendation
+     - Probability distribution bars
+     - Medical disclaimer
+
+--------------------------------------------------------------------------------
+
+3. ML PIPELINE ARCHITECTURE — STACKING ENSEMBLE
+--------------------------------------------------------------------------------
+
+SHARED PREPROCESSING (BOTH MODULES):
+
+  Input: Raw image bytes (JPEG/PNG)
+    |
+    v
+  1. PIL.Image.open() + verify integrity
+  2. Convert to RGB (grayscale -> 3ch, RGBA -> drop alpha)
+  3. Resize 224x224 (bilinear interpolation)
+  4. Normalize: pixels / 255.0
+  5. ImageNet standardization:
+     normalized = (pixel - mean) / std
+     mean = [0.485, 0.456, 0.406]
+     std  = [0.229, 0.224, 0.225]
+  6. Channels-first: (H,W,C) -> (C,H,W)
+  7. Add batch dim: (C,H,W) -> (1,C,H,W)
+    |
+    v
+  Output: PyTorch tensor [1, 3, 224, 224] float32
+
+ENSEMBLE PIPELINE (BRAIN MRI — 4 MODELS):
+
+                   Preprocessed Tensor [1, 3, 224, 224]
+                                  |
+      ┌───────────────┬───────────┴───────────┬───────────────┐
+      v               v                       v               v
+EfficientNet-B0   ResNet-50             DenseNet-121       VGG-16
+  (5.3M params)  (25.6M params)          (8.0M params)  (138M params)
+      |               |                       |               |
+      v               v                       v               v
+ Softmax [4]     Softmax [4]            Softmax [4]      Softmax [4]
+      |               |                       |               |
+      └───────────────┴───────────┬───────────┴───────────────┘
+                                  v
+                Feature Concatenation -> [16 features]
+                 (4 probs x 4 models = 16-dimensional vector)
+                                  v
+              Logistic Regression Meta-Learner
+              (scikit-learn, trained leakage-safe)
+                                  v
+                    Final Prediction (4 classes)
+                    + Confidence (meta-learner probability)
+                                  v
+              Grad-CAM (from agreeing base model)
+                                  v
+                     AI Clinical Report
+
+
+ENSEMBLE PIPELINE (CHEST X-RAY — 3 MODELS):
+
+                   Preprocessed Tensor [1, 3, 224, 224]
+                                  |
+      ┌───────────────┬───────────┴───────────┐
+      v               v                       v
+EfficientNet-B0   ResNet-50             DenseNet-121
+  (5.3M params)  (25.6M params)          (8.0M params)
+      |               |                       |
+      v               v                       v
+ Softmax [3]     Softmax [3]            Softmax [3]
+      |               |                       |
+      └───────────────┴───────────┬───────────┘
+                                  v
+                Feature Concatenation -> [9 features]
+                 (3 probs x 3 models = 9-dimensional vector)
+                                  v
+              Logistic Regression Meta-Learner
+              (scikit-learn, trained leakage-safe)
+                                  v
+                    Final Prediction (3 classes)
+                    + Confidence (meta-learner probability)
+                                  v
+              Grad-CAM (from agreeing base model)
+                                  v
+                     AI Clinical Report
+
+--------------------------------------------------------------------------------
+
+4. MODEL TRAINING COMPARISON
+--------------------------------------------------------------------------------
+
+4.1 BRAIN MRI (4 Classes: Glioma, Meningioma, No Tumor, Pituitary)
+
+Dataset: Kaggle Brain Tumor MRI Dataset
+Training: 5,600 images | Testing: 1,600 images (400 per class, balanced)
+Platform: Google Colab (Tesla T4 GPU)
+
+OVERALL MODEL COMPARISON:
+
+  Model                 Accuracy   Precision   Recall   F1      Parameters
+  ───────────────────   ────────   ─────────   ──────   ─────   ──────────
+  Stacking Ensemble     96.75%     96.81       96.75    96.71   All combined
+  DenseNet-121          96.06%     96.32       96.06    95.97   8.0M
+  EfficientNet-B0       95.06%     95.52       95.06    94.92   5.3M
+  ResNet-50             94.88%     95.29       94.88    94.74   25.6M
+  VGG-16                94.56%     95.12       94.56    94.41   138M
+
+FAIR COMPARISON (Same 800-image Meta-Test Split):
+
+  Model                 Accuracy
+  ───────────────────   ────────
+  Stacking Ensemble     96.75%
+  DenseNet-121          95.88%
+  EfficientNet-B0       95.12%
+  ResNet-50             95.12%
+  VGG-16                94.75%
+
+PER-CLASS PERFORMANCE (Stacking Ensemble):
+
+  Class          Precision   Recall   F1     Risk Level
+  ────────────   ─────────   ──────   ─────  ──────────
+  Glioma         0.98        0.90     0.93   High
+  Meningioma     0.95        0.98     0.97   Medium
+  No Tumor       0.95        1.00     0.97   Low
+  Pituitary      0.99        0.99     0.99   Medium
+
+PER-CLASS PERFORMANCE (EfficientNet-B0 Single Model):
+
+  Class          Precision   Recall   F1
+  ────────────   ─────────   ──────   ─────
+  Glioma         1.00        0.81     0.89
+  Meningioma     0.90        0.99     0.95
+  No Tumor       0.92        1.00     0.96
+  Pituitary      0.99        1.00     1.00
+
+KEY IMPROVEMENT: Glioma recall improved from 0.81 (single EfficientNet) to
+0.90 (ensemble). Different architectures make different errors; the
+meta-learner exploits their complementary strengths.
+
+
+4.2 CHEST X-RAY (3 Classes: Normal, Pneumonia, Tuberculosis)
+
+Dataset: Chest X-ray images (Normal, Pneumonia, Tuberculosis)
+Platform: Google Colab (Tesla T4 GPU)
+
+OVERALL MODEL COMPARISON:
+
+  Model                Architecture                Role           Parameters
+  ───────────────────  ─────────────────────────   ────────────   ──────────
+  EfficientNet-B0      efficientnet_b0, nc=3       Base learner   5.3M
+  ResNet-50            resnet50, nc=3              Base learner   25.6M
+  DenseNet-121         densenet121, nc=3           Base learner   8.0M
+  Stacking Ensemble    LogisticRegression (9 feat) Meta-learner   —
+
+ENSEMBLE RESULT:
+
+  Metric                        Score
+  ────────────────────────────  ─────
+  Stacking Ensemble Accuracy    82%
+  Feature Dimension             9 (3 probs x 3 models)
+  Meta-Learner                  Logistic Regression
+
+PER-CLASS CLINICAL BEHAVIOR:
+
+  Class           Risk Level   Grad-CAM                  AI Recommendation
+  ─────────────   ──────────   ───────────────────────   ─────────────────────────────
+  Normal          Low          Hidden                    No intervention needed
+  Pneumonia       High         Shown (consolidation)     Pulmonologist consultation
+  Tuberculosis    High         Shown (upper lobe)        Infectious disease specialist
+
+--------------------------------------------------------------------------------
+
+5. MODULE COMPARISON (BRAIN MRI vs CHEST X-RAY)
+--------------------------------------------------------------------------------
+
+  Aspect                Brain MRI                          Chest X-ray
+  ────────────────────  ─────────────────────────────────  ─────────────────────────────
+  Classes               4 (Glioma, Meningioma,             3 (Normal, Pneumonia,
+                          No Tumor, Pituitary)               Tuberculosis)
+  Base Models           4 (EfficientNet, ResNet,           3 (EfficientNet, ResNet,
+                          DenseNet, VGG)                     DenseNet)
+  Feature Vector Size   16 (4 probs x 4 models)           9 (3 probs x 3 models)
+  Meta-Learner          Logistic Regression                Logistic Regression
+  Ensemble Accuracy     96.75%                             82%
+  Models Directory      models/                            chest/
+  Model Prefix          BRAIN_MRI_*                        CHEST_XRAY_*
+  Meta-learner File     meta_model.pkl                     meta_model_Chest_Xray.pkl
+  Config File           ensemble_config.json               chest_xray_ensemble_config.json
+  Heatmap Hidden When   Prediction = "No Tumor"            Prediction = "Normal"
+  Input Size            224 x 224 x 3                      224 x 224 x 3
+  Normalization         ImageNet mean/std                  ImageNet mean/std
+
+--------------------------------------------------------------------------------
+
+6. PLUGIN ARCHITECTURE (MODULE ENGINE)
+--------------------------------------------------------------------------------
+
+  BaseModule (Abstract Base Class)
+  ├── module_id        -> "brain_mri" / "chest_xray"
+  ├── display_name     -> "Brain MRI Tumor Classification"
+  ├── classes          -> ["Glioma", ...] / ["Normal", ...]
+  ├── models_dir       -> settings.MODELS_DIR / CHEST_DIR
+  ├── predict(bytes)   -> {prediction, confidence, probs}
+  ├── gradcam(bytes)   -> {heatmap, prediction, confidence}
+  ├── report(bytes)    -> {prediction, risk, summary, ...}
+  └── is_available()   -> bool (model weights exist?)
+         |
+         |-- implements
+         |
+    ┌────┴────────────────────┐
+    v                         v
+  BrainMRIModule          ChestXrayModule
+  • 4 base models          • 3 base models
+  • 16-dim features        • 9-dim features
+  • models/ dir            • chest/ dir
+    |                         |
+    └────────────┬────────────┘
+                 v
+         ModuleRegistry
+         • init_registry() registers both modules
+         • get("brain_mri") -> BrainMRIModule
+         • get("chest_xray") -> ChestXrayModule
+
+Adding a new imaging module (e.g., skin_lesion, retinal) requires:
+  1. Create app/modules/{module_id}/ with module.py, metadata.json, config.py
+  2. Implement BaseModule interface
+  3. Register in init_registry()
+  4. Place model weights in the configured directory
+
+--------------------------------------------------------------------------------
+
+7. GRAD-CAM EXPLAINABILITY
+--------------------------------------------------------------------------------
+
+TARGET LAYERS PER ARCHITECTURE:
+
+  Architecture       Target Layer              Rationale
+  ────────────────   ───────────────────────   ──────────────────────────────
+  EfficientNet-B0    model.blocks[-1]          Last MBConv block
+  ResNet-50          model.layer4[-1]          Last residual block
+  DenseNet-121       model.features[-1]        Last dense block
+  VGG-16             Last nn.Conv2d (auto)     Deepest conv layer
+
+ENSEMBLE GRAD-CAM STRATEGY:
+  1. Run ensemble inference -> get final prediction
+  2. Find base model whose argmax == ensemble's final class
+  3. If multiple agree, pick highest-confidence one
+  4. Generate Grad-CAM from that model's target layer
+  5. Apply JET colormap at 40% opacity over original image
+  6. Encode as base64 PNG and return to frontend
+
+--------------------------------------------------------------------------------
+
+8. AI REPORT GENERATION
+--------------------------------------------------------------------------------
+
+Both modules share the same report service with class-specific templates:
+
+  Prediction      Module       Risk     Clinical Recommendation
+  ─────────────   ──────────   ──────   ────────────────────────────────────────
+  Glioma          brain_mri    High     Neuro-oncologist / neurosurgeon
+  Meningioma      brain_mri    Medium   Neurologist monitoring, periodic imaging
+  Pituitary       brain_mri    Medium   Endocrinologist + neurosurgeon referral
+  No Tumor        brain_mri    Low      No intervention; neurologist if symptoms
+  Normal          chest_xray   Low      No intervention; pulmonologist if symptoms
+  Pneumonia       chest_xray   High     Pulmonologist / infectious disease
+  Tuberculosis    chest_xray   High     Infectious disease, sputum AFB + GeneXpert
+
+Each report includes:
+  - Prediction + confidence
+  - Risk level
+  - Condition description
+  - AI summary (with secondary findings if confidence < 99%)
+  - Clinical recommendation
+  - Medical disclaimer
+
+--------------------------------------------------------------------------------
+
+9. EFFICIENTNET-B0 TRAINING CURVE (BRAIN MRI PRIMARY BASE LEARNER)
+--------------------------------------------------------------------------------
+
+  Epoch   Train Loss   Train Acc   Val Loss   Val Acc   Best?
+  ─────   ──────────   ─────────   ────────   ───────   ─────
+  1       0.5928       83.82%      0.5894     88.56%    Yes
+  2       0.1572       94.36%      0.5160     91.88%    Yes
+  3       0.0700       97.41%      0.6055     92.56%    Yes
+  4       0.0585       97.93%      0.5613     93.81%    Yes
+  5       0.0414       98.59%      0.5871     93.75%    No
+  6       0.0343       98.82%      0.6172     94.31%    Yes
+  7       0.0267       99.16%      0.6516     94.25%    No
+  8       0.0224       99.29%      0.5664     94.44%    Yes
+  9*      0.0212       99.38%      0.5768     95.06%    Yes (BEST)
+  10      0.0183       99.41%      0.6194     94.62%    No
+
+Training Observations:
+  - Rapid convergence: 83% -> 94% in 2 epochs (transfer learning benefit)
+  - Mild overfitting: 4.4% gap (train 99.41% vs val 95.06%)
+  - Best checkpoint saved at epoch 9
+  - Validation loss fluctuated — not steadily decreasing
+
+--------------------------------------------------------------------------------
+
+10. TRAINING CONFIGURATION
+--------------------------------------------------------------------------------
+
+SHARED SETTINGS (ALL BASE MODELS):
+
+  Setting          Value
+  ──────────────   ─────────────────────────────────────────
+  Framework        PyTorch 2.2 + timm 0.9.16
+  Pre-training     ImageNet (1.2M images, 1000 classes)
+  Input Size       224 x 224 x 3 (RGB)
+  Normalization    ImageNet mean/std
+  Optimizer        AdamW (lr=0.0001)
+  Loss             CrossEntropyLoss
+  Batch Size       32
+  Platform         Google Colab (Tesla T4 GPU, 16GB VRAM)
+
+BRAIN MRI TRAINING:
+
+  Setting              Value
+  ──────────────────   ─────────────────────────────────────────
+  Training images      5,600
+  Test images          1,600 (400 per class)
+  Epochs               10
+  Classes              Glioma, Meningioma, No Tumor, Pituitary
+  Best val accuracy    95.06% (EfficientNet-B0, epoch 9)
+
+CHEST X-RAY TRAINING:
+
+  Setting              Value
+  ──────────────────   ─────────────────────────────────────────
+  Classes              Normal, Pneumonia, Tuberculosis
+  Models trained       EfficientNet-B0, ResNet-50, DenseNet-121
+  Ensemble accuracy    82%
+
+AUGMENTATION PIPELINE (TRAINING):
+
+  transforms.Compose([
+      transforms.Resize((224, 224)),
+      transforms.RandomHorizontalFlip(),
+      transforms.RandomRotation(10),
+      transforms.ColorJitter(brightness=0.2, contrast=0.2),
+      transforms.ToTensor(),
+      transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+  ])
+
+--------------------------------------------------------------------------------
+
+11. STACKING ENSEMBLE — HOW IT WORKS
+--------------------------------------------------------------------------------
+
+TRAINING PHASE (LEAKAGE-SAFE):
+
+  1. Each base model outputs softmax probabilities on the test set
+  2. Concatenate all model outputs:
+     - Brain MRI: (1600, 4) x 4 models -> (1600, 16)
+     - Chest X-ray: (N, 3) x 3 models -> (N, 9)
+  3. Stratified split into meta-train (50%) / meta-test (50%)
+  4. Train Logistic Regression on meta-train probabilities
+  5. Evaluate on meta-test (ensemble never sees its own eval data)
+
+INFERENCE PHASE (BACKEND):
+
+  1. Preprocess image -> tensor [1, 3, 224, 224]
+  2. Load each base model one at a time:
+     - Forward pass -> softmax probabilities
+     - Free model from memory (gc.collect)
+  3. Concatenate all probability vectors
+  4. Meta-learner predicts final class + confidence
+  5. Pick agreeing base model for Grad-CAM
+  6. Generate clinical report
+
+--------------------------------------------------------------------------------
+
+12. MODEL ARTIFACTS
+--------------------------------------------------------------------------------
+
+BRAIN MRI MODULE (models/ directory):
+
+  File                          Description                    Size
+  ────────────────────────────  ───────────────────────────    ──────
+  BRAIN_MRI_EFFICIENTNET.pth    EfficientNet-B0 state_dict     ~16 MB
+  BRAIN_MRI_RESNET.pth          ResNet-50 state_dict           ~90 MB
+  BRAIN_MRI_DENSENET.pth        DenseNet-121 state_dict        ~28 MB
+  BRAIN_MRI_VGG.pth             VGG-16 state_dict              ~512 MB
+  meta_model.pkl                LR meta-learner                ~1 KB
+  ensemble_config.json          Model order + save names       ~1 KB
+
+CHEST X-RAY MODULE (chest/ directory):
+
+  File                              Description
+  ──────────────────────────────    ───────────────────────────────────────
+  CHEST_XRAY_EFFICIENTNET.pth       EfficientNet-B0 state_dict (3 classes)
+  CHEST_XRAY_RESNET.pth             ResNet-50 state_dict (3 classes)
+  CHEST_XRAY_DENSENET.pth           DenseNet-121 state_dict (3 classes)
+  meta_model_Chest_Xray.pkl         LR meta-learner
+  chest_xray_ensemble_config.json   Model order + save names
+
+--------------------------------------------------------------------------------
+
+13. TECHNOLOGY STACK
+--------------------------------------------------------------------------------
+
+  Layer           Technology                          Purpose
+  ─────────────   ─────────────────────────────────  ────────────────────────────
+  Frontend        React 18, Vite, Three.js, GSAP     UI, 3D viz, animations
+  API Gateway     Express.js 4.18, Multer, Mongoose  Routing, validation, MongoDB
+  ML Service      FastAPI 0.110, PyTorch 2.2, timm   Inference, Grad-CAM
+  Meta-Learner    scikit-learn (LogisticRegression)   Stacking ensemble head
+  Explainability  pytorch-grad-cam, OpenCV           Heatmap generation
+  Database        MongoDB 6.x                        Prediction history
+  Training        Google Colab (Tesla T4 GPU)        Model training
+  Packages        pip (Python), npm (Node.js)        Dependency management
+
+--------------------------------------------------------------------------------
+
+14. SEQUENCE DIAGRAM — COMPLETE PREDICTION FLOW
+--------------------------------------------------------------------------------
+
+Frontend          Express Backend           FastAPI Service         MongoDB
+   |                    |                        |                     |
+   |  POST /api/predict |                        |                     |
+   |  + module param    |                        |                     |
+   |------------------->|                        |                     |
+   |                    | Validate image         |                     |
+   |                    | (JPEG/PNG, <=10MB)     |                     |
+   |                    |                        |                     |
+   |                    |  POST /predict?module= |                     |
+   |                    |----------------------->|                     |
+   |                    |                        | 1. Registry lookup   |
+   |                    |                        | 2. Preprocess        |
+   |                    |                        | 3. Ensemble inference|
+   |                    |                        |    (sequential models|
+   |                    |                        |     + meta-learner)  |
+   |                    |                        |                     |
+   |                    |  200 JSON response     |                     |
+   |                    |<-----------------------|                     |
+   |                    |                        |                     |
+   |                    | Store in MongoDB       |                     |
+   |                    |-------------------------------------------->|
+   |                    |                        |                     |
+   |  200 JSON response |                        |                     |
+   |<-------------------|                        |                     |
+
+--------------------------------------------------------------------------------
+
+15. SUMMARY
+--------------------------------------------------------------------------------
+
+  Metric                Brain MRI              Chest X-ray
+  ────────────────────  ─────────────────────  ─────────────────────
+  Ensemble Accuracy     96.75%                 82%
+  Best Single Model     DenseNet-121 (96.06%)  —
+  Number of Base Models 4                      3
+  Feature Vector Size   16                     9
+  Meta-Learner          Logistic Regression    Logistic Regression
+  Training Platform     Google Colab (T4 GPU)  Google Colab (T4 GPU)
+  Preprocessing         ImageNet norm, 224x224 ImageNet norm, 224x224
+  Grad-CAM              Yes (agreeing model)   Yes (agreeing model)
+  AI Clinical Report    Yes                    Yes
+  Heatmap Hidden For    "No Tumor"             "Normal"
+  Memory-Efficient      Yes (sequential load)  Yes (sequential load)
+
+RESEARCH CONTRIBUTION:
+
+  Single Model (EfficientNet-B0)   ->  95.06% (Brain MRI)
+  Stacking Ensemble (4 CNNs + LR)  ->  96.75% (Brain MRI)   <- +1.69% improvement
+  Stacking Ensemble (3 CNNs + LR)  ->  82%    (Chest X-ray)
+
+The stacking ensemble combines complementary strengths of different CNN
+architectures. Each model makes different errors — the Logistic Regression
+meta-learner learns which model to trust for which class, producing a final
+prediction that exceeds any single model's accuracy.
+
+--------------------------------------------------------------------------------
+
+Document generated from NeuraSight project source code and training artifacts.
+NeuraSight — Final Year Project | AI-Powered Medical Imaging Platform

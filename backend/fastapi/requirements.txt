@@ -1,0 +1,72 @@
+# ==========================================================
+#  NeuraSight - FastAPI ML service
+# ==========================================================
+# Versions are the ones this project was actually measured on (CPU, Python
+# 3.11), not aspirational pins.
+#
+#   python -m venv .venv
+#   .venv\Scripts\activate          # Windows
+#   pip install -r requirements.txt
+#
+# torch/torchvision below install the default CPU wheels. For CUDA, install
+# those two separately first from https://pytorch.org/get-started/locally/ and
+# then run this file; pip will leave them alone.
+
+# --- Web service -----------------------------------------------------------
+fastapi==0.109.0
+uvicorn==0.27.0
+pydantic==2.13.5
+pydantic-settings==2.2.1
+python-dotenv==1.2.1
+python-multipart==0.0.6
+
+# --- Deep learning ---------------------------------------------------------
+torch==2.7.1
+torchvision==0.22.1
+timm==1.0.24
+
+# --- Imaging / numerics ----------------------------------------------------
+pillow==10.4.0
+numpy==1.26.4
+# cv2: Grad-CAM overlays and the Laplacian-variance blur check.
+opencv-python==4.13.0.92
+scipy==1.15.3
+
+# --- Stacking meta-learner -------------------------------------------------
+# MUST be 1.6.1: models/meta_model.pkl and chest/meta_model_Chest_Xray.pkl were
+# pickled with 1.6.1, and sklearn does not support cross-version unpickling.
+# Every measurement committed to this repo was taken under 1.5.1 and therefore
+# emitted an InconsistentVersionWarning at startup - a known deviation, recorded
+# rather than hidden. Installing 1.6.1 is the correct state; if you change it,
+# re-run the regression check in the README before trusting any number.
+scikit-learn==1.6.1
+joblib==1.4.2
+
+# --- Evidence retrieval ----------------------------------------------------
+# all-MiniLM-L6-v2, 384-dim. Pulls in transformers + huggingface-hub.
+# The knowledge base is 28 chunks / 40 KB, so there is deliberately no vector
+# database: brute-force cosine over a (28, 384) NumPy array is faster.
+sentence-transformers==6.1.0
+
+# --- Reporting -------------------------------------------------------------
+# PDF reports (platypus flowables).
+reportlab==4.0.9
+# Reliability diagrams for the calibration analysis.
+matplotlib==3.9.2
+
+# --- Offline narrative authoring (NOT needed to run the app) ---------------
+# The application never calls an LLM at request time; the 12 narratives in
+# knowledge/narratives/ are pre-generated and served from disk behind a
+# human-review gate. This is only required to re-author them.
+groq==1.7.0
+
+# --- Tests -----------------------------------------------------------------
+pytest==8.3.3
+hypothesis==6.112.1
+httpx==0.28.1
+
+# --- Optional --------------------------------------------------------------
+# pytorch_grad_cam is NOT installed here, so the hand-written Grad-CAM path
+# runs. That path honours the requested target class. If you install grad-cam,
+# re-verify heatmaps against the regression baselines in the README first.
+# grad-cam==1.5.0
