@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="782" viewBox="0 0 400 782" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 z" fill="#1a2a47"/>
+    </marker>
+    <style>
+      .bx { stroke-width: 1.2; rx: 9; }
+      .t  { fill: #1a2a47; font-size: 11.5px; text-anchor: middle; }
+      .tb { fill: #1a2a47; font-size: 12px; font-weight: bold; text-anchor: middle; }
+      .ts { fill: #24344f; font-size: 10.2px; text-anchor: middle; }
+      .ti { fill: #24344f; font-size: 10px; text-anchor: middle; font-style: italic; }
+      .ln { stroke: #1a2a47; stroke-width: 1.2; fill: none; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="400" height="782" fill="#ffffff"/>
+  <rect x="6" y="6" width="388" height="766" rx="10" fill="#fdfdff" stroke="#9ec9e2" stroke-width="1.4" stroke-dasharray="7 5"/>
+
+  <rect class="bx" x="26" y="20" width="348" height="36" fill="#ece8f8" stroke="#b0a4d9"/>
+  <text class="tb" x="200" y="43" font-size="12.5">(F) CALIBRATION AND CONFORMAL DECISION LAYER</text>
+
+  <rect class="bx" x="50" y="72" width="300" height="46" fill="#dbeafe" stroke="#6b9bd2"/>
+  <text class="tb" x="200" y="92">Base Model Logit Outputs</text>
+  <text class="ts" x="200" y="107">(from each base CNN of the module)</text>
+  <line class="ln" x1="200" y1="118" x2="200" y2="130" marker-end="url(#ar)"/>
+
+  <rect class="bx" x="34" y="132" width="332" height="130" fill="#e9f3fb" stroke="#6b9bd2"/>
+  <text class="tb" x="200" y="152">Temperature Scaling</text>
+  <rect x="48" y="162" width="304" height="92" rx="6" fill="#ffffff" stroke="#b9d4ea" stroke-width="1"/>
+  <text class="ts" x="200" y="178">Per-model temperature value fitted separately</text>
+  <text class="ts" x="200" y="196">EfficientNet-B0 : T = 3.3542</text>
+  <text class="ts" x="200" y="211">VGG-16 : T = 3.0329</text>
+  <text class="ts" x="200" y="226">DenseNet-121 : T = 1.9523</text>
+  <text class="ts" x="200" y="241">ResNet-50 : T = 1.7743</text>
+  <line class="ln" x1="200" y1="262" x2="200" y2="274" marker-end="url(#ar)"/>
+
+  <rect class="bx" x="50" y="278" width="300" height="46" fill="#fce4e4" stroke="#e39aa0"/>
+  <text class="tb" x="200" y="298">Temperature-Corrected Probabilities</text>
+  <text class="ts" x="200" y="313">(predicted class unchanged by the correction)</text>
+  <line class="ln" x1="200" y1="324" x2="200" y2="336" marker-end="url(#ar)"/>
+
+  <rect class="bx" x="50" y="340" width="300" height="46" fill="#ddf1e0" stroke="#8cc79a"/>
+  <text class="tb" x="200" y="360">Logistic Regression Meta-Learner</text>
+  <text class="ts" x="200" y="375">(Ensemble Decision Layer)</text>
+  <line class="ln" x1="200" y1="386" x2="200" y2="398" marker-end="url(#ar)"/>
+
+  <rect class="bx" x="34" y="402" width="332" height="68" fill="#ece8f8" stroke="#b0a4d9"/>
+  <text class="tb" x="200" y="422">Split Conformal Prediction</text>
+  <text class="ts" x="200" y="439">Score : s = 1 &#8722; p (candidate class)</text>
+  <text class="ts" x="200" y="455">Compared against calibrated threshold q&#770;</text>
+  <line class="ln" x1="200" y1="470" x2="200" y2="482" marker-end="url(#ar)"/>
+
+  <rect class="bx" x="34" y="486" width="332" height="50" fill="#dbeafe" stroke="#6b9bd2"/>
+  <text class="tb" x="200" y="506">Prediction Set Construction</text>
+  <text class="ts" x="200" y="522">Admit every class whose score falls below q&#770;</text>
+  <line class="ln" x1="200" y1="536" x2="200" y2="548" marker-end="url(#ar)"/>
+
+  <rect class="bx" x="70" y="552" width="260" height="40" fill="#fdf1d8" stroke="#e0b56a"/>
+  <text class="tb" x="200" y="577">Confidence Band Assignment</text>
+
+  <line class="ln" x1="200" y1="592" x2="200" y2="608"/>
+  <line class="ln" x1="84" y1="608" x2="316" y2="608"/>
+  <line class="ln" x1="84" y1="608" x2="84" y2="618" marker-end="url(#ar)"/>
+  <line class="ln" x1="200" y1="608" x2="200" y2="618" marker-end="url(#ar)"/>
+  <line class="ln" x1="316" y1="608" x2="316" y2="618" marker-end="url(#ar)"/>
+
+  <rect class="bx" x="28" y="622" width="112" height="58" fill="#ddf1e0" stroke="#8cc79a"/>
+  <text class="tb" x="84" y="644" font-size="11">Confident</text>
+  <text class="ts" x="84" y="660">set size = 1</text>
+  <text class="ti" x="84" y="673">single class</text>
+
+  <rect class="bx" x="144" y="622" width="112" height="58" fill="#fdf1d8" stroke="#e0b56a"/>
+  <text class="tb" x="200" y="644" font-size="11">Borderline</text>
+  <text class="ts" x="200" y="660">set size 2 &#8211; 3</text>
+  <text class="ti" x="200" y="673">ambiguous</text>
+
+  <rect class="bx" x="260" y="622" width="112" height="58" fill="#fce4e4" stroke="#e39aa0"/>
+  <text class="tb" x="316" y="644" font-size="11">Escalated</text>
+  <text class="ts" x="316" y="660">set size &gt; 3</text>
+  <text class="ti" x="316" y="673">human review</text>
+
+  <line class="ln" x1="84" y1="680" x2="84" y2="694"/>
+  <line class="ln" x1="200" y1="680" x2="200" y2="694"/>
+  <line class="ln" x1="316" y1="680" x2="316" y2="694"/>
+  <line class="ln" x1="84" y1="694" x2="316" y2="694"/>
+  <line class="ln" x1="200" y1="694" x2="200" y2="708" marker-end="url(#ar)"/>
+
+  <rect class="bx" x="34" y="712" width="332" height="50" fill="#ece8f8" stroke="#b0a4d9"/>
+  <text class="tb" x="200" y="732">Reported Result</text>
+  <text class="ts" x="200" y="748">Calibrated confidence + prediction set + band</text>
+</svg>

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="460" height="812" viewBox="0 0 460 812" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="ar2" markerWidth="9" markerHeight="9" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 z" fill="#1a2a47"/>
+    </marker>
+    <style>
+      .bx { stroke-width: 1.2; rx: 9; }
+      .tb { fill: #1a2a47; font-size: 12px; font-weight: bold; text-anchor: middle; }
+      .ts { fill: #24344f; font-size: 10.2px; text-anchor: middle; }
+      .ti { fill: #24344f; font-size: 9.6px; text-anchor: middle; font-style: italic; }
+      .ln { stroke: #1a2a47; stroke-width: 1.2; fill: none; }
+      .lr { stroke: #c0737b; stroke-width: 1.2; fill: none; stroke-dasharray: 5 3; }
+      .tr { fill: #8f3b45; font-size: 9.6px; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="460" height="812" fill="#ffffff"/>
+  <rect x="6" y="6" width="448" height="796" rx="10" fill="#fdfdff" stroke="#9ec9e2" stroke-width="1.4" stroke-dasharray="7 5"/>
+
+  <rect class="bx" x="26" y="20" width="408" height="36" fill="#ece8f8" stroke="#b0a4d9"/>
+  <text class="tb" x="230" y="43" font-size="12.5">(G) INPUT SCREENING AND EVIDENCE LAYER</text>
+
+  <rect class="bx" x="55" y="72" width="270" height="46" fill="#dbeafe" stroke="#6b9bd2"/>
+  <text class="tb" x="190" y="92">Uploaded Medical Image</text>
+  <text class="ts" x="190" y="107">(via web interface)</text>
+  <line class="ln" x1="190" y1="118" x2="190" y2="130" marker-end="url(#ar2)"/>
+
+  <rect class="bx" x="40" y="132" width="300" height="104" fill="#e9f3fb" stroke="#6b9bd2"/>
+  <text class="tb" x="190" y="152">Stage 1 &#8212; Technical Quality Screening</text>
+  <rect x="54" y="162" width="272" height="64" rx="6" fill="#ffffff" stroke="#b9d4ea" stroke-width="1"/>
+  <text class="ts" x="190" y="180">Sharpness &#8212; variance of the Laplacian</text>
+  <text class="ts" x="190" y="196">Contrast</text>
+  <text class="ts" x="190" y="212">Resolution</text>
+
+  <line class="lr" x1="340" y1="184" x2="366" y2="184" marker-end="url(#ar2)"/>
+  <rect class="bx" x="366" y="160" width="76" height="48" fill="#fce4e4" stroke="#e39aa0"/>
+  <text class="tr" x="404" y="180">Request</text>
+  <text class="tr" x="404" y="193">Refused</text>
+  <line class="ln" x1="190" y1="236" x2="190" y2="248" marker-end="url(#ar2)"/>
+
+  <rect class="bx" x="55" y="252" width="270" height="46" fill="#fce4e4" stroke="#e39aa0"/>
+  <text class="tb" x="190" y="272">Base CNN Models</text>
+  <text class="ts" x="190" y="287">Softmax probability outputs</text>
+  <line class="ln" x1="190" y1="298" x2="190" y2="310" marker-end="url(#ar2)"/>
+
+  <rect class="bx" x="40" y="314" width="300" height="92" fill="#ece8f8" stroke="#b0a4d9"/>
+  <text class="tb" x="190" y="334">Stage 2 &#8212; Distribution Screening</text>
+  <rect x="54" y="344" width="272" height="52" rx="6" fill="#ffffff" stroke="#cfc6e8" stroke-width="1"/>
+  <text class="ts" x="190" y="362">Mean pairwise Jensen&#8211;Shannon divergence</text>
+  <text class="ts" x="190" y="378">between the base model distributions</text>
+  <text class="ti" x="190" y="391">divergence above threshold &#8658; outside training distribution</text>
+
+  <line class="lr" x1="340" y1="358" x2="366" y2="358" marker-end="url(#ar2)"/>
+  <rect class="bx" x="366" y="334" width="76" height="48" fill="#fce4e4" stroke="#e39aa0"/>
+  <text class="tr" x="404" y="354">Request</text>
+  <text class="tr" x="404" y="367">Refused</text>
+  <line class="ln" x1="190" y1="406" x2="190" y2="418" marker-end="url(#ar2)"/>
+
+  <rect class="bx" x="40" y="422" width="300" height="46" fill="#ddf1e0" stroke="#8cc79a"/>
+  <text class="tb" x="190" y="442">Calibration and Conformal Decision Layer</text>
+  <text class="ts" x="190" y="457">(see Fig. 6)</text>
+  <line class="ln" x1="190" y1="468" x2="190" y2="480" marker-end="url(#ar2)"/>
+
+  <rect class="bx" x="55" y="484" width="270" height="46" fill="#fdf1d8" stroke="#e0b56a"/>
+  <text class="tb" x="190" y="504">Predicted Class + Confidence Band</text>
+  <text class="ts" x="190" y="519">used as the retrieval query</text>
+  <line class="ln" x1="190" y1="530" x2="190" y2="542" marker-end="url(#ar2)"/>
+
+  <rect class="bx" x="40" y="546" width="300" height="104" fill="#e9f3fb" stroke="#6b9bd2"/>
+  <text class="tb" x="190" y="566">Evidence Layer &#8212; Curated Corpus</text>
+  <rect x="54" y="576" width="272" height="64" rx="6" fill="#ffffff" stroke="#b9d4ea" stroke-width="1"/>
+  <text class="ts" x="190" y="594">Thirty-two passages from</text>
+  <text class="ts" x="190" y="609">seventeen verified sources</text>
+  <text class="ti" x="190" y="628">embedded in advance, held in memory as a single array</text>
+  <line class="ln" x1="190" y1="650" x2="190" y2="662" marker-end="url(#ar2)"/>
+
+  <rect class="bx" x="40" y="666" width="300" height="50" fill="#ece8f8" stroke="#b0a4d9"/>
+  <text class="tb" x="190" y="686">Retrieve Relevant Passages</text>
+  <text class="ts" x="190" y="702">by semantic similarity to the query</text>
+  <line class="ln" x1="190" y1="716" x2="190" y2="728" marker-end="url(#ar2)"/>
+
+  <rect class="bx" x="40" y="732" width="300" height="52" fill="#ddf1e0" stroke="#8cc79a"/>
+  <text class="tb" x="190" y="752">Cited Clinical Report</text>
+  <text class="ts" x="190" y="769">source identifier attached to every statement</text>
+</svg>

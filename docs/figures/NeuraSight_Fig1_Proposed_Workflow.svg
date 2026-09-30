@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="712" viewBox="0 0 500 712" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 z" fill="#2c4a70"/>
+    </marker>
+    <style>
+      .b  { fill: #f4f8fc; stroke: #2c4a70; stroke-width: 1.2; rx: 6; }
+      .bg { fill: #eef3f8; stroke: #5b7fa6; stroke-width: 1.1; rx: 6; }
+      .br { fill: #ffffff; stroke: #8a8f96; stroke-width: 1.1; rx: 6; }
+      .h  { fill: #14243d; font-size: 12px; font-weight: bold; }
+      .p  { fill: #33455f; font-size: 10px; }
+      .i  { fill: #4a5a72; font-size: 9.3px; font-style: italic; }
+      .r  { fill: #5c6570; font-size: 9.3px; text-anchor: middle; }
+      .ln { stroke: #2c4a70; stroke-width: 1.2; fill: none; }
+      .lr { stroke: #8a8f96; stroke-width: 1.1; fill: none; stroke-dasharray: 4 3; }
+      .ic { stroke: #2c4a70; stroke-width: 1.3; fill: none; stroke-linecap: round; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="500" height="712" fill="#ffffff"/>
+
+  <!-- 1 upload -->
+  <rect class="b" x="70" y="20" width="300" height="52"/>
+  <g class="ic" transform="translate(86,34)">
+    <path d="M7,12 V2 M3,6 L7,2 L11,6"/><path d="M1,14 H13"/>
+  </g>
+  <text class="h" x="112" y="41">Upload Image and Select Module</text>
+  <text class="p" x="112" y="58">Brain MRI or chest X-ray, chosen by the user</text>
+  <line class="ln" x1="220" y1="72" x2="220" y2="92" marker-end="url(#a)"/>
+
+  <!-- 2 validation -->
+  <rect class="b" x="70" y="92" width="300" height="44"/>
+  <g class="ic" transform="translate(86,103)">
+    <rect x="1" y="1" width="12" height="15" rx="1.5"/><path d="M4,9 L6.5,11.5 L10,6.5"/>
+  </g>
+  <text class="h" x="112" y="112">Input Validation</text>
+  <text class="p" x="112" y="128">File type, size and format checked</text>
+  <line class="ln" x1="220" y1="136" x2="220" y2="156" marker-end="url(#a)"/>
+
+  <!-- 3 quality -->
+  <rect class="b" x="70" y="156" width="300" height="56"/>
+  <g class="ic" transform="translate(86,169)">
+    <circle cx="6.5" cy="6.5" r="5"/><path d="M10.5,10.5 L14,14"/>
+  </g>
+  <text class="h" x="112" y="176">Quality Screening</text>
+  <text class="p" x="112" y="192">Sharpness, contrast and resolution assessed</text>
+  <text class="i" x="112" y="205">degraded inputs are refused, not classified</text>
+  <line class="lr" x1="370" y1="184" x2="392" y2="184" marker-end="url(#a)"/>
+  <rect class="br" x="392" y="164" width="96" height="40"/>
+  <text class="r" x="440" y="181">Request</text>
+  <text class="r" x="440" y="194">Refused</text>
+  <line class="ln" x1="220" y1="212" x2="220" y2="232" marker-end="url(#a)"/>
+
+  <!-- 4 preprocessing -->
+  <rect class="b" x="70" y="232" width="300" height="56"/>
+  <g class="ic" transform="translate(86,245)">
+    <rect x="1" y="1" width="13" height="13" rx="1.5"/><path d="M1,5.5 H14 M5.5,1 V14"/>
+  </g>
+  <text class="h" x="112" y="252">Preprocessing</text>
+  <text class="p" x="112" y="268">Resize to 224 &#215; 224, ImageNet normalisation</text>
+  <text class="i" x="112" y="281">deterministic at inference time</text>
+  <line class="ln" x1="220" y1="288" x2="220" y2="308" marker-end="url(#a)"/>
+
+  <!-- 5 ensemble -->
+  <rect class="bg" x="70" y="308" width="300" height="64"/>
+  <g class="ic" transform="translate(86,323)">
+    <rect x="1" y="1" width="12" height="4" rx="1"/><rect x="1" y="7" width="12" height="4" rx="1"/><rect x="1" y="13" width="12" height="4" rx="1"/>
+  </g>
+  <text class="h" x="112" y="328">Stacking Ensemble Inference</text>
+  <text class="p" x="112" y="344">Base CNNs produce probability vectors, which a</text>
+  <text class="p" x="112" y="357">logistic regression meta-learner combines</text>
+  <text class="i" x="112" y="368">four networks for brain MRI, three for chest X-ray</text>
+  <line class="ln" x1="220" y1="372" x2="220" y2="392" marker-end="url(#a)"/>
+
+  <!-- 6 distribution screening -->
+  <rect class="b" x="70" y="392" width="300" height="56"/>
+  <g class="ic" transform="translate(86,405)">
+    <circle cx="5" cy="7" r="4.5"/><circle cx="10" cy="7" r="4.5"/>
+  </g>
+  <text class="h" x="112" y="412">Distribution Screening</text>
+  <text class="p" x="112" y="428">Disagreement between base models measured</text>
+  <text class="i" x="112" y="441">images unlike the training data are refused</text>
+  <line class="lr" x1="370" y1="420" x2="392" y2="420" marker-end="url(#a)"/>
+  <rect class="br" x="392" y="400" width="96" height="40"/>
+  <text class="r" x="440" y="417">Request</text>
+  <text class="r" x="440" y="430">Refused</text>
+  <line class="ln" x1="220" y1="448" x2="220" y2="468" marker-end="url(#a)"/>
+
+  <!-- 7 calibration + conformal -->
+  <rect class="bg" x="70" y="468" width="300" height="64"/>
+  <g class="ic" transform="translate(86,483)">
+    <path d="M1,12 A6.5,6.5 0 0,1 14,12"/><path d="M7.5,12 L11,6.5"/>
+  </g>
+  <text class="h" x="112" y="488">Calibration and Conformal Decision</text>
+  <text class="p" x="112" y="504">Confidence corrected, then a prediction set built</text>
+  <text class="p" x="112" y="517">and assigned a band</text>
+  <text class="i" x="112" y="528">confident, borderline or escalated for review</text>
+  <line class="ln" x1="220" y1="532" x2="220" y2="552" marker-end="url(#a)"/>
+
+  <!-- 8 explanation + evidence -->
+  <rect class="b" x="70" y="552" width="300" height="56"/>
+  <g class="ic" transform="translate(86,565)">
+    <rect x="1" y="1" width="13" height="13" rx="1.5"/><circle cx="7.5" cy="7.5" r="3"/>
+  </g>
+  <text class="h" x="112" y="572">Explanation and Evidence</text>
+  <text class="p" x="112" y="588">Grad-CAM heatmap, and clinical passages</text>
+  <text class="p" x="112" y="601">retrieved from the curated evidence base</text>
+  <line class="ln" x1="220" y1="608" x2="220" y2="628" marker-end="url(#a)"/>
+
+  <!-- 9 output -->
+  <rect class="bg" x="70" y="628" width="300" height="64"/>
+  <g class="ic" transform="translate(86,643)">
+    <path d="M2,1 H10 L13,4 V16 H2 Z"/><path d="M4.5,7 H10.5 M4.5,10.5 H10.5"/>
+  </g>
+  <text class="h" x="112" y="648">Cited Report Returned</text>
+  <text class="p" x="112" y="664">Prediction, band, heatmap and cited findings,</text>
+  <text class="p" x="112" y="677">available as a downloadable PDF document</text>
+  <text class="i" x="112" y="688">the scan record is stored for later reference</text>
+</svg>
