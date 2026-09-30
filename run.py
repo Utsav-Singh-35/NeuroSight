@@ -118,14 +118,20 @@ def port_owner(port: int) -> int | None:
         return None
     try:
         if os.name == "nt":
+            # No `-p TCP`: that filter covers only IPv4, because Windows treats
+            # IPv6 as a separate "TCPv6" protocol. Vite listens on ::1, so the
+            # filtered form could not see it and the PID lookup silently failed,
+            # leaving --kill unable to free port 3000. Plain `netstat -ano`
+            # lists both families with "TCP" in the proto column.
             out = subprocess.run(
-                ["netstat", "-ano", "-p", "TCP"],
-                capture_output=True, text=True, timeout=10,
+                ["netstat", "-ano"],
+                capture_output=True, text=True, timeout=15,
             ).stdout
             for line in out.splitlines():
                 parts = line.split()
                 if len(parts) >= 5 and parts[0] == "TCP" \
-                        and parts[1].endswith(f":{port}") and parts[3] == "LISTENING":
+                        and parts[1].rsplit(":", 1)[-1] == str(port) \
+                        and parts[3] == "LISTENING":
                     return int(parts[4])
         else:
             out = subprocess.run(
