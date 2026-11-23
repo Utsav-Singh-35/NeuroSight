@@ -1,5 +1,8 @@
 # NeuraSight
-Off Campus code : K8QVK2
+# Off Campus code : K8QVK2
+
+
+
 **Explainable, calibrated and evidence-grounded medical image decision support.**
 
 Two independent diagnostic modules — brain MRI tumour classification and chest X-ray screening —
